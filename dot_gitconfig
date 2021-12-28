@@ -1,0 +1,5 @@
+[user]
+    email = legostax@gmail.com
+    name = Lego Stax
+[init]
+    defaultBranch = master

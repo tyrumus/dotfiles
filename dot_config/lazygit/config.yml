@@ -1,0 +1,5 @@
+gui:
+    scrollHeight: 3
+    scrollPastBottom: true
+    skipStashWarning: false
+    showCommandLog: false

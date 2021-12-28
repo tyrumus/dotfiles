@@ -1,0 +1,65 @@
+#!/bin/bash
+
+BLOCK_FILE="$HOME/.cache/chezmoi-root"
+
+# check if this script has already been ran
+if [ -f "${BLOCK_FILE}" ]; then
+    exit 0
+else
+    if [ "$EUID" != 0 ]; then
+        mkdir -p "$(dirname $(realpath ${BLOCK_FILE}))"
+        touch "${BLOCK_FILE}"
+    fi
+fi
+
+# run this script only as root, only after performing the above check
+if [ "$EUID" != 0 ]; then
+    sudo "$0" "$@"
+    exit $?
+fi
+
+# Run config setup stuff that can only be done as root
+
+echo "==> WRITING SYSTEM CONFIG FILES"
+
+# sshd
+cat >>/etc/ssh/sshd_config.d/10-naddan-chezmoi.conf <<EOL
+Port 22
+PermitRootLogin no
+MaxAuthTries 3
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+UsePAM yes
+AllowAgentForwarding no
+AllowTcpForwarding no
+GatewayPorts no
+X11Forwarding no
+TCPKeepAlive yes
+Compression delayed
+EOL
+
+# systemd
+cat >>/etc/systemd/logind.conf.d/10-naddan-chezmoi.conf <<EOL
+[Login]
+HandlePowerKey=ignore
+HandleSuspendKey=suspend
+HandleHibernateKey=ignore
+HandleLidSwitch=suspend
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
+HandleRebootKey=ignore
+EOL
+
+### INIT SERVICES ###
+echo "==> ENABLING SYSTEM SERVICES"
+systemctl enable lightdm.service
+systemctl enable sshd.service
+systemctl enable syncthing@naddan.service
+
+# laptop services (it's ok if these fail to enable)
+systemctl enable bluetooth.service
+systemctl enable iwd.service
+systemctl enable tlp.service
+echo "==> SYSTEM SERVICES ENABLED"

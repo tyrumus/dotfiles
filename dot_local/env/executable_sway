@@ -1,0 +1,19 @@
+#!/usr/bin/zsh
+
+# source environment vars shared between all sessions
+source shared-vars.zsh
+
+# Wayland-specific environment vars for various applications
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+# export QT_SCREEN_SCALE_FACTORS=1.5
+export ECORE_EVAS_ENGINE=wayland_egl
+export ELM_ENGINE=wayland_egl
+export SDL_VIDEODRIVER=wayland
+export _JAVA_AWT_WM_NONREPARENTING=1
+export MOZ_ENABLE_WAYLAND=1
+export MOZ_DBUS_REMOTE=1
+export MOX_USE_XINPUT2=1
+
+# now actually start sway
+exec /usr/bin/sway

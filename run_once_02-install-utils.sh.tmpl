@@ -1,0 +1,48 @@
+#!/bin/bash
+
+BLOCK_FILE="$HOME/.cache/chezmoi-install"
+
+# check if this script has already been ran
+if [ -f "${BLOCK_FILE}" ]; then
+    exit 0
+else
+    if [ "$EUID" != 0 ]; then
+        mkdir -p "$(dirname $(realpath ${BLOCK_FILE}))"
+        touch "${BLOCK_FILE}"
+    fi
+fi
+
+# packages expected to already be installed: chezmoi dhcpcd (iwd) git linux-lts nvidia-lts sudo wget
+
+PACKAGES_SYS="base-devel clipman dunst lightdm lightdm-gtk-greeter man-db ntfs-3g openssh pacman-contrib pipewire pipewire-alsa pipewire-jack pipewire-pulse pipewire-media-session reflector sudo sway swayidle swaylock-effects udiskie unzip waybar wget wlsunset gammastep rofi rofi-calc wtype xdg-user-dirs xorg-xwayland zip zsh xfce4 xmousepasteblock-git"
+PACKAGES_USER="bat discord duf electrum exa firefox fzf gnucash grimshot imagemagick keepassxc kitty lazygit lxqt-openssh-askpass neofetch neovim obsidian ranger ripgrep smbclient speedtest-cli spotify spotifyd syncthing teamviewer which wlogout pavucontrol vlc zsh-theme-powerlevel10k-git"
+PACKAGES_WORKSTATION="gimp davinci-resolve blender bitwig-studio steam obs-studio aseprite"
+PACKAGES_LAPTOP="acpi bluez brightnessctl tlp"
+
+PACKAGES="${PACKAGES_SYS} ${PACKAGES_USER}"
+
+{{- if eq .chezmoi.hostname "leviticus" }}
+PACKAGES="${PACKAGES} ${PACKAGES_WORKSTATION}"
+{{- else if eq .chezmoi.hostname "tacitus" }}
+PACKAGES="${PACKAGES} ${PACKAGES_LAPTOP}"
+{{- end }}
+
+echo "==> INSTALLING ALL PACKAGES"
+# install all the packages
+paru -S "${PACKAGES}"
+
+echo "==> ALL PACKAGES INSTALLED"
+
+# xdg-user-dirs
+xdg-user-dirs-update
+mkdir "$HOME/rsync"
+mkdir "$HOME/notes"
+
+### INIT SERVICES ###
+
+systemctl enable --user pipewire.service
+systemctl enable --user pipewire-pulse.service
+systemctl enable --user ssh-agent.service
+systemctl enable --user udiskie.service
+
+echo "==> ALL USER SERVICES ENABLED"

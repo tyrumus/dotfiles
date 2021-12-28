@@ -1,0 +1,17 @@
+configuration {
+    modi: "window,drun,ssh,calc";
+    font: "JetBrainsMono Nerd Font 16";
+    show-icons: true;
+    terminal: "kitty";
+    ssh-command: "{terminal} {ssh-client} {host} [-p {port}]";
+    window-thumbnail: true;
+    timeout {
+        action: "kb-cancel";
+        delay:  0;
+    }
+    filebrowser {
+        directories-first: true;
+        sorting-method:    "name";
+    }
+}
+@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
