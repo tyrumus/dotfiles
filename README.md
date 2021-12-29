@@ -64,5 +64,4 @@ CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `http
 
 - Make `install/arch-install.zsh` automatically set up partitioning
 - Fix neovim packer bootstrapping to work 1st time
-- Add script to change efibootmgr order temporarily to boot Windoze
 - Add systemd user service for xmousepasteblock

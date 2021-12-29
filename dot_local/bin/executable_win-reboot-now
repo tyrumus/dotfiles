@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo efibootmgr -n 0
+sudo systemctl reboot
