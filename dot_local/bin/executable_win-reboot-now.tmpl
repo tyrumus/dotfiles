@@ -1,4 +1,6 @@
+{{- if eq .chezmoi.hostname "leviticus" }}
 #!/bin/bash
 
 sudo efibootmgr -n 0
 sudo systemctl reboot
+{{- end }}
