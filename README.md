@@ -39,7 +39,7 @@ Partition | if drive is `/dev/sda` | Partition Type
 `/dev/swap_partition` | `/dev/sda2` | Linux swap
 `/dev/root_partition` | `/dev/sda3` | Linux x86-84 root (/)
 
-## Running the Install Script
+### Running the Install Script
 
 Once that's done, download the install script:
 ```
