@@ -2,21 +2,18 @@
 
 ### EDIT THESE AS NEEDED
 DRIVE="/dev/sda"
+DRIVE_ESP="${DRIVE}1"
+DRIVE_SWAP="${DRIVE}2"
+DRIVE_ROOT="${DRIVE}3"
 USRNAME="urmum"
 HOSTNAME="smokedcheese"
 TIMEZONE="Europe/Zurich"
 PACKAGES="base efibootmgr linux-lts linux-firmware chezmoi dhcpcd git sudo wget zsh"
 LAPTOP_PACKAGES="iwd"
 NVIDIA_PACKAGES="nvidia-lts"
-CHEZMOI_URL="https://github.com/you/your-dotfiles.git"
+CHEZMOI_URL="https://github.com/legostax/dotfiles"
 
 
-
-# calculated variables
-# partitions
-DRIVE_ESP="${DRIVE}1"
-DRIVE_SWAP="${DRIVE}2"
-DRIVE_ROOT="${DRIVE}3"
 
 echo "==> Starting unattended install..."
 

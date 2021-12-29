@@ -25,3 +25,38 @@ $ chezmoi apply
 ```
 
 Logout of your session, and log back in. Enjoy!
+
+## Run unattended Arch Linux install
+
+[Follow the Arch Linux install guide](https://wiki.archlinux.org/title/Installation_guide) to do the following:
+1) Partition the target drive
+2) Connect to the Internet
+
+Here's the GPT layout the install script expects:
+Partition | if drive is `/dev/sda` | Partition Type
+--- | --- | ---
+`/dev/efi_system_partition` | `/dev/sda1` | ESP
+`/dev/swap_partition` | `/dev/sda2` | Linux swap
+`/dev/root_partition` | `/dev/sda3` | Linux x86-84 root (/)
+
+## Running the Install Script
+
+Once that's done, download the install script:
+```
+$ curl -L https://git.io/legostax-dotfiles-arch-install -o install.zsh
+```
+
+Edit the variables at the top of the downloaded script, and execute it.
+
+What are each of the variables for?
+Name | Description | Example
+--- | --- | ---
+DRIVE | Name of target install disk | `/dev/sda`
+USRNAME | Username of sudoer account | `urmum`
+HOSTNAME | Hostname of the system | `smokedcheese`
+TIMEZONE | Desired timezone system time should be displayed | `Europe/Zurich`
+PACKAGES | List of packages installed every time, separated by spaces | `base linux linux-firmware`
+LAPTOP_PACKAGES | List of packages installed when system is a laptop | `iwd`
+NVIDIA_PACKAGES | List of packages installed when system has NVIDIA graphics card | `nvidia-lts`
+CHROOT_PACKAGES | List of packages to install when installer is chrooted | `efibootmgr`
+CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `https://github.com/you/your-dotfiles.git`
