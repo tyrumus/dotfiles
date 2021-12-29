@@ -60,8 +60,9 @@ systemctl enable sddm.service
 systemctl enable sshd.service
 systemctl enable syncthing@naddan.service
 
-# laptop services (it's ok if these fail to enable)
+# laptop services
+{{- if eq .chezmoi.hostname "tacitus" }}
 systemctl enable bluetooth.service
-systemctl enable iwd.service
 systemctl enable tlp.service
+{{- end }}
 echo "==> SYSTEM SERVICES ENABLED"
