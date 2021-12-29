@@ -14,6 +14,30 @@ NVIDIA_PACKAGES="nvidia-lts"
 CHEZMOI_URL="https://github.com/legostax/dotfiles"
 
 
+# prompt for passwords beforehand
+ROOT_PASSWD=""
+ROOT_PASSWD_CONF="a"
+while [ ! "${ROOT_PASSWD}" = "${ROOT_PASSWD_CONF}" ]; do
+    echo -n "Enter the password for root: "
+    read -rs ROOT_PASSWD </dev/tty
+    echo
+
+    echo -n "Confirm root password: "
+    read -rs ROOT_PASSWD_CONF </dev/tty
+    echo
+done
+
+USER_PASSWD=""
+USER_PASSWD_CONF="a"
+while [ ! "${USER_PASSWD}" = "${USER_PASSWD_CONF}" ]; do
+    echo -n "Enter the password for ${USRNAME}: "
+    read -rs USER_PASSWD </dev/tty
+    echo
+
+    echo -n "Confirm ${USRNAME} password: "
+    read -rs USER_PASSWD_CONF </dev/tty
+    echo
+done
 
 echo "==> Starting unattended install..."
 
@@ -59,12 +83,14 @@ echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
 groupadd sudo
 useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
-echo "Color" >> /etc/pacman.conf
-echo "ParallelDownloads = 5" >> /etc/pacman.conf
-echo "MAKEFLAGS=\"-j$(nproc)\"" >> /etc/makepkg.conf
+sed -i "s/#Color.*/Color/" /etc/pacman.conf
+sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
+sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
 mkinitcpio -P
 efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux-lts -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet initrd=/initramfs-linux-lts.img"
+echo root:${ROOT_PASSWD} | chpasswd
+echo ${USRNAME}:${USER_PASSWD} | chpasswd
 EOF
 
 # add self-destructing chezmoi install script
@@ -78,11 +104,6 @@ echo "==> Syncing drives..."
 sync
 echo "==> Drives synced."
 
+umount -R /mnt
+swapoff ${DRIVE_SWAP}
 echo "==> Installation complete."
-echo "==> Configure static IP address stuff now, if you want it."
-echo "==> Finish installation by running the following:"
-echo "arch-chroot /mnt"
-echo "passwd"
-echo "passwd ${USRNAME}"
-echo "exit"
-echo "reboot"
