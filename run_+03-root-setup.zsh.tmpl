@@ -23,6 +23,7 @@ fi
 echo "==> WRITING SYSTEM CONFIG FILES"
 
 # sshd
+mkdir -p /etc/ssh/sshd_config.d
 cat >>/etc/ssh/sshd_config.d/10-naddan-chezmoi.conf <<EOL
 Port 22
 PermitRootLogin no
@@ -41,6 +42,7 @@ Compression delayed
 EOL
 
 # systemd
+mkdir -p /etc/systemd/logind.conf.d
 cat >>/etc/systemd/logind.conf.d/10-naddan-chezmoi.conf <<EOL
 [Login]
 HandlePowerKey=ignore
