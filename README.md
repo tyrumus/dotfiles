@@ -59,3 +59,9 @@ PACKAGES | List of packages installed every time, separated by spaces | `base li
 LAPTOP_PACKAGES | List of packages installed when system is a laptop | `iwd`
 NVIDIA_PACKAGES | List of packages installed when system has NVIDIA graphics card | `nvidia-lts`
 CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `https://github.com/you/your-dotfiles.git`
+
+## TODO
+
+- Make `install/arch-install.zsh` automatically set up partitioning
+- Fix neovim packer bootstrapping to work 1st time
+- Add script to change efibootmgr order temporarily to boot Windoze
