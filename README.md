@@ -12,11 +12,9 @@ $ chezmoi init https://github.com/legostax/dotfiles.git
 
 My `run_once` scripts are intended to deploy an entirely new Arch Linux install. [Following the steps here](https://gist.github.com/legostax/5e52f3b97e61cb5e25c989930b6fc240) enables them to run smoothly without needing to run any commands in this repo directly.
 
-If you don't want my automated scripts to mess up your Linux install, run the following commands:
+If you don't want my automated scripts to mess up your Linux install, run the following command:
 ```
-$ touch $HOME/.cache/chezmoi-paru
-$ touch $HOME/.cache/chezmoi-install
-$ touch $HOME/.cache/chezmoi-root
+$ sh install/disable-install.sh
 ```
 
 Finally, apply the dotfiles:
