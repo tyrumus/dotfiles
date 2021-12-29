@@ -85,6 +85,8 @@ useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
 sed -i "s/#Color.*/Color/" /etc/pacman.conf
 sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
+echo "[multilib]" >> /etc/pacman.conf
+echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
 mkinitcpio -P
