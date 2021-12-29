@@ -7,7 +7,7 @@ if [ -f "${BLOCK_FILE}" ]; then
     exit 0
 else
     if [ "$EUID" != 0 ]; then
-        mkdir -p "$(dirname $(realpath ${BLOCK_FILE}))"
+        mkdir -p "$(dirname $(realpath -m ${BLOCK_FILE}))"
         touch "${BLOCK_FILE}"
     fi
 fi
