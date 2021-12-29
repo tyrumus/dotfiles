@@ -42,6 +42,7 @@ Compression delayed
 EOL
 
 # systemd
+echo "RebootWatchdogSec=0" >> /etc/systemd/system.conf
 mkdir -p /etc/systemd/logind.conf.d
 cat >>/etc/systemd/logind.conf.d/10-naddan-chezmoi.conf <<EOL
 [Login]
