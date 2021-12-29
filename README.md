@@ -43,7 +43,7 @@ Partition | if drive is `/dev/sda` | Partition Type
 
 Once that's done, download the install script:
 ```
-$ curl -L https://git.io/legostax-dotfiles-arch-install -o install.zsh
+$ curl -L https://git.io/JyoUF -o install.zsh
 ```
 
 Edit the variables at the top of the downloaded script, and execute it.
