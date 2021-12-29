@@ -58,5 +58,4 @@ TIMEZONE | Desired timezone system time should be displayed | `Europe/Zurich`
 PACKAGES | List of packages installed every time, separated by spaces | `base linux linux-firmware`
 LAPTOP_PACKAGES | List of packages installed when system is a laptop | `iwd`
 NVIDIA_PACKAGES | List of packages installed when system has NVIDIA graphics card | `nvidia-lts`
-CHROOT_PACKAGES | List of packages to install when installer is chrooted | `efibootmgr`
 CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `https://github.com/you/your-dotfiles.git`
