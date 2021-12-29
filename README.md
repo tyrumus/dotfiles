@@ -14,7 +14,9 @@ My `run_once` scripts are intended to deploy an entirely new Arch Linux install.
 
 If you don't want my automated scripts to mess up your Linux install, run the following command:
 ```
+$ chezmoi cd
 $ sh install/disable-install.sh
+$ exit
 ```
 
 Finally, apply the dotfiles:
