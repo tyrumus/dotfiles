@@ -93,6 +93,11 @@ echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
 EOF
 
+# perform laptop chrooted operations
+cat << EOF | arch-chroot /mnt
+systemctl enable iwd.service
+EOF
+
 # add self-destructing chezmoi install script
 cat >>/mnt/home/${USRNAME}/.zshrc <<EOL
 rm \$0
