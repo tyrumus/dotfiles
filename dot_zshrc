@@ -81,5 +81,10 @@ scroll-and-clear-screen() {
 zle -N scroll-and-clear-screen
 bindkey "^l" scroll-and-clear-screen
 
+# HOME, DELETE, and END keys
+bindkey "\e[H" beginning-of-line
+bindkey "\e[3~" delete-char
+bindkey "\e[F" end-of-line
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
