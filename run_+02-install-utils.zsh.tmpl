@@ -22,10 +22,10 @@ PACKAGES_LAPTOP="acpi bluez brightnessctl tlp"
 
 PACKAGES="${PACKAGES_SYS} ${PACKAGES_USER}"
 
-{{- if eq .chezmoi.hostname "leviticus" }}
-PACKAGES="${PACKAGES} ${PACKAGES_WORKSTATION}"
-{{- else if eq .chezmoi.hostname "tacitus" }}
+{{- if eq .chassistype "laptop" }}
 PACKAGES="${PACKAGES} ${PACKAGES_LAPTOP}"
+{{- else }}
+PACKAGES="${PACKAGES} ${PACKAGES_WORKSTATION}"
 {{- end }}
 
 echo "==> INSTALLING ALL PACKAGES"

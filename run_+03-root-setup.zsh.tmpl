@@ -63,7 +63,7 @@ systemctl enable sshd.service
 systemctl enable syncthing@naddan.service
 
 # laptop services
-{{- if eq .chezmoi.hostname "tacitus" }}
+{{- if eq .chassistype "laptop" }}
 systemctl enable bluetooth.service
 systemctl enable tlp.service
 {{- end }}

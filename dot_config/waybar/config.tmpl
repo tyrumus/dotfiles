@@ -1,6 +1,10 @@
 {
     "layer": "top",
+{{- if eq .chassistype "laptop" }}
     "height": 40, // Waybar height (to be removed for auto height)
+{{- else }}
+    "height": 30, // Waybar height (to be removed for auto height)
+{{- end }}
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["sway/window"],
     "modules-right": ["idle_inhibitor", "pulseaudio", "network", "backlight", "battery", "tray", "clock"],
@@ -20,7 +24,9 @@
         }
     },
     "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>"
+        "format": "<span style=\"italic\">{}</span>",
+        "max-length": 20,
+        "tooltip": true
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -41,7 +47,7 @@
     "backlight": {
         // "device": "acpi_video1",
         "format": "{percent}% {icon}",
-        "format-icons": ["", ""]
+        "format-icons": ["", "", "", ""]
     },
     "battery": {
         "bat": "BAT1",
@@ -51,12 +57,12 @@
             "critical": 15
         },
         "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
+        "format-charging": "{capacity}% ",
         "format-plugged": "{capacity}% ",
         "format-alt": "{time} {icon}",
         "format-good": "{capacity}% {icon}", // An empty format will hide the module
-        "format-full": "100% ",
-        "format-icons": ["", "", "", "", ""]
+        "format-full": "100% ",
+        "format-icons": ["", "", "", "", "", "", "", "", "", ""]
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
@@ -70,14 +76,14 @@
         // "scroll-step": 1, // %, can be a float
         "format": "{icon} {volume}%    {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
+        "format-bluetooth-muted": "ﱝ {icon} {format_source}",
+        "format-muted": "ﱝ {format_source}",
         "format-source": "{volume}% ",
         "format-source-muted": "",
         "format-icons": {
             "headphone": "",
             "hands-free": "",
-            "headset": "",
+            "headset": "",
             "phone": "",
             "portable": "",
             "car": "",

@@ -2,7 +2,11 @@
     border: none;
     border-radius: 0;
     font-family: JetBrains Mono;
+{{- if eq .chassistype "laptop" }}
     font-size: 20px;
+{{- else }}
+    font-size: 14px;
+{{- end }}
     min-height: 0;
     margin: 0 0px;
 }
