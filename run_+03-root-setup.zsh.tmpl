@@ -1,3 +1,4 @@
+{{- if not (stat (joinPath .chezmoi.homeDir ".cache/chezmoi-paru")) }}
 #!/usr/bin/zsh
 
 BLOCK_FILE="$HOME/.cache/chezmoi-root"
@@ -67,3 +68,4 @@ systemctl enable bluetooth.service
 systemctl enable tlp.service
 {{- end }}
 echo "==> SYSTEM SERVICES ENABLED"
+{{- end }}

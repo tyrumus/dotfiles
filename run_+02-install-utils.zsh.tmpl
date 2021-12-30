@@ -1,3 +1,4 @@
+{{- if not (stat (joinPath .chezmoi.homeDir ".cache/chezmoi-install")) }}
 #!/usr/bin/zsh
 
 BLOCK_FILE="$HOME/.cache/chezmoi-install"
@@ -46,3 +47,4 @@ systemctl enable --user ssh-agent.service
 systemctl enable --user udiskie.service
 
 echo "==> ALL USER SERVICES ENABLED"
+{{- end }}
