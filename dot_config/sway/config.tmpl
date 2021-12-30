@@ -23,6 +23,14 @@ output * bg /home/naddan/.config/sway/gruvbox_city.png fill
 output * scale 1
 {{- if eq .chassistype "desktop" }}
 # TODO: configure output of all monitors
+output DVI-D-1 mode 1920x1080@60.000Hz
+output DVI-D-1 pos 960 0 res 1920x1080
+
+output DP-2 mode 1920x1080@144.001Hz
+output DP-2 pos 0 1080 res 1920x1080
+
+output DP-3 mode 1920x1080@144.001Hz
+output DP-3 pos 1920 1080 res 1920x1080
 {{- end }}
 
 ### Lockscreen configuration
@@ -54,6 +62,9 @@ input type:touchpad {
 }
 {{- else }}
 # TODO: configure mouse
+input type:mouse {
+    #scroll_factor 3.0
+}
 {{- end }}
 input * xkb_numlock enable
 seat seat0 xcursor_theme Adwaita 16

@@ -64,4 +64,4 @@ CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `http
 
 - Make `install/arch-install.zsh` automatically set up partitioning
 - Fix neovim packer bootstrapping to work 1st time
-- Fix Sway config to make mouse cursor visible with `--unsupported-gpu`
+- Finish setting up new Sway config
