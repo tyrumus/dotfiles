@@ -16,7 +16,7 @@ export MOZ_DBUS_REMOTE=1
 export MOX_USE_XINPUT2=1
 
 # now actually start sway
-{{- if eq .chezmoi.hostname "leviticus" }}
+{{- if eq .hasnvidia "yes" }}
 exec /usr/bin/sway --unsupported-gpu
 {{- else }}
 exec /usr/bin/sway
