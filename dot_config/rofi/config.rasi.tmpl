@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") }}
 configuration {
     modi: "window,drun,ssh,calc";
     font: "JetBrainsMono Nerd Font 16";
@@ -15,3 +16,4 @@ configuration {
     }
 }
 @theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
+{{- end }}

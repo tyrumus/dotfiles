@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") }}
 {
     "layer": "top",
 {{- if eq .chassistype "laptop" }}
@@ -92,4 +93,4 @@
         "on-click": "pavucontrol"
     }
 }
-
+{{- end }}

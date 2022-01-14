@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") }}
 {
     "label" : "shutdown",
     "action" : "systemctl poweroff",
@@ -22,3 +23,4 @@
     "text" : "[L]ogout",
     "keybind" : "l"
 }
+{{- end }}

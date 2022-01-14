@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") }}
 * {
     background-image: none;
 }
@@ -45,3 +46,4 @@ button:focus, button:active, button:hover {
 #reboot {
     /* background-image: image(url("/usr/share/wlogout/icons/reboot.png"), url("/usr/local/share/wlogout/icons/reboot.png")); */
 }
+{{- end }}

@@ -42,8 +42,10 @@ alias cedit="chezmoi edit"
 alias lg="lazygit"
 alias wakelevi="ssh pi \"/home/pi/wake.sh leviticus\""
 
+{{- if not (eq .chassistype "wsl") }}
 # kitty support
 source <(kitty + complete setup zsh)
+{{- end }}
 
 # fzf plugins
 source /usr/share/fzf/completion.zsh
