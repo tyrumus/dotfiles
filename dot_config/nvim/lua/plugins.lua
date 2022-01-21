@@ -10,15 +10,11 @@ end
 
 return require("packer").startup(function(use)
     use("wbthomason/packer.nvim")
-    -- use({"nvim-telescope/telescope.nvim", requires = {{"nvim-lua/popup.nvim"}, {"nvim-lua/plenary.nvim"}}})
     use({"hoob3rt/lualine.nvim", requires = {"kyazdani42/nvim-web-devicons", opt = true}})
-    -- use({"projekt0n/github-nvim-theme"})
-    -- use({"marko-cerovac/material.nvim"})
     use({"eddyekofo94/gruvbox-flat.nvim"})
     use({"lukas-reineke/indent-blankline.nvim"})
     use({"kdheepak/lazygit.nvim"})
     use({"folke/todo-comments.nvim", requires = {{"nvim-lua/plenary.nvim"}, {"folke/trouble.nvim"}}})
-    -- use({"glepnir/dashboard-nvim"})
     use({"goolord/alpha-nvim"})
     use({"terrortylor/nvim-comment"})
     use({"tpope/vim-surround"})
@@ -27,6 +23,7 @@ return require("packer").startup(function(use)
     use({"ibhagwan/fzf-lua", requires = {"vijaymarupudi/nvim-fzf", "kyazdani42/nvim-web-devicons"}})
     use({"ahmedkhalf/project.nvim"})
     use({"andweeb/presence.nvim"})
+    use({"blackCauldron7/surround.nvim"})
 
     if packer_bootstrap then
         require('packer').sync()
