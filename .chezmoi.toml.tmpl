@@ -14,8 +14,22 @@
 {{- end }}
 {{- $hasNvidia := "no" }}
 {{- if contains "NVIDIA" (output "lspci") }}
-{{-     $hasNvidia = "yes" }}
+{{-     writeToStdout "chezmoi has determined there is an NVIDIA card present.\nIs this correct? [y/n] " }}
+{{-     if (promptBool "y") }}
+{{-         $hasNvidia = "yes" }}
+{{-     end }}
 {{- end }}
+{{- writeToStdout (cat "chezmoi has determined it is running on" $chassisType "\nIs this correct? [y/n] ") }}
+{{- if (not (promptBool "y")) }}
+{{-     writeToStdout "what is the chassis type? [desktop, laptop, wsl] " }}
+{{-     $newChassisType := (promptString "") }}
+{{-     if (or (eq $newChassisType "desktop") (eq $newChassisType "laptop") (eq $newChassisType "wsl")) }}
+{{-         $chassisType = $newChassisType }}
+{{-     else }}
+{{-         writeToStdout (cat "Error: unexpected input: " $newChassisType "\nWriting" $chassisType "to chezmoi config instead.\nRun \"chezmoi init\" if this is incorrect.\n") }}
+{{-     end }}
+{{- end }}
+{{- writeToStdout "\nIf you don't want the setup scripts to run automatically,\nensure you execute " .chezmoi.sourceDir "/install/disable-install.sh prior to running \"chezmoi apply\"\n" }}
 
 [data]
     chassisType = {{ $chassisType | quote }}
