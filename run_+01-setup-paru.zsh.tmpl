@@ -3,7 +3,7 @@
 
 BLOCK_FILE="$HOME/.cache/chezmoi-paru"
 
-# check if this script has already been ran
+# check if this script has already been ran. Unnecessary with chezmoi template, but better safe than sorry
 if [ -f "${BLOCK_FILE}" ]; then
     exit 0
 else

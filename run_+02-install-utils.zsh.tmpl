@@ -3,7 +3,7 @@
 
 BLOCK_FILE="$HOME/.cache/chezmoi-install"
 
-# check if this script has already been ran
+# check if this script has already been ran. Unnecessary with chezmoi template, but better safe than sorry
 if [ -f "${BLOCK_FILE}" ]; then
     exit 0
 else
@@ -13,7 +13,7 @@ else
     fi
 fi
 
-# packages expected to already be installed: chezmoi dhcpcd (iwd) git linux-lts nvidia-lts sudo wget
+# packages expected to already be installed: chezmoi dhcpcd [iwd] git linux-lts nvidia-lts sudo wget zsh
 
 PACKAGES_SYS="base-devel clipman dunst sddm xorg-server man-db ntfs-3g openssh pacman-contrib pipewire pipewire-alsa pipewire-jack pipewire-pulse pipewire-media-session reflector sudo sway swayidle swaylock-effects udiskie unzip waybar wget wlsunset gammastep rofi rofi-calc wtype xdg-user-dirs xorg-xwayland zip zsh xfce4 xmousepasteblock-git"
 PACKAGES_USER="bat discord duf electrum exa firefox fzf gnucash grimshot imagemagick keepassxc qt5-wayland kitty lazygit lxqt-openssh-askpass neofetch neovim obsidian ranger ripgrep smbclient speedtest-cli spotify spotifyd syncthing teamviewer which wlogout pavucontrol vlc zsh-theme-powerlevel10k-git"
