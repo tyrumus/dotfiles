@@ -40,7 +40,10 @@ alias rsync="~/.local/share/zsh-scripts/rsync-fixed.zsh"
 alias chezgit="lazygit -p ~/.local/share/chezmoi"
 alias cedit="chezmoi edit"
 alias lg="lazygit"
+{{- if not (eq .chezmoi.hostname "leviticus") }}
 alias wakelevi="ssh pi \"/home/pi/wake.sh leviticus\""
+alias sleeplevi="ssh -t leviticus /usr/bin/sudo /usr/bin/systemctl suspend"
+{{- end }}
 
 {{- if not (eq .chassistype "wsl") }}
 # kitty support
