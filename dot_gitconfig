@@ -1,5 +1,8 @@
 [user]
-    email = legostax@gmail.com
+    email = tyrieckmann@protonmail.com
     name = Lego Stax
+	signingkey = 94B920BE113E4F6D
 [init]
     defaultBranch = master
+[commit]
+	gpgsign = true

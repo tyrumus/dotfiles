@@ -3,3 +3,5 @@ gui:
     scrollPastBottom: true
     skipStashWarning: false
     showCommandLog: false
+git:
+  overrideGpg: true
