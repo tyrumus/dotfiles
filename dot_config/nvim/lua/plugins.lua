@@ -23,7 +23,6 @@ return require("packer").startup(function(use)
     use({"ibhagwan/fzf-lua", requires = {"vijaymarupudi/nvim-fzf", "kyazdani42/nvim-web-devicons"}})
     use({"ahmedkhalf/project.nvim"})
     use({"andweeb/presence.nvim"})
-    use({"blackCauldron7/surround.nvim"})
 
     if packer_bootstrap then
         require('packer').sync()
