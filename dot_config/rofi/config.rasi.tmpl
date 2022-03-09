@@ -1,7 +1,11 @@
 {{- if not (eq .chassistype "wsl") }}
 configuration {
     modi: "window,drun,ssh,calc";
+{{- if (eq .chassistype "laptop") }}
     font: "JetBrainsMono Nerd Font 16";
+{{- else }}
+    font: "JetBrainsMono Nerd Font 11";
+{{- end }}
     show-icons: true;
     terminal: "kitty";
     ssh-command: "{terminal} {ssh-client} {host} [-p {port}]";

@@ -1,29 +1,21 @@
 {{- if not (eq .chassistype "wsl") }}
 # Sway config
+# TODO: determine why clients don't open on the intended screen and why workspaces change magically when moving the mouse around
 
 ### Variables
-#
-# Logo key. Use Mod1 for Alt.
 set $mod Mod4
 set $alt Mod1
-# Home row direction keys, like vim
 set $left h
 set $down j
 set $up k
 set $right l
-# Your preferred terminal emulator
 set $term kitty
-# Your preferred application launcher
-# Note: pass the final command to swaymsg so that the resulting window can be opened
-# on the original workspace that the command was run on.
-# set $menu dmenu_path | dmenu | xargs swaymsg exec --
+set $menu rofi -show combi -combi-modi "window,drun,ssh" -modi combi | xargs swaymsg exec --
 
 ### Output configuration
-# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 output * bg /home/naddan/.config/sway/gruvbox_city.png fill
 output * scale 1
 {{- if eq .chassistype "desktop" }}
-# TODO: configure output of all monitors
 output DVI-D-1 mode 1920x1080@60.000Hz
 output DVI-D-1 pos 960 0 res 1920x1080
 
@@ -34,25 +26,12 @@ output DP-3 mode 1920x1080@144.001Hz
 output DP-3 pos 1920 1080 res 1920x1080
 {{- end }}
 
-### Lockscreen configuration
+### Lockscreen and idle configuration
 set $lock /home/naddan/.local/bin/lockscreen
 
-### Idle configuration
-#
-# Example configuration:
-#
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-#          before-sleep 'swaylock -f -c 000000'
-#
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
+exec swayidle -w timeout 300 $lock timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep $lock
 
 ### Input configuration
-# You can get the names of your inputs by running: swaymsg -t get_inputs
-# Read `man 5 sway-input` for more information about this section.
 {{- if eq .chassistype "laptop" }}
 input type:touchpad {
     tap enabled
@@ -78,29 +57,28 @@ xwayland enable
 client.focused #ebdbb2 #ebdbb2 #ffffff #ebdbb2 #ebdbb2
 
 ### Key bindings
-#
-# Basics:
-#
 bindsym $mod+Escape exec wlogout --buttons-per-row 4
 bindsym XF86PowerOff exec wlogout --buttons-per-row 4
 bindsym $mod+t exec $term
 bindsym $mod+q kill
-bindsym $mod+r exec rofi -show combi -combi-modi "window,drun,ssh" -modi combi
+bindsym $mod+r exec $menu
 bindsym $mod+c exec rofi -show calc
 bindsym $mod+$alt+l exec $lock
 bindsym $mod+Shift+r reload
-bindsym $mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
-
-# Framework keyboard bindings
+bindsym $mod+Shift+q exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -10%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym XF86MonBrightnessUp exec brightnessctl -q -d intel_backlight s 5%+
-bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
-bindsym XF86AudioMedia exec keepassxc &
 bindsym Print exec --no-startup-id grimshot copy area
 bindsym $mod+Print exec --no-startup-id grimshot copy screen
 bindsym $mod+Shift+Print exec --no-startup-id grimshot copy active
+
+{{- if eq .chassistype "laptop" }}
+# Framework keyboard bindings
+bindsym XF86MonBrightnessUp exec brightnessctl -q -d intel_backlight s 5%+
+bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
+bindsym XF86AudioMedia exec keepassxc &
+{{- end }}
 
 # Workspaces
 bindsym $mod+1 workspace number 1
@@ -113,33 +91,19 @@ bindsym $mod+Shift+2 move container to workspace number 2
 bindsym $mod+Shift+3 move container to workspace number 3
 bindsym $mod+Shift+4 move container to workspace number 4
 bindsym $mod+Shift+5 move container to workspace number 5
-#
-# Moving around:
-#
-# Move your focus around
+
+# Move focus
 bindsym $mod+$left focus left
 bindsym $mod+$down focus down
 bindsym $mod+$up focus up
 bindsym $mod+$right focus right
-# Or use $mod+[up|down|left|right]
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
 
 # Move the focused window with the same, but add Shift
 bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down
 bindsym $mod+Shift+$up move up
 bindsym $mod+Shift+$right move right
-# Ditto, with arrow keys
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
-#
-# Layout stuff:
-#
+
 # You can "split" the current object of your focus with
 # $mod+b or $mod+v, for horizontal and vertical splits
 # respectively.
@@ -162,11 +126,6 @@ bindsym $mod+space focus mode_toggle
 
 # Move focus to the parent container
 bindsym $mod+a focus parent
-#
-# Scratchpad:
-#
-# Sway has a "scratchpad", which is a bag of holding for windows.
-# You can send windows there and get them back later.
 
 # Move the currently focused window to the scratchpad
 bindsym $mod+Shift+minus move scratchpad
@@ -174,30 +133,6 @@ bindsym $mod+Shift+minus move scratchpad
 # Show the next scratchpad window or hide the focused scratchpad window.
 # If there are multiple scratchpad windows, this command cycles through them.
 bindsym $mod+minus scratchpad show
-#
-# Resizing containers:
-#
-mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
-
-    # Ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
-
-    # Return to default mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-# bindsym $mod+r mode "resize"
 
 # gaps
 smart_gaps on
@@ -212,15 +147,11 @@ assign [app_id="kitty"] workspace 2
 for_window [class="discord"] move container to workspace 3
 assign [app_id="org.keepassxc.KeePassXC"] workspace 4
 
-# userspace stuffs
-exec systemctl --user import-environment WAYLAND_DISPLAY &
-exec systemctl --user import-environment DISPLAY &
-# TODO: need to test if the following works or not
-exec dbus-update-activation-environment --systemd WAYLAND XDG_CURRENT_DESKTOP=sway
+# userspace stuffs - the commented out stuff currently doesn't even work...not sure if it needs to.
+# exec systemctl --user import-environment WAYLAND_DISPLAY &
+# exec systemctl --user import-environment DISPLAY &
+# exec dbus-update-activation-environment --systemd WAYLAND XDG_CURRENT_DESKTOP=sway
 exec xrdb -load ~/.Xresources
-
-# FIX: wlsunset does not run
-exec /usr/bin/wlsunset -l 33.43 -L -111.89 -T 6500 -t 4500 &
 
 exec /usr/bin/dunst &
 
