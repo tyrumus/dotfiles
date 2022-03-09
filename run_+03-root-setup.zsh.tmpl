@@ -25,6 +25,7 @@ echo "==> WRITING SYSTEM CONFIG FILES"
 
 # sshd
 mkdir -p /etc/ssh/sshd_config.d
+
 cat >>/etc/ssh/sshd_config.d/10-naddan-chezmoi.conf <<EOL
 Port 22
 PermitRootLogin no
@@ -43,9 +44,22 @@ Compression delayed
 EOL
 
 # systemd
-echo "RebootWatchdogSec=0" >> /etc/systemd/system.conf
-echo "DefaultTimeoutStopSec=10s" >> /etc/systemd/system.conf
+mkdir -p /etc/systemd/system.conf.d
+
+{{- if eq .chassistype "laptop" }}
+cat >>/etc/systemd/system.conf.d/10-naddan-chezmoi-framework.conf <<EOL
+[Manager]
+RebootWatchdogSec=0
+EOL
+{{- end }}
+
+cat >>/etc/systemd/system.conf.d/20-naddan-chezmoi.conf <<EOL
+[Manager]
+DefaultTimeoutStopSec=10s
+EOL
+
 mkdir -p /etc/systemd/logind.conf.d
+
 cat >>/etc/systemd/logind.conf.d/10-naddan-chezmoi.conf <<EOL
 [Login]
 HandlePowerKey=ignore
