@@ -16,15 +16,57 @@ set $menu rofi -show combi -combi-modi "window,drun,ssh" -modi combi | xargs swa
 output * bg /home/naddan/.config/sway/gruvbox_city.png fill
 output * scale 1
 {{- if eq .chassistype "desktop" }}
-output DVI-D-1 mode 1920x1080@60.000Hz
-output DVI-D-1 pos 960 0 res 1920x1080
-
+set $monprimary DP-2
 output DP-2 mode 1920x1080@144.001Hz
 output DP-2 pos 0 1080 res 1920x1080
+set $ws1p 1p
+set $ws2p 2p
+set $ws3p 3p
+set $ws4p 4p
 
+set $monsecondary DP-4
 output DP-3 mode 1920x1080@144.001Hz
 output DP-3 pos 1920 1080 res 1920x1080
+set $ws1s 1s
+set $ws2s 2s
+set $ws3s 3s
+set $ws4s 4s
+workspace $ws1s output $monsecondary
+workspace $ws2s output $monsecondary
+workspace $ws3s output $monsecondary
+workspace $ws4s output $monsecondary
+
+set $montertiary DVI-D-1
+output DVI-D-1 mode 1920x1080@60.000Hz
+output DVI-D-1 pos 960 0 res 1920x1080
+set $ws1t 1t
+set $ws2t 2t
+set $ws3t 3t
+set $ws4t 4t
+workspace $ws1t output $montertiary
+workspace $ws2t output $montertiary
+workspace $ws3t output $montertiary
+workspace $ws4t output $montertiary
 {{- end }}
+{{- if eq .chassistype "laptop" }}
+set $monprimary eDP-1
+set $ws1p 1p
+set $ws2p 2p
+set $ws3p 3p
+set $ws4p 4p
+{{- end }}
+
+### Configure default workspaces
+workspace $ws1p output $monprimary
+workspace $ws2p output $monprimary
+workspace $ws3p output $monprimary
+workspace $ws4p output $monprimary
+
+# app workspace/screen locations
+assign [class="firefox"] workspace $ws1p
+assign [app_id="kitty"] workspace $ws2p
+for_window [class="discord"] move container to workspace $ws3p
+assign [app_id="org.keepassxc.KeePassXC"] workspace $ws4p
 
 ### Lockscreen and idle configuration
 set $lock /home/naddan/.local/bin/lockscreen
@@ -46,6 +88,8 @@ input type:mouse {
     #scroll_factor 3.0
 }
 {{- end }}
+
+### Misc extra stuff
 input * xkb_numlock enable
 seat seat0 xcursor_theme Adwaita 16
 floating_modifier $mod normal
@@ -54,6 +98,7 @@ default_border pixel 2
 hide_edge_borders smart
 exec wl-paste -t text --watch clipman store
 xwayland enable
+workspace_auto_back_and_forth no
 
 client.focused #ebdbb2 #ebdbb2 #ffffff #ebdbb2 #ebdbb2
 
@@ -141,12 +186,6 @@ gaps inner 50
 gaps outer -10
 gaps bottom 1
 gaps top 1
-
-# app workspace/screen locations
-assign [class="firefox"] workspace 1
-assign [app_id="kitty"] workspace 2
-for_window [class="discord"] move container to workspace 3
-assign [app_id="org.keepassxc.KeePassXC"] workspace 4
 
 # userspace stuffs - the commented out stuff currently doesn't even work...not sure if it needs to.
 # exec systemctl --user import-environment WAYLAND_DISPLAY &
