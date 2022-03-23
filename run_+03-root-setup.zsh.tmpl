@@ -76,6 +76,8 @@ echo "==> ENABLING SYSTEM SERVICES"
 systemctl enable sddm.service
 systemctl enable sshd.service
 systemctl enable syncthing@naddan.service
+systemctl enable reflector.timer
+systemctl start reflector.timer
 
 # laptop services
 {{- if eq .chassistype "laptop" }}
