@@ -71,6 +71,10 @@ setopt correct
 export VISUAL=/usr/bin/nvim
 export EDITOR=/usr/bin/nvim
 
+search() {
+    find . -name "$1" -exec grep -i "$2" {} +
+}
+
 ranger() {
     if [ -z "$RANGER_LEVEL" ]; then
         /usr/bin/ranger "$@"
