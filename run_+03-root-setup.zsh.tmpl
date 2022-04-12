@@ -43,6 +43,16 @@ TCPKeepAlive yes
 Compression delayed
 EOL
 
+# greetd
+rm /etc/greetd/config.toml
+cat >>/etc/greetd/config.toml <<EOL
+[terminal]
+vt = 1
+[default_session]
+command = "tuigreet --remember --remember-session"
+user = "greeter"
+EOL
+
 # systemd
 mkdir -p /etc/systemd/system.conf.d
 
@@ -73,7 +83,7 @@ EOL
 
 ### INIT SERVICES ###
 echo "==> ENABLING SYSTEM SERVICES"
-systemctl enable sddm.service
+systemctl enable greetd.service
 systemctl enable sshd.service
 systemctl enable syncthing@naddan.service
 systemctl enable reflector.timer
