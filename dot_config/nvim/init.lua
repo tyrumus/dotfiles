@@ -1,7 +1,7 @@
 vim.opt.termguicolors = true
 
 -- load plugins
-require("plugins").bootstrap()
+require("plug")
 require("keymap")
 
 -- nvim options
