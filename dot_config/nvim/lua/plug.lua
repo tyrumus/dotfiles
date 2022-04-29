@@ -23,7 +23,7 @@ packer.init({
     }
 })
 
--- some automated shiz
+-- auto source this file on write
 vim.cmd([[autocmd BufWritePost plug.lua luafile %]])
 
 local plugs = {
@@ -68,8 +68,10 @@ local plugs = {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("indent_blankline").setup({
-                buftype_exclude = {"terminal"},
-                filetype_exclude = {"dashboard"}
+                space_char_blankline = " ",
+                show_end_of_line = true,
+                buftype_exclude = {"terminal", "nofile", "help"},
+                filetype_exclude = {"alpha"}
             })
         end
     },
@@ -95,6 +97,21 @@ local plugs = {
     },
     {
         "tpope/vim-surround"
+    },
+    {
+        "lewis6991/gitsigns.nvim",
+        config = function()
+            require("gitsigns").setup()
+        end
+    },
+    {
+        "sindrets/diffview.nvim",
+        config = function()
+            require("diffview").setup()
+        end
+    },
+    {
+        "fladson/vim-kitty"
     },
     {
         "folke/which-key.nvim"
@@ -126,6 +143,5 @@ return packer.startup(function(use)
     end
     if firstRun then
         packer.sync()
-        -- vim.cmd("autocmd User PackerComplete ++once PackerSync")
     end
 end)
