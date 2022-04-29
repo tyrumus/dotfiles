@@ -39,6 +39,9 @@ xdg-user-dirs-update
 mkdir "$HOME/rsync"
 mkdir "$HOME/notes"
 
+# nvim setup
+nvim --headless -c "autocmd User PackerComplete quitall"
+
 ### INIT SERVICES ###
 
 systemctl enable --user pipewire.service
