@@ -33,7 +33,7 @@ local plugs = {
     {
         "goolord/alpha-nvim",
         config = function()
-            require("alpha").setup(require("alpha.themes.dashboard").opts)
+            require("alpha").setup(require("dashboard").opts)
         end
     },
     {
@@ -77,6 +77,17 @@ local plugs = {
     },
     {
         "ibhagwan/fzf-lua",
+        config = function()
+            require("fzf-lua").setup({
+                files = {
+                    multiprocess = true,
+                    git_icons = true,
+                    file_icons = true,
+                    color_icons = true,
+                    rg_opts = "--color=never --files --hidden --follow --ignore -g '!.git' -g '!node_modules'"
+                }
+            })
+        end,
         requires = {"vijaymarupudi/nvim-fzf", "kyazdani42/nvim-web-devicons"}
     },
     {
