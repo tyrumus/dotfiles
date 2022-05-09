@@ -1,5 +1,6 @@
 # local bin
 export PATH=$PATH:~/.local/bin
+export npm_config_prefix=$HOME/.local
 
 # Neovim is my beautiful child
 export VISUAL=/usr/bin/nvim
