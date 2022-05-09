@@ -61,15 +61,8 @@ bindkey "^[[1;5D" backward-word
 # Enhanced tab completion
 zstyle ':completion:*:*:*:default' menu yes select search
 
-# local bin
-export PATH=$PATH:~/.local/bin
-
 # not sure what this does
 setopt correct
-
-# Neovim is my beautiful child
-export VISUAL=/usr/bin/nvim
-export EDITOR=/usr/bin/nvim
 
 search() {
     find . -name "$1" -exec grep -i "$2" {} +
