@@ -70,6 +70,8 @@ pacstrap /mnt ${=PACKAGES}
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # perform chrooted operations
+# may need to add the following flag to the efibootmgr command if the motherboard deletes the boot entry on reboot
+# -e 3
 cat << EOF | arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 hwclock --systohc
