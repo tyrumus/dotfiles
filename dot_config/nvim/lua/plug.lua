@@ -160,7 +160,7 @@ local plugs = {
         run = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = {"bash", "toml", "yaml", "html", "css", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
+                ensure_installed = {"bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
                 highlight = {
                     enable = true
                 }
