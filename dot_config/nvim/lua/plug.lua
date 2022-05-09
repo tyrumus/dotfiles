@@ -111,6 +111,63 @@ local plugs = {
         end
     },
     {
+        "hrsh7th/nvim-cmp",
+        config = function()
+            local lspkind = require("lspkind")
+            local cmp = require("cmp")
+            cmp.setup({
+                mapping = {
+                    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                    ["<C-e>"] = cmp.mapping.close(),
+                    ["<c-y>"] = cmp.mapping.confirm({
+                        behavior = cmp.ConfirmBehavior.Insert,
+                        select = true,
+                    })
+                },
+                formatting = {
+                    format = lspkind.cmp_format({
+                        with_text = true,
+                        menu = {
+                            buffer = "[buf]",
+                            nvim_lsp = "[LSP]",
+                            path = "[path]"
+                        }
+                    })
+                },
+                sources = {
+                    {name = "nvim_lsp"},
+                    {name = "path"},
+                    {name = "buffer", keyword_length = 5}
+                },
+                experimental = {
+                    ghost_text = true
+                }
+            })
+        end,
+        requires = {{"hrsh7th/cmp-nvim-lsp"}, {"hrsh7th/cmp-buffer"}, {"onsails/lspkind.nvim"}}
+    },
+    {
+        "neovim/nvim-lspconfig",
+        config = function()
+            require("lspconfig").pyright.setup({})
+            require("lspconfig").svelte.setup({})
+            require("lspconfig").tailwindcss.setup({})
+        end
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        run = ":TSUpdate",
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = {"bash", "toml", "yaml", "html", "css", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
+                highlight = {
+                    enable = true
+                }
+            })
+        end
+    },
+    {
         "fladson/vim-kitty"
     },
     {
