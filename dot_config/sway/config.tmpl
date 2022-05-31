@@ -1,6 +1,5 @@
-{{- if not (eq .chassistype "wsl") }}
+{{- if not (eq .chassistype "wsl") -}}
 # Sway config
-# TODO: determine why clients don't open on the intended screen and why workspaces change magically when moving the mouse around
 
 ### Variables
 set $mod Mod4
@@ -10,97 +9,18 @@ set $down j
 set $up k
 set $right l
 set $term kitty
-set $menu rofi -show combi -combi-modi "window,drun,ssh" -modi combi | xargs swaymsg exec --
+set $menu rofi -show combi -combi-modi "window,drun,ssh" -modi combi -normal-window | xargs swaymsg exec --
 
-### Output configuration
-output * bg /home/naddan/.config/sway/gruvbox_city.png fill
-output * scale 1
-{{- if eq .chassistype "desktop" }}
-set $monprimary DP-2
-output DP-2 mode 1920x1080@144.001Hz
-output DP-2 pos 0 1080 res 1920x1080
-set $ws1p 1p
-set $ws2p 2p
-set $ws3p 3p
-set $ws4p 4p
+## Chassis-specific Config
+include chassis-config
 
-set $monsecondary DP-4
-output DP-3 mode 1920x1080@144.001Hz
-output DP-3 pos 1920 1080 res 1920x1080
-set $ws1s 1s
-set $ws2s 2s
-set $ws3s 3s
-set $ws4s 4s
-workspace $ws1s output $monsecondary
-workspace $ws2s output $monsecondary
-workspace $ws3s output $monsecondary
-workspace $ws4s output $monsecondary
-
-set $montertiary DVI-D-1
-output DVI-D-1 mode 1920x1080@60.000Hz
-output DVI-D-1 pos 960 0 res 1920x1080
-set $ws1t 1t
-set $ws2t 2t
-set $ws3t 3t
-set $ws4t 4t
-workspace $ws1t output $montertiary
-workspace $ws2t output $montertiary
-workspace $ws3t output $montertiary
-workspace $ws4t output $montertiary
-{{- end }}
-{{- if eq .chassistype "laptop" }}
-set $monprimary eDP-1
-set $ws1p 1p
-set $ws2p 2p
-set $ws3p 3p
-set $ws4p 4p
-{{- end }}
-
-### Configure default workspaces
-workspace $ws1p output $monprimary
-workspace $ws2p output $monprimary
-workspace $ws3p output $monprimary
-workspace $ws4p output $monprimary
-
+## Generic Config
 # app workspace/screen locations
-assign [class="firefox"] workspace $ws1p
-assign [app_id="kitty"] workspace $ws2p
-for_window [class="discord"] move container to workspace $ws3p
-assign [app_id="org.keepassxc.KeePassXC"] workspace $ws4p
-
-### Lockscreen and idle configuration
-set $lock /home/naddan/.local/bin/lockscreen
-
-exec swayidle -w timeout 300 $lock timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep $lock
-
-### Input configuration
-{{- if eq .chassistype "laptop" }}
-input type:touchpad {
-    tap enabled
-    drag enabled
-    natural_scroll enabled
-    pointer_accel 0.15
-    dwt enabled
-}
-{{- else }}
-# TODO: configure mouse
-input type:mouse {
-    #scroll_factor 3.0
-}
-{{- end }}
-
-### Misc extra stuff
-input * xkb_numlock enable
-seat seat0 xcursor_theme Adwaita 16
-floating_modifier $mod normal
-focus_follows_mouse yes
-default_border pixel 2
-hide_edge_borders smart
-exec wl-paste -t text --watch clipman store
-xwayland enable
-workspace_auto_back_and_forth no
-
-client.focused #ebdbb2 #ebdbb2 #ffffff #ebdbb2 #ebdbb2
+assign [app_id="firefox"] workspace 1
+assign [app_id="kitty"] workspace 2
+for_window [class="discord"] move container to workspace dt
+assign [app_id="org.keepassxc.KeePassXC"] workspace kt
+for_window [class="Rofi"] floating enable
 
 ### Key bindings
 bindsym $mod+Escape exec wlogout --buttons-per-row 4
@@ -119,24 +39,19 @@ bindsym Print exec --no-startup-id grimshot copy area
 bindsym $mod+Print exec --no-startup-id grimshot copy screen
 bindsym $mod+Shift+Print exec --no-startup-id grimshot copy active
 
-{{- if eq .chassistype "laptop" }}
-# Framework keyboard bindings
-bindsym XF86MonBrightnessUp exec brightnessctl -q -d intel_backlight s 5%+
-bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
-bindsym XF86AudioMedia exec keepassxc &
-{{- end }}
-
 # Workspaces
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
 bindsym $mod+4 workspace number 4
-bindsym $mod+5 workspace number 5
+bindsym $mod+9 workspace dt
+bindsym $mod+0 workspace kt
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
 bindsym $mod+Shift+3 move container to workspace number 3
 bindsym $mod+Shift+4 move container to workspace number 4
-bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+9 move container to workspace dt
+bindsym $mod+Shift+0 move container to workspace kt
 
 # Move focus
 bindsym $mod+$left focus left
@@ -180,26 +95,42 @@ bindsym $mod+Shift+minus move scratchpad
 # If there are multiple scratchpad windows, this command cycles through them.
 bindsym $mod+minus scratchpad show
 
-# gaps
+# change default focus on login
+exec swaymsg focus output $monprimary
+
+### Lockscreen and idle configuration
+set $lock /home/naddan/.local/bin/lockscreen
+exec swayidle -w timeout 300 $lock timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep $lock
+
+### Theming
+output * bg /home/naddan/.config/sway/gruvbox_city.png fill
+client.focused #ebdbb2 #ebdbb2 #ffffff #ebdbb2 #ebdbb2
 smart_gaps on
 gaps inner 50
 gaps outer -10
 gaps bottom 1
 gaps top 1
 
-# userspace stuffs - the commented out stuff currently doesn't even work...not sure if it needs to.
-# exec systemctl --user import-environment WAYLAND_DISPLAY &
-# exec systemctl --user import-environment DISPLAY &
-# exec dbus-update-activation-environment --systemd WAYLAND XDG_CURRENT_DESKTOP=sway
-exec xrdb -load ~/.Xresources
+### Misc extra stuff
+input * xkb_numlock enable
+seat seat0 xcursor_theme Adwaita 16
+floating_modifier $mod normal
+focus_follows_mouse yes
+default_border pixel 2
+hide_edge_borders smart
+exec wl-paste -t text --watch clipman store
+xwayland enable
+workspace_auto_back_and_forth no
 
+### Userspace stuffs
+exec xrdb -load ~/.Xresources
 exec /usr/bin/dunst &
 
-# status bar
+### Status bar
 bar {
     swaybar_command waybar
     position top
 }
 
 include /etc/sway/config.d/*
-{{- end }}
+{{- end -}}
