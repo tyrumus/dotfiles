@@ -18,9 +18,11 @@ include chassis-config
 # app workspace/screen locations
 assign [app_id="firefox"] workspace 1
 assign [app_id="kitty"] workspace 2
+assign [app_id="pavucontrol"] workspace 3
 assign [class="obsidian"] workspace 4
 for_window [class="discord"] move container to workspace dt
 assign [app_id="org.keepassxc.KeePassXC"] workspace kt
+assign [class="Spotify"] workspace st
 for_window [class="Rofi"] floating enable
 
 ### Key bindings
@@ -30,6 +32,7 @@ bindsym $mod+t exec $term
 bindsym $mod+q kill
 bindsym $mod+r exec $menu
 bindsym $mod+c exec rofi -show calc
+bindsym $mod+p exec pavucontrol
 bindsym $mod+$alt+l exec $lock
 bindsym $mod+Shift+r reload
 bindsym $mod+Shift+q exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'
@@ -45,14 +48,16 @@ bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
 bindsym $mod+4 workspace number 4
-bindsym $mod+9 workspace dt
-bindsym $mod+0 workspace kt
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
 bindsym $mod+Shift+3 move container to workspace number 3
 bindsym $mod+Shift+4 move container to workspace number 4
-bindsym $mod+Shift+9 move container to workspace dt
-bindsym $mod+Shift+0 move container to workspace kt
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
 
 # Move focus
 bindsym $mod+$left focus left
