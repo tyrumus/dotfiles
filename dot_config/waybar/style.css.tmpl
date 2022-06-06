@@ -73,6 +73,7 @@ window#waybar.hidden {
     padding: 0 10px;
     margin: 0 4px;
     color: #ffffff;
+    border-radius: 5px;
 }
 
 #window,
@@ -122,12 +123,16 @@ label:focus {
 #cpu,
 #memory,
 #disk,
-#backlight
+#backlight,
 #network,
-#network.disconnected,
 #pulseaudio,
 #pulseaudio.muted {
     background-color: #ebdbb2;
+    color: #000000;
+}
+
+#network.disconnected {
+    background-color: #ea6962;
     color: #000000;
 }
 
@@ -153,10 +158,6 @@ label:focus {
     background-color: #eb4d4b;
 }
 
-#tray {
-    background-color: #2d3436;
-}
-
 #tray > .passive {
     -gtk-icon-effect: dim;
 }
@@ -166,8 +167,11 @@ label:focus {
     background-color: #eb4d4b;
 }
 
+#tray,
+#network,
 #idle_inhibitor {
-    background-color: #2d3436;
+    background-color: #3c3836;
+    color: #ffffff;
 }
 
 #idle_inhibitor.activated {
