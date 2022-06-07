@@ -50,7 +50,7 @@
     },
     "backlight": {
         // "device": "acpi_video1",
-        "format": "{percent:3}% {icon}",
+        "format": "{percent}% {icon}",
         "format-icons": ["", "", "", ""]
     },
     "battery": {
@@ -60,11 +60,11 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity:3}% {icon}",
-        "format-charging": "{capacity:3}% ",
-        "format-plugged": "{capacity:3}% ",
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
         "format-alt": "{time} {icon}",
-        "format-good": "{capacity:3}% {icon}", // An empty format will hide the module
+        "format-good": "{capacity}% {icon}", // An empty format will hide the module
         "format-full": "100% ",
         "format-icons": ["", "", "", "", "", "", "", "", "", ""]
     },
@@ -78,12 +78,12 @@
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": "{format_source}   {volume:3}% {icon}",
+        "format": "{format_source} | {volume}% {icon}",
         "format-bluetooth": "{volume:3}% {icon} {format_source}",
         "format-bluetooth-muted": "ﱝ {icon} {format_source}",
-        "format-muted": "{format_source}   xxx% ﱝ",
-        "format-source": "{volume:3}%",
-        "format-source-muted": " xxx%",
+        "format-muted": "{format_source} | ﱝ",
+        "format-source": "{volume}%",
+        "format-source-muted": "",
         "format-icons": {
             "headphone": "",
             "hands-free": "",
