@@ -1,6 +1,6 @@
 {{- if not (eq .chassistype "wsl") }}
 configuration {
-    modi: "window,drun,ssh,calc";
+    modi: "drun,ssh,calc";
 {{- if (eq .chassistype "laptop") }}
     font: "JetBrainsMono Nerd Font 16";
 {{- else }}
