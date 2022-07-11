@@ -5,3 +5,4 @@ export npm_config_prefix=$HOME/.local
 # Neovim is my beautiful child
 export VISUAL=/usr/bin/nvim
 export EDITOR=/usr/bin/nvim
+. "$HOME/.cargo/env"
