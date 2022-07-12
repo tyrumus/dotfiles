@@ -1,4 +1,5 @@
+{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 
-# swaylock --ignore-empty-password --screenshots --effect-blur 5x5 --fade-in 0.1 --indicator --clock --indicator-caps-lock --font "JetBrains Mono" --indicator-thickness 10 --inside-color 282828 --line-color 282828 --line-uses-inside --text-color ebdbb2 --separator-color 282828 --text-ver-color 282828 --ring-ver-color ebdbb2 --inside-ver-color ebdbb2 --ring-color ebdbb2
-swaylock --ignore-empty-password --color 000000 --fade-in 0.1 --indicator --clock --indicator-caps-lock --font "JetBrains Mono" --indicator-thickness 10 --inside-color 282828 --line-color 282828 --line-uses-inside --text-color ebdbb2 --separator-color 282828 --text-ver-color 282828 --ring-ver-color ebdbb2 --inside-ver-color ebdbb2 --ring-color ebdbb2
+swaylock --ignore-empty-password --screenshots --effect-blur 5x5 --color 000000 --fade-in 0.1 --indicator --clock --indicator-caps-lock --font "JetBrains Mono" --indicator-thickness 10 --inside-color 282828 --line-color 282828 --line-uses-inside --text-color ebdbb2 --separator-color 282828 --text-ver-color 282828 --ring-ver-color ebdbb2 --inside-ver-color ebdbb2 --ring-color ebdbb2
+{{- end -}}
