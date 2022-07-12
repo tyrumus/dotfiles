@@ -52,5 +52,6 @@ input type:touchpad {
 bindsym XF86MonBrightnessUp exec brightnessctl -q -d intel_backlight s 5%+
 bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
 bindsym XF86AudioMedia exec keepassxc &
+bindswitch lid:on exec systemctl suspend
 {{- end -}}
 {{- end -}}
