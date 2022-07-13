@@ -159,12 +159,27 @@ local plugs = {
         requires = {{"hrsh7th/cmp-nvim-lsp"}, {"hrsh7th/cmp-buffer"}, {"onsails/lspkind.nvim"}}
     },
     {
-        "neovim/nvim-lspconfig",
+        "williamboman/nvim-lsp-installer",
         config = function()
+            require("nvim-lsp-installer").setup({
+                automatic_installation = true,
+                ui = {
+                    icons = {
+                        server_installed = "✓",
+                        server_pending = "➜",
+                        server_uninstalled = "✗"
+                    }
+                }
+            })
+
             require("lspconfig").pyright.setup({})
             require("lspconfig").svelte.setup({})
             require("lspconfig").tailwindcss.setup({})
-        end
+        end,
+        after = "nvim-lspconfig"
+    },
+    {
+        "neovim/nvim-lspconfig"
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -176,7 +191,8 @@ local plugs = {
                     enable = true
                 }
             })
-        end
+        end,
+        after = "nvim-lsp-installer"
     },
     {
         "fladson/vim-kitty"
