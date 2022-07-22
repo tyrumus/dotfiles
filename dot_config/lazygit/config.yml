@@ -3,5 +3,8 @@ gui:
     scrollPastBottom: true
     skipStashWarning: false
     showCommandLog: false
+    theme:
+      selectedLineBgColor:
+        - default
 git:
   overrideGpg: true
