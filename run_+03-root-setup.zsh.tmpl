@@ -15,15 +15,36 @@ fi
 
 # run this script only as root, only after performing the above check
 if [ "$EUID" != 0 ]; then
+    echo "==> CHEZMOI: EXECUTING ROOT-ONLY SETUP"
     sudo "$0" "$@"
     exit $?
 fi
 
+### SPECIAL PRINT FUNCTIONS ###
+ssp() {
+    echo -en "\033[1m"
+    echo -en "\033[32m"
+    echo -n "==> "
+    echo -en "\033[39m"
+    echo -en "CHEZMOI: ${1}"
+    echo -e "\033[0m"
+}
+
+sp() {
+    echo -en "\033[1m"
+    echo -en "\033[34m"
+    echo -n "  -> "
+    echo -en "\033[39m"
+    echo -en "$1"
+    echo -e "\033[0m"
+}
+
 # Run config setup stuff that can only be done as root
 
-echo "==> WRITING SYSTEM CONFIG FILES"
+ssp "WRITING SYSTEM CONFIG FILES"
 
 # sshd
+sp "Writing SSHD config"
 mkdir -p /etc/ssh/sshd_config.d
 
 cat >>/etc/ssh/sshd_config.d/10-naddan-chezmoi.conf <<EOL
@@ -44,6 +65,7 @@ Compression delayed
 EOL
 
 # greetd
+sp "Writing greetd config"
 rm /etc/greetd/config.toml
 cat >>/etc/greetd/config.toml <<EOL
 [terminal]
@@ -54,6 +76,7 @@ user = "greeter"
 EOL
 
 # systemd
+sp "Writing systemd configs"
 mkdir -p /etc/systemd/system.conf.d
 
 {{- if eq .chassistype "laptop" }}
@@ -84,7 +107,7 @@ IdleActionSec=20
 EOL
 
 ### INIT SERVICES ###
-echo "==> ENABLING SYSTEM SERVICES"
+sp "Enabling systemd services"
 systemctl enable greetd.service
 systemctl enable sshd.service
 systemctl enable syncthing@naddan.service
@@ -93,8 +116,9 @@ systemctl start reflector.timer
 
 # laptop services
 {{- if eq .chassistype "laptop" }}
+sp "Enabling laptop systemd services"
 systemctl enable bluetooth.service
 systemctl enable tlp.service
 {{- end }}
-echo "==> SYSTEM SERVICES ENABLED"
+ssp "ROOT SETUP SCRIPT COMPLETE"
 {{- end -}}

@@ -13,41 +13,92 @@ else
     fi
 fi
 
-# packages expected to already be installed: chezmoi dhcpcd [iwd] git linux-lts nvidia-lts sudo wget zsh
+### SPECIAL PRINT FUNCTIONS ###
+ssp() {
+    echo -en "\033[1m"
+    echo -en "\033[32m"
+    echo -n "==> "
+    echo -en "\033[39m"
+    echo -en "CHEZMOI: ${1}"
+    echo -e "\033[0m"
+}
 
-PACKAGES_SYS="base-devel clipman dunst greetd greetd-tuigreet xorg-server man-db ntfs-3g openssh pacman-contrib pam-u2f pipewire pipewire-alsa pipewire-jack pipewire-pulse pipewire-media-session reflector sudo sway swayidle swaylock-effects udiskie unzip waybar wget gammastep rofi rofi-calc wtype xdg-user-dirs xorg-xwayland zip zsh xfce4 xmousepasteblock-git"
-PACKAGES_USER="bat discord duf electrum exa firefox fzf gnucash grimshot imagemagick keepassxc qt5-wayland kitty lazygit lxqt-openssh-askpass neofetch neovim obsidian ranger ripgrep rustup smbclient speedtest-cli spotify spotifyd syncthing teamviewer which wlogout pavucontrol vlc zsh-theme-powerlevel10k-git"
+sp() {
+    echo -en "\033[1m"
+    echo -en "\033[34m"
+    echo -n "  -> "
+    echo -en "\033[39m"
+    echo -en "$1"
+    echo -e "\033[0m"
+}
+
+
+### PACKAGE INSTALL ###
+
+ssp "INSTALLING ALL PACKAGES"
+
+# packages expected to already be installed: chezmoi dhcpcd [iwd] git linux-lts [nvidia-lts] sudo wget zsh
+
+PACKAGES_SYS="ntfs-3g pam-u2f"
+PACKAGES_TERMINAL="bat duf exa git git-lfs fzf xdg-user-dirs imagemagick unzip zip zsh wget lazygit pacman-contrib openssh man-db neofetch neovim ranger reflector ripgrep smbclient speedtest-cli sudo which zsh-theme-powerlevel10k-git"
+PACKAGES_GUI="sway waybar gammastep swayidle swaylock-effects rofi rofi-calc udiskie clipman discord dunst electrum firefox gnucash greetd greetd-tuigreet grimshot imagemagick git-credential-keepassxc keepassxc qt5-wayland kitty lxqt-openssh-askpass obsidian pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber spotify spotifyd syncthing teamviewer wlogout pavucontrol vlc xorg-server xorg-xwayland xfce4 xmousepasteblock-git"
 PACKAGES_WORKSTATION="gimp blender bitwig-studio steam obs-studio"
 PACKAGES_LAPTOP="acpi bluez brightnessctl tlp"
 
-PACKAGES="${PACKAGES_SYS} ${PACKAGES_USER}"
+PACKAGES="${PACKAGES_TERMINAL}"
 
 {{- if eq .chassistype "laptop" }}
-PACKAGES="${PACKAGES} ${PACKAGES_LAPTOP}"
-{{- else }}
-PACKAGES="${PACKAGES} ${PACKAGES_WORKSTATION}"
+sp "Including laptop packages"
+PACKAGES="${PACKAGES} ${PACKAGES_SYS} ${PACKAGES_GUI} ${PACKAGES_LAPTOP}"
+{{- else if eq .chassistype "desktop" }}
+sp "Including workstation packages"
+PACKAGES="${PACKAGES} ${PACKAGES_SYS} ${PACKAGES_GUI} ${PACKAGES_WORKSTATION}"
 {{- end }}
 
-echo "==> INSTALLING ALL PACKAGES"
 # install all the packages
 paru -Sy "${=PACKAGES}"
 
-echo "==> ALL PACKAGES INSTALLED"
+ssp "ALL PACKAGES INSTALLED"
 
 # xdg-user-dirs
+ssp "BEGINNING HOME FOLDER SETUP"
+
+sp "Updating XDG user folders"
 xdg-user-dirs-update
+
+sp "Creating extra home folders"
 mkdir "$HOME/rsync"
 mkdir "$HOME/notes"
 
 # nvim setup
+sp "Starting headless Neovim install"
 nvim --headless -c "autocmd User PackerComplete quitall"
 
+{{- if or (eq .chassistype "laptop") (eq .chassistype "desktop") -}}
 ### INIT SERVICES ###
 
+sp "Enabling user systemd services"
 systemctl enable --user pipewire.service
 systemctl enable --user pipewire-pulse.service
 systemctl enable --user ssh-agent.service
 systemctl enable --user udiskie.service
 
-echo "==> ALL USER SERVICES ENABLED"
+### CHEZMOI REMINDERS ###
+sp "Generating post-install reminder file"
+cat >>~/.cache/chezmoi-reminders.zsh <<EOL
+#!/usr/bin/zsh
+
+echo "Don't forget to configure the following stuff and things when you're ready:"
+
+echo "After syncing password database with Syncthing, unlock it and run:"
+echo "\$ git-credential-keepassxc configure"
+
+echo "Delete ${0} to stop these reminders."
+EOL
+
+{{- else -}}
+# prevent root setup script from running when this is a terminal-only install
+touch "${HOME}/.cache/chezmoi-root"
+{{- end -}}
+ssp "INSTALL UTILS SCRIPT COMPLETE"
 {{- end -}}

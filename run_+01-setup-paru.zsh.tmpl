@@ -13,12 +13,33 @@ else
     fi
 fi
 
+ssp() {
+    echo -en "\033[1m"
+    echo -en "\033[32m"
+    echo -n "==> "
+    echo -en "\033[39m"
+    echo -en "CHEZMOI: ${1}"
+    echo -e "\033[0m"
+}
+
+ssp "INSTALLING NECESSARY UTILITIES"
+pacman -S base-devel git rustup
+
+sp "Installing latest Rust toolchain"
+rustup toolchain install stable
+
 # download and setup paru
-echo "==> CHEZMOI: STARTING PARU INSTALL"
+ssp "STARTING PARU INSTALL"
 
 git clone https://aur.archlinux.org/paru.git /tmp/paru
 cd /tmp/paru
 makepkg -si --noconfirm
 
-echo "==> CHEZMOI: PARU INSTALL COMPLETE"
+ssp "PARU INSTALL COMPLETE"
+{{- end -}}
+{{- if eq .chassistype "wsl" -}}
+# i don't want anything extra set up in WSL
+touch "${HOME}/.cache/chezmoi-install"
+touch "${HOME}/.cache/chezmoi-root"
+ssp "WSL INSTALL COMPLETE. You'll need to install what you want manually... :)"
 {{- end -}}
