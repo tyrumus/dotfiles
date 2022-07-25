@@ -1,16 +1,39 @@
-# LegoStax's Dotfiles
+# Tyrumus's Dotfiles
 
-If you came from [this Reddit post,](https://www.reddit.com/r/unixporn/comments/6drt6c/awesomewm_noobs_paradise/) you're probably looking for [this repo instead.](https://github.com/legostax/dotfiles-old)
+If you came from [this Reddit post,](https://www.reddit.com/r/unixporn/comments/6drt6c/awesomewm_noobs_paradise/) you're probably looking for [this repo instead.](https://github.com/tyrumus/dotfiles-old)
 
 This new repo is managed by [chezmoi](https://www.chezmoi.io/)
+
+## System Information
+
+Some details about the current setup, and links to their respective install/config information (Arch Wiki preferred).
+
+- Distro: [Arch Linux](https://archlinux.org/)
+- Window Manager: [Sway](https://wiki.archlinux.org/title/Sway)
+- Shell: [Zsh](https://wiki.archlinux.org/title/Zsh)
+- Terminal Emulator: [Kitty](https://wiki.archlinux.org/title/Kitty)
+- Display Manager: [greetd](https://wiki.archlinux.org/title/Greetd) with greeter [greetd-tuigreet](https://wiki.archlinux.org/title/Greetd#tuigreet)
+- App Launcher: [rofi](https://wiki.archlinux.org/title/Rofi)
+- Widgets: [eww](https://github.com/elkowar/eww)
+- Panel: [waybar](https://github.com/Alexays/Waybar)
+- Text Editor: [Neovim](https://wiki.archlinux.org/title/Neovim)
+- File Manager: [ranger](https://wiki.archlinux.org/title/Ranger)
+- Notification Daemon: [dunst](https://wiki.archlinux.org/title/Dunst)
+- Music Player: [spotifyd](https://spotifyd.github.io/spotifyd/)
+- Lockscreen: [swaylock-effects](https://github.com/jirutka/swaylock-effects)
+- Color scheme: [gruvbox](https://github.com/morhetz/gruvbox)
+
+## Screenshot
+
+![Epic screenshot of my setup]()
 
 ## Setup
 Install chezmoi with your distro's package manager, then run the following:
 ```
-$ chezmoi init https://github.com/legostax/dotfiles.git
+$ chezmoi init https://github.com/tyrumus/dotfiles.git
 ```
 
-My `run_once` scripts are intended to deploy an entirely new Arch Linux install. [Following the steps here](https://gist.github.com/legostax/5e52f3b97e61cb5e25c989930b6fc240) enables them to run smoothly without needing to run any commands in this repo directly.
+My `run_once` scripts are intended to deploy [an entirely new Arch Linux install.](https://github.com/tyrumus/dotfiles#run-unattended-arch-linux-install) **This will install tons of packages and enable systemd services.**
 
 If you don't want my automated scripts to mess up your Linux install, run the following command:
 ```

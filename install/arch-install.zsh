@@ -11,7 +11,7 @@ TIMEZONE="Europe/Zurich"
 PACKAGES="base base-devel efibootmgr linux-lts linux-firmware chezmoi dhcpcd git sudo wget zsh"
 LAPTOP_PACKAGES="iwd"
 NVIDIA_PACKAGES="nvidia-lts nvidia-settings"
-CHEZMOI_URL="https://github.com/legostax/dotfiles"
+CHEZMOI_URL="https://github.com/tyrumus/dotfiles"
 
 
 # prompt for passwords beforehand
