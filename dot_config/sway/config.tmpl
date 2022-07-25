@@ -41,7 +41,7 @@ bindsym $mod+Shift+q exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg e
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -10%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym Print exec --no-startup-id grimshot copy area
+bindsym Print exec --no-startup-id flameshot gui
 bindsym $mod+Print exec --no-startup-id grimshot copy screen
 bindsym $mod+Shift+Print exec --no-startup-id grimshot copy active
 
