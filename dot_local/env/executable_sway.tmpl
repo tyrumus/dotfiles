@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") }}
 #!/usr/bin/zsh
 
 # source environment vars shared between all sessions
@@ -25,4 +26,5 @@ exec /usr/bin/sway --unsupported-gpu
 {{- else }}
 # now actually start sway
 exec /usr/bin/sway
+{{- end }}
 {{- end }}
