@@ -36,10 +36,10 @@ cd /tmp/paru
 makepkg -si --noconfirm
 
 ssp "PARU INSTALL COMPLETE"
-{{- end -}}
 {{- if eq .chassistype "wsl" -}}
 # i don't want anything extra set up in WSL
 touch "${HOME}/.cache/chezmoi-install"
 touch "${HOME}/.cache/chezmoi-root"
 ssp "WSL INSTALL COMPLETE. You'll need to install what you want manually... :)"
+{{- end -}}
 {{- end -}}
