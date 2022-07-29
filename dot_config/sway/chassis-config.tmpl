@@ -52,9 +52,6 @@ input type:touchpad {
 bindsym XF86MonBrightnessUp exec brightnessctl -q -d intel_backlight s 5%+
 bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
 bindsym XF86AudioMedia exec keepassxc &
-bindsym $mod+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-bindsym $mod+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -10%
-bindsym $mod+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +10%
 bindswitch lid:on exec systemctl suspend
 {{- end -}}
 {{- end -}}
