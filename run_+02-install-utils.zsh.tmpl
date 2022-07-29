@@ -74,6 +74,9 @@ mkdir "$HOME/notes"
 sp "Starting headless Neovim install"
 nvim --headless -c "autocmd User PackerComplete quitall"
 
+sp "Installing Git LFS"
+git lfs install
+
 {{- if or (eq .chassistype "laptop") (eq .chassistype "desktop") -}}
 ### INIT SERVICES ###
 
