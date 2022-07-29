@@ -2,6 +2,8 @@
 export PATH=$PATH:~/.local/bin
 export npm_config_prefix=$HOME/.local
 
+export WINEFSYNC=1
+
 # Neovim is my beautiful child
 export VISUAL=/usr/bin/nvim
 export EDITOR=/usr/bin/nvim
