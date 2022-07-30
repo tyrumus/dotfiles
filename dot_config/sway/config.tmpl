@@ -28,11 +28,22 @@ for_window [class="Spotify"] move container to workspace 8
 for_window [class="Rofi"] floating enable
 
 ### Key bindings
-bindsym $mod+Escape exec wlogout --buttons-per-row 4
-bindsym XF86PowerOff exec wlogout --buttons-per-row 4
+bindsym $mod+Escape exec eww open main-top; mode "ewwmenu"
+bindsym XF86PowerOff exec eww open main-top; mode "ewwmenu"
+mode "ewwmenu" {
+    bindsym Escape exec eww close-all; mode "default"
+    bindsym l exec loginctl terminate-user naddan
+    bindsym u exec eww close-all; mode "default"; exec systemctl suspend
+    bindsym r exec systemctl reboot
+    bindsym s exec systemctl poweroff
+    bindsym $mod+r exec eww close-all; mode "default"; exec $menu
+    bindsym $mod+$alt+l exec eww close-all; mode "default"; exec $lock
+    bindsym $mod+Shift+r mode "default"; reload
+    bindsym $mod+Shift+q exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'
+}
 bindsym $mod+t exec $term
 bindsym $mod+q kill
-bindsym $mod+r exec $menu
+bindsym $mod+r exec $menu; exec eww close-all
 bindsym $mod+c exec rofi -show calc
 bindsym $mod+p exec pavucontrol
 bindsym $mod+$alt+l exec $lock
@@ -141,6 +152,7 @@ workspace_auto_back_and_forth no
 ### Userspace stuffs
 exec xrdb -load ~/.Xresources
 exec /usr/bin/dunst &
+exec eww open main-back
 
 ### Status bar
 bar {

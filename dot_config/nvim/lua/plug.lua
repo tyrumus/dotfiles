@@ -210,6 +210,9 @@ local plugs = {
         "lambdalisue/suda.vim"
     },
     {
+        "elkowar/yuck.vim"
+    },
+    {
         "ahmedkhalf/project.nvim",
         config = function()
             require("project_nvim").setup({

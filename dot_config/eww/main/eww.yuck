@@ -1,0 +1,187 @@
+; TODO: change to use magic eww vars
+(defpoll cpu :interval "1s" "main/scripts/system --cpu")
+(defpoll memory :interval "1s" "main/scripts/system --mem")
+
+(defwidget main []
+  (box :class "main-window" :orientation "v" :space-evenly "false"
+    (box :class "boxes-cont" :orientation "h" :space-evenly "false"
+      (box :class "main-window-box" :space-evenly "false" :orientation "v"
+        (box :class "top-row" :space-evenly "false" :orientation "h"
+          (box :class "greeting-box" :space-evenly "false" :orientation "v" :height 400
+            (box :class "greeting-img" :space-evenly "false" :orientation "v" :width 200 :height 200 :style "background-image: url(\"/home/naddan/.face\");")
+            (box :class "greeting-stuff" :space-evenly "false" :orientation "v" :spacing 5
+              (label :class "greeting-name" :text "Tyronius Maximus" :halign "center")
+              (label :class "greeting-username" :text "naddan@tacitus" :halign "center")
+            )
+          )
+          (box :class "internal-row" :space-evenly "false" :orientation "v"
+            (box :class "weather-box" :space-evenly "false" :orientation "v" :width 600
+              (box :class "weather-temp" :space-evenly "true" :orientation "h"
+                (label :class "weather-icon" :text "" :halign "end")
+                (label :class "weather-temp-text" :text "33°F" :halign "start")
+              )
+              (label :class "weather-feelslike" :text "feels like 32°F")
+              (box :class "weather-extra" :space-evenly "true" :orientation "h" :vexpand true :valign "end"
+                (label :class "weather-extra-icon" :text "" :halign "end")
+                (label :text "8 mph" :halign "start")
+                (label :class "weather-extra-icon" :text "" :halign "end")
+                (label :text "32°F" :halign "start")
+              )
+              (box :class "weather-extra" :space-evenly "true" :orientation "h" :vexpand true :valign "end"
+                (label :class "weather-extra-icon" :text "懲" :halign "end")
+                (label :text "40%" :halign "start")
+                (label :class "weather-extra-icon" :text "" :halign "end")
+                (label :text "32°F" :halign "start")
+              )
+            )
+            (box :class "datetime-box" :space-evenly "false" :orientation "v" :vexpand true :width 600
+              (label :class "datetime-time" :text "21:15")
+              (label :class "datetime-date" :text "Monday, Jul 25 2022")
+            )
+          )
+        )
+        (box :class "bottom-row" :space-evenly "false" :orientation "h"
+          (box :class "stats-box" :space-evenly "false" :orientation "v" :width 508 :height 400
+            (box :class "cpu-stats" :space-evenly "false"
+              (label :tooltip "${cpu}%" :class "cpu-icon" :text "")
+              (scale :min 0 :max 101 :active false :value {cpu == "" ? 0 : cpu} :class "cpu-scale" :width 275)
+              (label :class "stats-text" :text "${cpu}%")
+            )
+            (box :class "mem-stats" :space-evenly "false"
+              (label :tooltip "${memory}%" :class "cpu-icon" :text "力")
+              (scale :min 0 :max 101 :active false :value {memory == "" ? 0 : memory} :class "mem-scale" :width 275)
+              (label :class "stats-text" :text "${memory}%")
+            )
+            (box :class "net-cont" :space-evenly "false" :halign "center" :orientation "v"
+              (box :class "net-icon" :space-evenly "true"
+                (label :text "")
+                (label :class "net-text" :text "42 MB/s")
+              )
+              (box :class "net-icon" :space-evenly "true"
+                (label :text "祝")
+                (label :class "net-text" :text "42 MB/s")
+              )
+            )
+          )
+          (box :class "music-box" :space-evenly "false" :orientation "v" :width 400
+            ; $ convert in -blur 0x4 -fill "#3C3836" -tint -50% out
+            (box :class "music-data-cont" :space-evenly "false" :orientation "v" :height 350 :style "background-image: url('/home/naddan/.cache/eww/out');"
+              (label :class "music-title" :text "Timmy and the lords of the Underworld" :limit-width 20 :show_truncated true)
+              (label :class "music-album" :text "Timmy and the lords of the Underworld" :limit-width 26 :show_truncated true)
+              (label :class "music-artist" :text "Timmy and the lords of the Underworld" :limit-width 24 :show_truncated true)
+            )
+            (box :class "music-controls" :space-evenly "true" :orientation "h" :height 90
+              (eventbox :class "click-hover" :onclick "notify-send back"
+                (label :text "玲")
+              )
+              (eventbox :class "click-hover" :onclick "notify-send playpause"
+                (label :text "契")
+              )
+              (eventbox :class "click-hover" :onclick "notify-send next"
+                (label :text "怜")
+              )
+            )
+          )
+        )
+      )
+      (box :class "main-right-box" :space-evenly "false" :orientation "v" :width 300
+        (box :class "top-row" :space-evenly "false" :orientation "h"
+          (box :class "storage-box" :space-evenly "false" :orientation "v" :height 600
+            (box :class "disc-space" :space-evenly "true" :orientation "h"
+              (label :text "")
+              (label :class "disc-space-text" :text "12%")
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/Documents &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/Documents &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #ea6962;"
+                (label :text "" :width 80)
+                (label :text "Documents" :halign "start")
+              )
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/Downloads &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/Documents &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #a9b665;"
+                (label :text "" :width 80)
+                (label :text "Downloads" :halign "start")
+              )
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/Music &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/Music &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #d8a657;"
+                (label :text "" :width 80)
+                (label :text "Music" :halign "start")
+              )
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/Pictures &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/Pictures &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #d65d0e;"
+                (label :text "" :width 80)
+                (label :text "Pictures" :halign "start")
+              )
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/Videos &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/Videos &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #7daea3;"
+                (label :text "" :width 80)
+                (label :text "Videos" :halign "start")
+              )
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/git &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/git &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #d3869b;"
+                (label :text "" :width 80)
+                (label :text "git" :halign "start")
+              )
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/.config &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/.config &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #689d6a;"
+                (label :text "" :width 80)
+                (label :text "~/.config" :halign "start")
+              )
+            )
+            (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/.local/share/chezmoi &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/.local/share/chezmoi &"
+              (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #d4be98;"
+                (label :text "" :width 80)
+                (label :text "chezmoi" :halign "start")
+              )
+            )
+          )
+        )
+        (box :class "bottom-row" :space-evenly "false" :orientation "v"
+          (box :class "bottom-row-inside" :space-evenly "false" :orientation "h"
+            (box :class "power-box" :space-evenly "true" :orientation "h" :height 172
+              (eventbox :class "click-hover" :onclick "loginctl terminate-user naddan"
+                (label :text "﫼" :width 120 :halign "center" :style "color: #ea6962;")
+              )
+            )
+            (box :class "power-box" :space-evenly "true" :orientation "h" :height 172
+              (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; systemctl suspend"
+                (label :text "鈴" :width 120 :halign "center" :style "color: #a9b665;")
+              )
+            )
+          )
+          (box :class "bottom-row-inside" :space-evenly "false" :orientation "h"
+            (box :class "power-box" :space-evenly "true" :orientation "h" :height 172
+              (eventbox :class "click-hover" :onclick "systemctl reboot"
+                (label :text "勒" :width 120 :halign "center" :style "color: #d8a657;")
+              )
+            )
+            (box :class "power-box" :space-evenly "true" :orientation "h" :height 172
+              (eventbox :class "click-hover" :onclick "systemctl poweroff"
+                (label :text "襤" :width 120 :halign "center" :style "color: #7daea3;")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
+
+(defwindow main-back
+  :stacking "bottom"
+  :monitor 0
+  :geometry (geometry :anchor "center" :width 600)
+  (main)
+)
+
+(defwindow main-top
+  :stacking "fg"
+  :monitor 0
+  :geometry (geometry :anchor "center" :width 600)
+  (main)
+)

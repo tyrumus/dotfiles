@@ -21,6 +21,11 @@ workspace 4 output $monsecondary
 workspace 8 output $montertiary
 workspace 9 output $montertiary
 workspace 10 output $montertiary
+
+### Key bindings
+mode "ewwmenu" {
+    bindsym w exec win-reboot-now
+}
 {{- end -}}
 {{- if eq .chassistype "laptop" -}}
 ### Output configuration
