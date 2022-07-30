@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 
 ## Files and Data
@@ -50,3 +51,4 @@ if [[ "$1" == "--cpu" ]]; then
 elif [[ "$1" == "--mem" ]]; then
 	get_mem
 fi
+{{- end }}

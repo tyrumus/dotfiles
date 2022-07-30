@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") -}}
 $bg: #282828;
 $bg-alt: #3c3836;
 $bg-alt2: #ebdbb2;
@@ -14,3 +15,4 @@ $gray: #d4be98;
 $gray-alt: #a89984;
 
 @import "./main/eww.scss";
+{{- end }}
