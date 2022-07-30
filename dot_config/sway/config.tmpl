@@ -111,7 +111,12 @@ exec swaymsg focus output $monprimary
 
 ### Lockscreen and idle configuration
 set $lock /home/naddan/.local/bin/lockscreen
-exec swayidle -w timeout 300 $lock before-sleep $lock idlehint 580
+{{- if eq .hasnvidia "yes" }}
+# idlehint temporarily removed until nvidia driver plays nice with suspend on wayland
+exec swayidle -w timeout 300 $lock before-sleep $lock
+{{- else }}
+exec swayidle -w timeout 300 $lock before-sleep $lock idlehint 300
+{{- end }}
 
 ### Theming
 output * bg /home/naddan/.config/sway/gruvbox_city.png fill
