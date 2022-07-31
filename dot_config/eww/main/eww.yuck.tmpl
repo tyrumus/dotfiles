@@ -175,7 +175,11 @@
 
 (defwindow main-top
   :stacking "fg"
+{{- if eq .chassistype "desktop" }}
   :monitor 1
+{{- else }}
+  :monitor 0
+{{- end }}
   :geometry (geometry :anchor "center" :width 600)
   (main)
 )
