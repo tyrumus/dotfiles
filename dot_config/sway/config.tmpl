@@ -32,10 +32,10 @@ bindsym $mod+Escape exec eww open main-top; mode "ewwmenu"
 bindsym XF86PowerOff exec eww open main-top; mode "ewwmenu"
 mode "ewwmenu" {
     bindsym Escape exec eww close-all; mode "default"
-    bindsym $mod+l exec loginctl terminate-user naddan
-    bindsym $mod+u exec eww close-all; mode "default"; exec systemctl suspend
-    bindsym $mod+r exec systemctl reboot
-    bindsym $mod+s exec systemctl poweroff
+    bindsym $alt+l exec loginctl terminate-user naddan
+    bindsym $alt+u exec eww close-all; mode "default"; exec systemctl suspend
+    bindsym $alt+r exec systemctl reboot
+    bindsym $alt+s exec systemctl poweroff
     bindsym $mod+r exec eww close-all; mode "default"; exec $menu
     bindsym $mod+$alt+l exec eww close-all; mode "default"; exec $lock
     bindsym $mod+Shift+r mode "default"; reload
