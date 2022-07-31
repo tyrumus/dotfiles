@@ -1,0 +1,16 @@
+spacing = 1
+padding = 2
+hide_ascii = false
+prefer_small_ascii = true
+separator = " => "
+key_color = "Cyan"
+separator_color = "Blue"
+
+[palette]
+type = "Dark"
+glyph = " ● "
+visible = true
+
+[custom_ascii]
+color = "Blue"
+path = "~/.config/macchina/arch-linux-ascii.txt"
