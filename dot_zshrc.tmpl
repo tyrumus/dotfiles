@@ -5,8 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-if [ -f "${HOME}/.cache/chezmoi-reminders.zsh" ]; then
-    source "${HOME}/.cache/chezmoi-reminders.zsh"
+if [ -f "${XDG_CACHE_HOME:-$HOME}/.cache/chezmoi-reminders.zsh" ]; then
+    source "${XDG_CACHE_HOME:-$HOME}/.cache/chezmoi-reminders.zsh"
 fi
 
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
@@ -19,7 +19,7 @@ bindkey -e
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
 zstyle ':completion:*' completer _complete _ignored
-zstyle :compinstall filename '/home/naddan/.zshrc'
+zstyle :compinstall filename '/home/{{- .chezmoi.username -}}/.zshrc'
 
 autoload -Uz compinit
 compinit

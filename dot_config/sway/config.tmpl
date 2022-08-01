@@ -32,7 +32,7 @@ bindsym $mod+Escape exec eww open main-top; mode "ewwmenu"
 bindsym XF86PowerOff exec eww open main-top; mode "ewwmenu"
 mode "ewwmenu" {
     bindsym Escape exec eww close-all; mode "default"
-    bindsym $alt+l exec loginctl terminate-user naddan
+    bindsym $alt+l exec loginctl terminate-user {{ .chezmoi.username }}
     bindsym $alt+u exec eww close-all; mode "default"; exec systemctl suspend
     bindsym $alt+r exec systemctl reboot
     bindsym $alt+s exec systemctl poweroff
@@ -121,7 +121,7 @@ bindsym $mod+minus scratchpad show
 exec swaymsg focus output $monprimary
 
 ### Lockscreen and idle configuration
-set $lock /home/naddan/.local/bin/lockscreen
+set $lock /home/{{- .chezmoi.username -}}/.local/bin/lockscreen
 {{- if eq .hasnvidia "yes" }}
 # idlehint temporarily removed until nvidia driver plays nice with suspend on wayland
 exec swayidle -w timeout 300 '$lock' before-sleep '$lock' timeout 310 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
@@ -130,7 +130,7 @@ exec swayidle -w timeout 300 $lock before-sleep $lock idlehint 300
 {{- end }}
 
 ### Theming
-output * bg /home/naddan/.config/sway/gruvbox_city.png fill
+output * bg /home/{{- .chezmoi.username -}}/.config/sway/gruvbox_city.png fill
 client.focused #ebdbb2 #ebdbb2 #ffffff #ebdbb2 #ebdbb2
 smart_gaps on
 gaps inner 50

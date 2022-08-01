@@ -24,7 +24,7 @@
       (box :class "main-window-box" :space-evenly "false" :orientation "v"
         (box :class "top-row" :space-evenly "false" :orientation "h"
           (box :class "greeting-box" :space-evenly "false" :orientation "v" :height 400
-            (box :class "greeting-img" :space-evenly "false" :orientation "v" :width 200 :height 200 :style "background-image: url(\"/home/naddan/.face\");")
+            (box :class "greeting-img" :space-evenly "false" :orientation "v" :width 200 :height 200 :style "background-image: url(\"/home/{{- .chezmoi.username -}}/.face\");")
             (box :class "greeting-stuff" :space-evenly "false" :orientation "v" :spacing 5
               (label :class "greeting-name" :text profile-name :halign "center")
               (label :class "greeting-username" :text profile-username :halign "center")
@@ -159,7 +159,7 @@
         (box :class "bottom-row" :space-evenly "false" :orientation "v"
           (box :class "bottom-row-inside" :space-evenly "false" :orientation "h"
             (box :class "power-box" :space-evenly "true" :orientation "h" :height 172
-              (eventbox :class "click-hover" :onclick "loginctl terminate-user naddan"
+              (eventbox :class "click-hover" :onclick "loginctl terminate-user {{ .chezmoi.username }}"
                 (label :text "﫼" :width 120 :halign "center" :style "color: #ea6962;")
               )
             )

@@ -47,7 +47,7 @@ ssp "WRITING SYSTEM CONFIG FILES"
 sp "Writing SSHD config"
 mkdir -p /etc/ssh/sshd_config.d
 
-cat >>/etc/ssh/sshd_config.d/10-naddan-chezmoi.conf <<EOL
+cat >>/etc/ssh/sshd_config.d/10-chezmoi.conf <<EOL
 Port 22
 PermitRootLogin no
 MaxAuthTries 3
@@ -80,20 +80,20 @@ sp "Writing systemd configs"
 mkdir -p /etc/systemd/system.conf.d
 
 {{- if eq .chassistype "laptop" }}
-cat >>/etc/systemd/system.conf.d/10-naddan-chezmoi-framework.conf <<EOL
+cat >>/etc/systemd/system.conf.d/10-chezmoi-framework.conf <<EOL
 [Manager]
 RebootWatchdogSec=0
 EOL
 {{- end }}
 
-cat >>/etc/systemd/system.conf.d/20-naddan-chezmoi.conf <<EOL
+cat >>/etc/systemd/system.conf.d/20-chezmoi.conf <<EOL
 [Manager]
 DefaultTimeoutStopSec=10s
 EOL
 
 mkdir -p /etc/systemd/logind.conf.d
 
-cat >>/etc/systemd/logind.conf.d/10-naddan-chezmoi.conf <<EOL
+cat >>/etc/systemd/logind.conf.d/10-chezmoi.conf <<EOL
 [Login]
 HandlePowerKey=ignore
 HandleSuspendKey=suspend
@@ -110,7 +110,7 @@ EOL
 sp "Enabling systemd services"
 systemctl enable greetd.service
 systemctl enable sshd.service
-systemctl enable syncthing@naddan.service
+systemctl enable syncthing@{{- .chezmoi.username -}}.service
 systemctl enable reflector.timer
 systemctl start reflector.timer
 
