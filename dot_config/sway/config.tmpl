@@ -40,6 +40,19 @@ mode "ewwmenu" {
     bindsym $mod+$alt+l exec eww close-all; mode "default"; exec $lock
     bindsym $mod+Shift+r mode "default"; reload
     bindsym $mod+Shift+q exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'
+    bindsym $mod+t exec $term
+    bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+    bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -10%
+    bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
+    bindsym $mod+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+    bindsym $mod+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -10%
+    bindsym $mod+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +10%
+    bindsym Print exec --no-startup-id flameshot gui
+    bindsym $mod+Print exec --no-startup-id grimshot copy screen
+    bindsym $mod+Shift+Print exec --no-startup-id grimshot copy active
+    bindsym XF86AudioPlay exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music toggle
+    bindsym XF86AudioNext exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music next
+    bindsym XF86AudioPrev exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music back
 }
 bindsym $mod+t exec $term
 bindsym $mod+q kill
@@ -58,6 +71,9 @@ bindsym $mod+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ 
 bindsym Print exec --no-startup-id flameshot gui
 bindsym $mod+Print exec --no-startup-id grimshot copy screen
 bindsym $mod+Shift+Print exec --no-startup-id grimshot copy active
+bindsym XF86AudioPlay exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music toggle
+bindsym XF86AudioNext exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music next
+bindsym XF86AudioPrev exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music back
 
 # Workspaces
 bindsym $mod+1 workspace number 1
