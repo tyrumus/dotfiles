@@ -1,0 +1,4 @@
+#!/bin/bash
+
+USAGE=$(/usr/bin/df / | tail -1 | tr -s "[:space:]" | cut -d' ' -f 5)
+echo "${USAGE}"

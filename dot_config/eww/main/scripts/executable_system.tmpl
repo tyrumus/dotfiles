@@ -50,5 +50,8 @@ if [[ "$1" == "--cpu" ]]; then
 	get_cpu
 elif [[ "$1" == "--mem" ]]; then
 	get_mem
+elif [[ "$1" == "--temp" ]]; then
+	CPU_TEMP=$(eww get EWW_TEMPS | jq -r ".CPU")
+    echo ${CPU_TEMP}
 fi
 {{- end }}

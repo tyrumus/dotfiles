@@ -3,6 +3,7 @@
 (defpoll date :interval "1s" "date '+%A, %b %e %Y'")
 (defpoll cpu :interval "1s" "main/scripts/system --cpu")
 (defpoll memory :interval "1s" "main/scripts/system --mem")
+(defpoll cpu-temp :interval "1s" "main/scripts/system --temp")
 (defpoll profile-username :interval "24h" "main/scripts/user")
 (defvar  profile-name "Tyronius Maximus")
 (defpoll weather-icon :interval "1m" "main/scripts/weather icon")
@@ -17,6 +18,7 @@
 (defpoll music-artist :interval "1s" "main/scripts/music artist")
 (defpoll music-album :interval "1s" "main/scripts/music album")
 (defpoll music-status :interval "1s" "main/scripts/music status")
+(defpoll disk-usage :interval "1m" "main/scripts/disk")
 
 (defwidget main []
   (box :class "main-window" :orientation "v" :space-evenly "false"
@@ -60,22 +62,24 @@
           (box :class "stats-box" :space-evenly "false" :orientation "v" :width 508 :height 400
             (box :class "cpu-stats" :space-evenly "false"
               (label :tooltip "${cpu}%" :class "cpu-icon" :text "")
-              (scale :min 0 :max 101 :active false :value {cpu == "" ? 0 : cpu} :class "cpu-scale" :width 275)
-              (label :class "stats-text" :text "${cpu}%")
+              (scale :min 0 :max 101 :active false :value {cpu == "" ? 0 : cpu} :class "cpu-scale" :width 350)
             )
             (box :class "mem-stats" :space-evenly "false"
               (label :tooltip "${memory}%" :class "cpu-icon" :text "力")
-              (scale :min 0 :max 101 :active false :value {memory == "" ? 0 : memory} :class "mem-scale" :width 275)
-              (label :class "stats-text" :text "${memory}%")
+              (scale :min 0 :max 101 :active false :value {memory == "" ? 0 : memory} :class "mem-scale" :width 350)
             )
-            (box :class "net-cont" :space-evenly "false" :halign "center" :orientation "v"
-              (box :class "net-icon" :space-evenly "true"
+            (box :class "temp-stats" :space-evenly "false"
+              (label :tooltip "${cpu-temp} C" :class "cpu-icon" :text "" :style "font-size: 36px")
+              (scale :min 20 :max 100 :active false :value {cpu-temp} :class "temp-scale" :width 350)
+            )
+            (box :class "net-cont" :space-evenly "false" :orientation "h"
+              (box :class "net-icon" :space-evenly "false" :halign "start"
                 (label :text "")
-                (label :class "net-text" :text "42 MB/s")
+                (label :class "net-text" :text "${round(EWW_NET['eno1'].NET_DOWN / 1000000, 2)} MB/s")
               )
-              (box :class "net-icon" :space-evenly "true"
+              (box :class "net-icon" :space-evenly "false" :halign "end" :hexpand true
                 (label :text "祝")
-                (label :class "net-text" :text "42 MB/s")
+                (label :class "net-text" :text "${round(EWW_NET['eno1'].NET_UP / 1000000, 2)} MB/s")
               )
             )
           )
@@ -104,7 +108,7 @@
           (box :class "storage-box" :space-evenly "false" :orientation "v" :height 600
             (box :class "disc-space" :space-evenly "true" :orientation "h"
               (label :text "")
-              (label :class "disc-space-text" :text "12%")
+              (label :class "disc-space-text" :text disk-usage)
             )
             (eventbox :class "click-hover" :onclick "eww close-all; swaymsg mode default; kitty -d ~/Documents &" :onrightclick "eww close-all; swaymsg mode default; kitty ranger ~/Documents &"
               (box :class "folder-row" :space-evenly "false" :orientation "h" :width 300 :style "color: #ea6962;"

@@ -122,11 +122,11 @@
     color: $fg-alt;
 }
 
-.cpu-scale trough, .mem-scale trough {
+.cpu-scale trough, .mem-scale trough, .temp-scale trough {
     background-color: $bg-alt;
     min-height: 10px;
     border-radius: 15px;
-    margin: 0 30px;
+    margin-left: 30px;
 }
 
 .cpu-scale highlight {
@@ -139,7 +139,12 @@
     border-radius: 15px;
 }
 
-.mem-stats {
+.temp-scale highlight {
+    background-color: $yellow;
+    border-radius: 15px;
+}
+
+.mem-stats, .temp-stats {
     margin-top: 40px;
 }
 
@@ -149,11 +154,8 @@
     color: $fg-alt;
 }
 
-.net-icon {
-    margin: 0 20px;
-}
-
 .net-text {
+    margin-left: 10px;
     font-size: 24px;
 }
 
