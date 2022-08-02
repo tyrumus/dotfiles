@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 
 PLAYER="spotify"
@@ -118,3 +119,4 @@ elif [[ "$1" == "next" ]]; then
 elif [[ "$1" == "back" ]]; then
     back_music
 fi
+{{- end }}

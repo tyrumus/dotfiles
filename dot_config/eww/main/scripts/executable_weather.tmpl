@@ -1,3 +1,4 @@
+{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 
 api_cfg="${HOME}/.config/eww/main/scripts/weather-settings"
@@ -132,3 +133,4 @@ elif [[ "$1" == "high" ]]; then
 elif [[ "$1" == "low" ]]; then
     cat ${cache_weather_low}
 fi
+{{- end }}
