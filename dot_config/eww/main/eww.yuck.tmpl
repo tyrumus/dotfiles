@@ -4,6 +4,11 @@
 (defpoll cpu :interval "1s" "main/scripts/system --cpu")
 (defpoll memory :interval "1s" "main/scripts/system --mem")
 (defpoll cpu-temp :interval "1s" "main/scripts/system --temp")
+{{- if (eq .chassistype "desktop") }}
+(defvar  iface "eno1")
+{{- else }}
+(defvar  iface "wlan0")
+{{- end }}
 (defpoll profile-username :interval "24h" "main/scripts/user")
 (defvar  profile-name "Tyronius Maximus")
 (defpoll weather-icon :interval "1m" "main/scripts/weather icon")
@@ -75,11 +80,11 @@
             (box :class "net-cont" :space-evenly "false" :orientation "h"
               (box :class "net-icon" :space-evenly "false" :halign "start"
                 (label :text "")
-                (label :class "net-text" :text "${round(EWW_NET['eno1'].NET_DOWN / 1000000, 2)} MB/s")
+                (label :class "net-text" :text "${round(EWW_NET[iface].NET_DOWN / 1000000, 2)} MB/s")
               )
               (box :class "net-icon" :space-evenly "false" :halign "end" :hexpand true
                 (label :text "祝")
-                (label :class "net-text" :text "${round(EWW_NET['eno1'].NET_UP / 1000000, 2)} MB/s")
+                (label :class "net-text" :text "${round(EWW_NET[iface].NET_UP / 1000000, 2)} MB/s")
               )
             )
           )
@@ -193,7 +198,11 @@
 
 (defwindow main-top
   :stacking "fg"
+  {{- if (eq .chassistype "desktop") }}
   :monitor 1
+  {{- else }}
+  :monitor 0
+  {{- end }}
   :geometry (geometry :anchor "center" :width 600)
   (main)
 )
