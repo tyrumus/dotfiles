@@ -19,6 +19,7 @@
 {{-         $hasNvidia = "yes" }}
 {{-     end }}
 {{- end }}
+{{- writeToStdout (cat "available options: desktop (3 screen setup), laptop (1 screen setup), Windoze Subsystem for Linux (basic terminal-only setup in Arch distro)") }}
 {{- writeToStdout (cat "chezmoi has determined it is running on" $chassisType "\nIs this correct? [y/n] ") }}
 {{- if (not (promptBool "y")) }}
 {{-     writeToStdout "what is the chassis type? [desktop, laptop, wsl] " }}
@@ -29,7 +30,12 @@
 {{-         writeToStdout (cat "Error: unexpected input: " $newChassisType "\nWriting" $chassisType "to chezmoi config instead.\nRun \"chezmoi init\" if this is incorrect.\n") }}
 {{-     end }}
 {{- end }}
-{{- writeToStdout "\nIf you don't want the setup scripts to run automatically,\nensure you execute " .chezmoi.sourceDir "/install/disable-install.sh prior to running \"chezmoi apply\"\n" }}
+{{- if not (.chezmoi.osRelease.id "arch") }}
+{{-     writeToStdout (cat "chezmoi has detected that this is not an Arch Linux system, disabling install scripts...")
+{{-     output ("sh" .chezmoi.sourceDir "/install/disable-install.sh")
+{{- else }}
+{{-     writeToStdout "\nIf you don't want the setup scripts to run automatically,\nensure you execute " .chezmoi.sourceDir "/install/disable-install.sh prior to running \"chezmoi apply\"\n" }}
+{{- end }}
 
 [data]
     chassisType = {{ $chassisType | quote }}
