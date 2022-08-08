@@ -39,6 +39,22 @@ while [ ! "${USER_PASSWD}" = "${USER_PASSWD_CONF}" ]; do
     echo
 done
 
+# prompt for chassis type
+SUCCESS=1
+echo "the following chassis types are defined: \"desktop\", \"laptop\", \"convertible\", \"server\", \"tablet\", \"handset\", \"watch\", \"embedded\", as well as the special chassis types \"vm\" and \"container\""
+while [ ! $SUCCESS = 0 ]; do
+    echo -n "Enter the chassis type: "
+    read -r CHASSIS_TYPE </dev/tty
+
+    if [[ ! "${CHASSIS_TYPE}" = "" ]]; then
+        hostnamectl chassis "${CHASSIS_TYPE}"
+
+        if [[ $? = 0 ]]; then
+            SUCCESS=0
+        fi
+    fi
+done
+
 echo "==> Starting unattended install..."
 
 timedatectl set-ntp true
@@ -95,6 +111,7 @@ mkinitcpio -P
 efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux-lts -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet initrd=/initramfs-linux-lts.img"
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
+hostnamectl chassis "${CHASSIS_TYPE}"
 EOF
 
 # perform laptop chrooted operations
