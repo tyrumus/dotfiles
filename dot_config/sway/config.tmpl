@@ -68,7 +68,6 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
 bindsym $mod+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym $mod+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -10%
 bindsym $mod+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +10%
-bindsym Print exec --no-startup-id flameshot gui
 bindsym $mod+Print exec --no-startup-id grimshot copy screen
 bindsym $mod+Shift+Print exec --no-startup-id grimshot copy active
 bindsym XF86AudioPlay exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music toggle

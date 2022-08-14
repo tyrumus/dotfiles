@@ -26,6 +26,7 @@ workspace 10 output $montertiary
 mode "ewwmenu" {
     bindsym $alt+w exec win-reboot-now
 }
+bindsym Print exec --no-startup-id grimshot copy area
 {{- end -}}
 {{- if eq .chassistype "laptop" -}}
 ### Output configuration
@@ -57,6 +58,7 @@ input type:touchpad {
 bindsym XF86MonBrightnessUp exec brightnessctl -q -d intel_backlight s 5%+
 bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
 bindsym XF86AudioMedia exec keepassxc &
+bindsym Print exec --no-startup-id flameshot gui
 bindswitch lid:on exec systemctl suspend
 {{- end -}}
 {{- end -}}
