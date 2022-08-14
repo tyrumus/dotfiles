@@ -123,7 +123,6 @@ EOF
 cat >>/mnt/home/${USRNAME}/.zshrc <<EOL
 rm \$0
 chezmoi init ${CHEZMOI_URL}
-chezmoi apply
 EOL
 
 echo "==> Syncing drives..."

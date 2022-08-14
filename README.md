@@ -85,4 +85,6 @@ CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `http
 
 ## TODO
 
-- Make `install/arch-install.zsh` automatically set up partitioning
+- Move shortened git.io URL to `https://tyrumus.dev/ai`
+- Make `install/arch-install.zsh` check for an internet connection prior to installation
+- Make `install/arch-install.zsh` automatically set up partitioning and connect to the internet, if wired
