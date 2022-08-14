@@ -25,7 +25,7 @@ Some details about the current setup, and links to their respective install/conf
 
 ## Screenshot
 
-![Epic screenshot of my setup]()
+![Epic screenshot of my setup](img/dotfiles-rice-aug2022.png)
 
 ## Setup
 Install chezmoi with your distro's package manager, then run the following:
