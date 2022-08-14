@@ -19,7 +19,7 @@ Some details about the current setup, and links to their respective install/conf
 - Text Editor: [Neovim](https://wiki.archlinux.org/title/Neovim)
 - File Manager: [ranger](https://wiki.archlinux.org/title/Ranger)
 - Notification Daemon: [dunst](https://wiki.archlinux.org/title/Dunst)
-- Music Player: [spotifyd](https://spotifyd.github.io/spotifyd/)
+- Music Player: [Spotify](https://wiki.archlinux.org/title/Spotify)
 - Lockscreen: [swaylock-effects](https://github.com/jirutka/swaylock-effects)
 - Color scheme: [gruvbox](https://github.com/morhetz/gruvbox)
 
