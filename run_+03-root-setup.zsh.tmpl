@@ -100,7 +100,11 @@ cat >>/etc/greetd/config.toml <<EOL
 [terminal]
 vt = 1
 [default_session]
+{{- if eq .chassistype "desktop" }}
 command = "tuigreet --remember --remember-session --power-reboot '/usr/local/bin/win-reboot-now'"
+{{- else }}
+command = "tuigreet --remember --remember-session"
+{{- end }}
 user = "greeter"
 EOL
 
