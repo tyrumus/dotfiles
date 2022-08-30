@@ -41,7 +41,36 @@ sp() {
 
 # Run config setup stuff that can only be done as root
 
+ssp "WRITING SYSTEM SCRIPTS"
+
+{{- if eq .chassistype "desktop" }}
+sp "Writing win-reboot-now script"
+
+cat >>/usr/local/bin/win-reboot-now <<EOL
+#!/bin/bash
+
+# run this script only as root
+if [ "\$EUID" != 0 ]; then
+    sudo "\$0" "\$@"
+    exit \$?
+fi
+
+efibootmgr -qn 0
+systemctl reboot
+EOL
+
+chmod +x /usr/local/bin/win-reboot-now
+{{- end }}
+
 ssp "WRITING SYSTEM CONFIG FILES"
+
+{{- if eq .chassistype "desktop" }}
+sp "Writing win-reboot-now sudoer file"
+
+cat >>/etc/sudoers.d/20-win-reboot <<EOL
+%sudo ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/win-reboot-now
+EOL
+{{- end }}
 
 # sshd
 sp "Writing SSHD config"
@@ -71,7 +100,7 @@ cat >>/etc/greetd/config.toml <<EOL
 [terminal]
 vt = 1
 [default_session]
-command = "tuigreet --remember --remember-session"
+command = "tuigreet --remember --remember-session --power-reboot '/usr/local/bin/win-reboot-now'"
 user = "greeter"
 EOL
 
