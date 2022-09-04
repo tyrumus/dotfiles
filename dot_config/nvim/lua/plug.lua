@@ -45,14 +45,17 @@ local plugs = {
         end
     },
     {
-        "hoob3rt/lualine.nvim",
+        "nvim-lualine/lualine.nvim",
         config = function()
             require("lualine").setup({
                 options = {
                     theme = "auto",
                     section_separators = {left = "", right = ""},
                     component_separators = {"", ""},
-                    icons_enabled = true
+                    icons_enabled = true,
+                    refresh = {
+                        statusline = 250,
+                    }
                 }
             })
         end,
@@ -177,7 +180,7 @@ local plugs = {
                     }
                 }
             })
-
+    
             require("lspconfig").pyright.setup({})
             require("lspconfig").svelte.setup({})
             require("lspconfig").tailwindcss.setup({})
