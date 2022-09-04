@@ -66,7 +66,7 @@ Partition | if drive is `/dev/sda` | Partition Type
 
 Once that's done, download the install script:
 ```
-$ curl -L https://git.io/JyoUF -o install.zsh
+$ curl -L https://tyrumus.dev/ai -o install.zsh
 ```
 
 Edit the variables at the top of the downloaded script, and execute it.
@@ -85,6 +85,5 @@ CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `http
 
 ## TODO
 
-- Move shortened git.io URL to `https://tyrumus.dev/ai`
 - Make `install/arch-install.zsh` check for an internet connection prior to installation
 - Make `install/arch-install.zsh` automatically set up partitioning and connect to the internet, if wired
