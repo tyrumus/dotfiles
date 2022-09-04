@@ -230,7 +230,10 @@ local plugs = {
         "andweeb/presence.nvim",
         config = function()
             require("presence"):setup({
-                neovim_image_text = "8==========>"
+                neovim_image_text = "8==========>",
+                buttons = {{label = "View Repository", url = "https://naddan.co/r"}}, -- :)
+                blacklist = {"/var/tmp", "cshw"},
+                reading_text = "Browsing files"
             })
         end
     }
