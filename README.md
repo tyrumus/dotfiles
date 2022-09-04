@@ -52,7 +52,7 @@ Logout of your session, and log back in. Enjoy!
 ## Run unattended Arch Linux install
 
 [Follow the Arch Linux install guide](https://wiki.archlinux.org/title/Installation_guide) to do the following:
-1) Partition the target drive
+1) Partition the target drive. No need to create filesystems, as the script will handle that.
 2) Connect to the Internet
 
 Here's the GPT layout the install script expects:
@@ -85,5 +85,4 @@ CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `http
 
 ## TODO
 
-- Make `install/arch-install.zsh` check for an internet connection prior to installation
-- Make `install/arch-install.zsh` automatically set up partitioning and connect to the internet, if wired
+- Make `install/arch-install.zsh` automatically set up partitioning
