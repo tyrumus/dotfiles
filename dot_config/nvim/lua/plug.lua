@@ -216,6 +216,9 @@ local plugs = {
         "elkowar/yuck.vim"
     },
     {
+        "nathom/filetype.nvim"
+    },
+    {
         "ahmedkhalf/project.nvim",
         config = function()
             require("project_nvim").setup({
