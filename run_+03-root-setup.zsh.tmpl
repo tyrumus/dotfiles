@@ -68,7 +68,7 @@ ssp "WRITING SYSTEM CONFIG FILES"
 sp "Writing win-reboot-now sudoer file"
 
 cat >>/etc/sudoers.d/20-win-reboot <<EOL
-%sudo ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/win-reboot-now
+greeter ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/win-reboot-now
 EOL
 {{- end }}
 
