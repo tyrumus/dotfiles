@@ -192,7 +192,9 @@ local plugs = {
     },
     {
         "nvim-treesitter/nvim-treesitter",
-        run = ":TSUpdate",
+        run = function()
+            require("nvim-treesitter.install").update({with_sync = true})
+        end,
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {"bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
