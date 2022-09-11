@@ -140,7 +140,20 @@ IdleAction=suspend
 IdleActionSec=300
 EOL
 
+# reflector
+sp "Writing reflector config"
+mkdir -p /etc/xdg/reflector
+cat >>/etc/xdg/reflector/reflector.conf <<EOL
+--save /etc/pacman.d/mirrorlist
+--protocol https
+--country "United States"
+--latest 5
+--sort rate
+EOL
+
 ### INIT SERVICES ###
+ssp "ENABLING SERVICES"
+
 sp "Enabling systemd services"
 systemctl enable greetd.service
 systemctl enable sshd.service
