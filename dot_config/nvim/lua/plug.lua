@@ -71,10 +71,24 @@ local plugs = {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("indent_blankline").setup({
+                char = "▎",
                 space_char_blankline = " ",
                 show_end_of_line = true,
+                show_current_context = true,
+                show_current_context_start = true,
                 buftype_exclude = {"terminal", "nofile", "help"},
-                filetype_exclude = {"alpha"}
+                filetype_exclude = {
+                    "alpha",
+                    "man",
+                    "gitmessengerpopup",
+                    "diagnosticpopup",
+                    "lspinfo",
+                    "packer",
+                    "checkhealth",
+                    "help",
+                    "json",
+                    "terminal",
+                }
             })
         end
     },
