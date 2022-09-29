@@ -1,3 +1,4 @@
+# vim: ft=zsh
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -29,13 +30,12 @@ compinit
 # My code starts here #
 #######################
 
+# Aliases
 alias ls="exa --icons"
 alias ll="ls --long --header"
 alias la="ls -la"
 alias cat="bat"
 alias df="duf"
-alias c="pwd | kitty +kitten clipboard"
-alias ssh="TERM=xterm-256color ssh"
 alias rsync="~/.local/share/zsh-scripts/rsync-fixed.zsh"
 alias chezgit="lazygit -p ~/.local/share/chezmoi"
 alias cedit="chezmoi edit"
@@ -46,24 +46,16 @@ alias sleeplevi="ssh -t leviticus /usr/bin/sudo /usr/bin/systemctl suspend"
 {{- end }}
 
 {{- if not (eq .chassistype "wsl") }}
-# kitty support
+### kitty support
 source <(kitty + complete setup zsh)
+alias clip="kitty +kitten clipboard"
+alias c="pwd | clip"
+alias ssh="TERM=xterm-256color ssh"
+alias kssh="kitty +kitten ssh"
+alias icat="kitty +kitten icat"
 {{- end }}
 
-# fzf plugins
-source /usr/share/fzf/completion.zsh
-source /usr/share/fzf/key-bindings.zsh
-
-# Ctrl+left, Ctrl+right moves a whole word
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
-
-# Enhanced tab completion
-zstyle ':completion:*:*:*:default' menu yes select search
-
-# not sure what this does
-setopt correct
-
+### Functions
 search() {
     find . -name "$1" -exec grep -i "$2" {} +
 }
@@ -76,14 +68,27 @@ ranger() {
     fi
 }
 
+# fzf plugins
+source /usr/share/fzf/completion.zsh
+source /usr/share/fzf/key-bindings.zsh
+
+### Z shell stuffs
+# Ctrl+left, Ctrl+right moves a whole word
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
+# Enhanced tab completion
+zstyle ':completion:*:*:*:default' menu yes select search
+
+# spelling suggestions for mistyped commands
+setopt correct
+
 scroll-and-clear-screen() {
     printf "\n%.0s" {1..$LINES}
     zle clear-screen
 }
 zle -N scroll-and-clear-screen
 bindkey "^l" scroll-and-clear-screen
-
-# HOME, DELETE, and END keys
 bindkey "\e[H" beginning-of-line
 bindkey "\e[3~" delete-char
 bindkey "\e[F" end-of-line

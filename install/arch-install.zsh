@@ -1,4 +1,5 @@
 #!/usr/bin/zsh
+# vim: ft=zsh
 
 ### EDIT THESE AS NEEDED
 DRIVE="/dev/sda"

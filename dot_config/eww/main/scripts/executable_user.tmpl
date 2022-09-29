@@ -1,5 +1,6 @@
 {{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
+# vim: ft=bash
 
 fullname=$(getent passwd "$(whoami)" | cut -d ':' -f 5 | cut -d ',' -f 1 | tr -d "\n")
 if [ -z "$fullname" ]; then
