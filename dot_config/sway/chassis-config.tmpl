@@ -1,4 +1,3 @@
-{{- if not (eq .chassistype "wsl") -}}
 # vim: ft=conf
 {{- if eq .chassistype "desktop" -}}
 ### Output configuration
@@ -61,5 +60,4 @@ bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
 bindsym XF86AudioMedia exec keepassxc &
 bindsym Print exec --no-startup-id flameshot gui
 bindswitch lid:on exec systemctl suspend
-{{- end -}}
 {{- end -}}

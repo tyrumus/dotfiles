@@ -1,4 +1,3 @@
-{{- if not (eq .chassistype "wsl") -}}
 * {
     all: unset;
     transition: 100ms ease-out;
@@ -226,4 +225,3 @@
     background-color: $bg-alt;
     border-radius: 30px;
 }
-{{- end }}

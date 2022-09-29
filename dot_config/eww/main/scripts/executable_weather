@@ -1,4 +1,3 @@
-{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 # vim: ft=bash
 
@@ -136,4 +135,3 @@ elif [[ "$1" == "high" ]]; then
 elif [[ "$1" == "low" ]]; then
     cat ${cache_weather_low}
 fi
-{{- end }}

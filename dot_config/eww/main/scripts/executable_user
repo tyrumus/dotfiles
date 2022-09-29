@@ -1,4 +1,3 @@
-{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 # vim: ft=bash
 
@@ -8,4 +7,3 @@ if [ -z "$fullname" ]; then
 else
     echo "$fullname"
 fi
-{{- end }}

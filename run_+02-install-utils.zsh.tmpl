@@ -104,6 +104,7 @@ EOL
 {{- else -}}
 # prevent root setup script from running when this is a terminal-only install
 touch "${HOME}/.cache/chezmoi-root"
+ssp "TERMINAL-ONLY INSTALL COMPLETE. You'll need to install what you want manually... :)"
 {{- end -}}
 ssp "INSTALL UTILS SCRIPT COMPLETE"
 {{- end -}}

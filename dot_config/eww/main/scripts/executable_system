@@ -1,4 +1,3 @@
-{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 # vim: ft=bash
 
@@ -55,4 +54,3 @@ elif [[ "$1" == "--temp" ]]; then
 	CPU_TEMP=$(eww get EWW_TEMPS | jq -r ".CPU")
     echo ${CPU_TEMP}
 fi
-{{- end }}

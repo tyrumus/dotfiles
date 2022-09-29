@@ -3,3 +3,16 @@ LICENSE.md
 nvim/plugin/packer_
 install/
 img/
+{{- if eq .chassistype "wsl" }}
+.config/dunst
+.config/eww
+.config/fontconfig
+.config/kitty
+.config/rofi
+.config/sway
+.config/systemd
+.config/waybar
+.fonts
+.local
+.face
+{{- end }}

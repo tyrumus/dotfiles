@@ -1,4 +1,3 @@
-{{- if not (eq .chassistype "wsl") -}}
 #!/bin/bash
 # vim: ft=bash
 
@@ -120,4 +119,3 @@ elif [[ "$1" == "next" ]]; then
 elif [[ "$1" == "back" ]]; then
     back_music
 fi
-{{- end }}
