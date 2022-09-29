@@ -1,3 +1,4 @@
+# vim: ft=toml
 {{- $chassisType := "desktop" }}
 {{- if contains "WSL" (output "uname" "-r") }}
 {{-     $chassisType = "wsl" }}
@@ -40,3 +41,11 @@
 [data]
     chassistype = {{ $chassisType | quote }}
     hasnvidia = {{ $hasNvidia | quote }}
+
+[diff]
+    command = "nvim"
+    args = ["-d", "{{ .Destination }}", "{{ .Target }}"]
+
+[merge]
+    command = "nvim"
+    args = ["-d", "{{ .Destination }}", "{{ .Target }}"]
