@@ -56,32 +56,18 @@ Logout of your session, and log back in. Enjoy!
 2) Connect to the Internet
 
 Here's the GPT layout the install script expects:
-Partition | if drive is `/dev/sda` | Partition Type
---- | --- | ---
-`/dev/efi_system_partition` | `/dev/sda1` | ESP
-`/dev/swap_partition` | `/dev/sda2` | Linux swap
-`/dev/root_partition` | `/dev/sda3` | Linux x86-84 root (/)
+Partition Type | Recommended size
+--- | ---
+ESP | 512M
+Linux swap | same size as RAM
+Linux x86-64 root (/) | remainder of drive
 
 ### Running the Install Script
 
-Once that's done, download the install script:
+Once that's done, run the install script:
 ```
-$ curl -L https://tyrumus.dev/ai -o install.zsh
+$ curl -L https://tyrumus.dev/ai | zsh
 ```
-
-Edit the variables at the top of the downloaded script, and execute it.
-
-What are each of the variables for?
-Name | Description | Example
---- | --- | ---
-DRIVE | Name of target install disk | `/dev/sda`
-USRNAME | Username of sudoer account | `urmum`
-HOSTNAME | Hostname of the system | `smokedcheese`
-TIMEZONE | Desired timezone system time should be displayed | `Europe/Zurich`
-PACKAGES | List of packages installed every time, separated by spaces | `base linux linux-firmware`
-LAPTOP_PACKAGES | List of packages installed when system is a laptop | `iwd`
-NVIDIA_PACKAGES | List of packages installed when system has NVIDIA graphics card | `nvidia-lts`
-CHEZMOI_URL | URL of dotfiles repository to install upon next user login | `https://github.com/you/your-dotfiles.git`
 
 ## TODO
 
