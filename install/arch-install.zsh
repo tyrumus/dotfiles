@@ -18,6 +18,7 @@ pacman -S --noconfirm gum &> /dev/null
 
 alias ssp="gum style --foreground 45 --bold"
 alias sp="gum style --foreground 45 --faint"
+alias load="gum spin --spinner dot"
 
 # verify boot mode (is it UEFI?)
 ssp "Verifying boot mode..."
@@ -109,9 +110,9 @@ sp "Enabling NTP"
 timedatectl set-ntp true
 
 sp "Creating filesystems"
-mkfs.ext4 ${DRIVE_ROOT}
-mkswap ${DRIVE_SWAP}
-mkfs.fat -F 32 ${DRIVE_ESP}
+load --title "Creating ext4 filesystem" -- mkfs.ext4 ${DRIVE_ROOT}
+load --title "Creating swap space" -- mkswap ${DRIVE_SWAP}
+load --title "Creating FAT32 filesystem" -- mkfs.fat -F 32 ${DRIVE_ESP}
 
 sp "Mounting filesystems"
 mount ${DRIVE_ROOT} /mnt
@@ -127,8 +128,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 # perform chrooted operations
 # may need to add -e 3 to the efibootmgr command if the motherboard deletes the boot entry on reboot
-ssp "Performing chrooted operations"
-cat << EOF | arch-chroot /mnt
+load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
@@ -172,8 +172,7 @@ rm \$0
 chezmoi init ${CHEZMOI_URL}
 EOL
 
-sp "Syncing drives"
-sync
+load --title "Syncing drives" -- sync
 sp "Drives synced"
 
 sp "Unmounting all the things"
@@ -182,3 +181,4 @@ swapoff ${DRIVE_SWAP}
 ssp "Installation complete."
 unalias ssp
 unalias sp
+unalias load
