@@ -2,111 +2,89 @@
 # vim: ft=zsh
 
 ### EDIT THESE AS NEEDED
-DRIVE="/dev/sda"
-DRIVE_ESP="${DRIVE}1"
-DRIVE_SWAP="${DRIVE}2"
-DRIVE_ROOT="${DRIVE}3"
-USRNAME="urmum"
-HOSTNAME="smokedcheese"
-TIMEZONE="Europe/Zurich"
-PACKAGES="base base-devel efibootmgr linux-lts linux-firmware chezmoi dhcpcd git sudo wget zsh"
-LAPTOP_PACKAGES="iwd"
-NVIDIA_PACKAGES="nvidia-lts nvidia-settings"
-CHEZMOI_URL="https://github.com/tyrumus/dotfiles"
 
 
-### SPECIAL PRINT FUNCTIONS ###
-ssp() {
-    echo -en "\033[1m"
-    echo -en "\033[32m"
-    echo -n "==> "
-    echo -en "\033[39m"
-    echo -en "INSTALL: ${1}"
-    echo -e "\033[0m"
-}
-
-sp() {
-    echo -en "\033[1m"
-    echo -en "\033[34m"
-    echo -n "  -> "
-    echo -en "\033[39m"
-    echo -en "$1"
-    echo -e "\033[0m"
-}
-sps() {
-    echo -en "\033[1m"
-    echo -en "\033[34m"
-    echo -n "  -> "
-    echo -en "\033[39m"
-    echo -en "$1"
-}
-spe() {
-    echo -en "$1"
-    echo -e "\033[0m"
-}
-
-ssp "Verifying all the things..."
-# verify boot mode (is it UEFI?)
-sps "Verifying boot mode: "
-ls /sys/firmware/efi/efivars &> /dev/null
-if [[ $? = 0 ]]; then
-    spe "SUCCESS"
-else
-    spe "FAIL: UEFI boot not detected. Continuing install."
-fi
+### INITIAL SCRIPT SETUP ###
 
 # check for functioning internet connection
 # probably pointless, since this script is intended to be downloaded from the internet
-sps "Checking internet connection: "
+echo -n "Checking internet connection: "
 ping -c 1 archlinux.org &> /dev/null
 if [[ $? = 0 ]]; then
-    spe "SUCCESS"
+    echo "SUCCESS"
 else
-    spe "FAIL: Unable to connect to archlinux.org"
+    echo "FAIL: Unable to connect to archlinux.org"
     exit 1
 fi
 
-# prompt for passwords beforehand
-ssp "Please answer the following prompts for unattended installation"
+pacman -S --noconfirm gum &> /dev/null
+
+
+### FUNCTIONS ###
+
+
+### USER INPUT FOR OPTIONS ###
+
+# verify boot mode (is it UEFI?)
+gum style --foreground 45 --bold "Verifying boot mode..."
+ls /sys/firmware/efi/efivars &> /dev/null
+if [[ $? = 0 ]]; then
+    gum style --foreground 2 --bold "SUCCESS"
+else
+    gum style --foreground 1 --bold "FAIL: UEFI boot not detected."
+    exit 1
+fi
+
+echo
+echo
+gum style --foreground 45 --italic "Please answer the following prompts for unattended installation"
+
+# prompt for root passwords
 ROOT_PASSWD=""
 ROOT_PASSWD_CONF="a"
 while [ ! "${ROOT_PASSWD}" = "${ROOT_PASSWD_CONF}" ]; do
-    echo -n "Enter the password for root: "
-    read -rs ROOT_PASSWD </dev/tty
-    echo
-
-    echo -n "Confirm root password: "
-    read -rs ROOT_PASSWD_CONF </dev/tty
-    echo
+    ROOT_PASSWD=$(gum input --password --placeholder "Enter root password" --cursor.foreground 45)
+    ROOT_PASSWD_CONF=$(gum input --password --placeholder "Confirm root password" --cursor.foreground 45)
 done
 
+# prompt for username
+USRNAME=$(gum input --placeholder "Enter sudoer username" --cursor.foreground 45)
+
+# prompt for user password
 USER_PASSWD=""
 USER_PASSWD_CONF="a"
 while [ ! "${USER_PASSWD}" = "${USER_PASSWD_CONF}" ]; do
-    echo -n "Enter the password for ${USRNAME}: "
-    read -rs USER_PASSWD </dev/tty
-    echo
-
-    echo -n "Confirm ${USRNAME} password: "
-    read -rs USER_PASSWD_CONF </dev/tty
-    echo
+    USER_PASSWD=$(gum input --password --placeholder "Enter password for ${USRNAME}" --cursor.foreground 45)
+    USER_PASSWD_CONF=$(gum input --password --placeholder "Confirm ${USRNAME} password" --cursor.foreground 45)
 done
+
+# prompt for hostname
+HOSTNAME=$(gum input --placeholder "smokedcheese")
+
+# prompt for timezone
+TIMEZONE=$(gum input --value "Europe/Zurich")
+
+# prompt for drive info
+DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
+DRIVE_ESP="/dev/${DATA}"
+DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
+DRIVE_SWAP="/dev/${DATA}"
+DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
+DRIVE_ROOT="/dev/${DATA}"
+
+# prompt for chezmoi URL
+CHEZMOI_URL=$(gum input --value "https://github.com/tyrumus/dotfiles")
 
 # prompt for chassis type
 SUCCESS=1
-echo "the following chassis types are defined: \"desktop\", \"laptop\", \"convertible\", \"server\", \"tablet\", \"handset\", \"watch\", \"embedded\", as well as the special chassis types \"vm\" and \"container\""
-while [ ! $SUCCESS = 0 ]; do
-    echo -n "Enter the chassis type: "
-    read -r CHASSIS_TYPE </dev/tty
+CHASSIS_TYPE=$(gum choose {desktop,laptop,convertible,server,tablet,handset,watch,embedded,vm,container})
+hostnamectl chassis "${CHASSIS_TYPE}"
 
-    if [[ ! "${CHASSIS_TYPE}" = "" ]]; then
-        hostnamectl chassis "${CHASSIS_TYPE}"
-
-        if [[ $? = 0 ]]; then
-            SUCCESS=0
-        fi
-    fi
-done
+# TODO: prompt to edit these lists
+PACKAGES="base base-devel efibootmgr linux-lts linux-firmware chezmoi dhcpcd git sudo wget zsh"
+LAPTOP_PACKAGES="iwd"
+NVIDIA_PACKAGES="nvidia-lts nvidia-settings"
+exit 0
 
 ssp "Starting unattended install..."
 
