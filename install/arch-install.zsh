@@ -43,10 +43,12 @@ while [ ! "${ROOT_PASSWD}" = "${ROOT_PASSWD_CONF}" ]; do
     ROOT_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
     ROOT_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
 done
+clear
 
 # prompt for username
 ssp "Enter username for sudoer account (default user)"
 USRNAME=$(gum input --placeholder "Enter username" --cursor.foreground 45)
+clear
 
 # prompt for user password
 ssp "Enter password for ${USRNAME}"
@@ -56,43 +58,59 @@ while [ ! "${USER_PASSWD}" = "${USER_PASSWD_CONF}" ]; do
     USER_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
     USER_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
 done
+clear
 
 # prompt for hostname
 ssp "Enter hostname"
 HOSTNAME=$(gum input --placeholder "Hostname")
+clear
 
 # prompt for timezone
 ssp "Enter timezone"
 TIMEZONE=$(gum input --value "Europe/Zurich")
+clear
+
+function display_drives() {
+    sp "EFI system partition -> $1"
+    sp "Swap space partition -> $2"
+    sp "Root partition       -> $3"
+}
 
 # prompt for drive info
+display_drives
 ssp "Select device or partition for EFI system partition"
 DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
 DRIVE_ESP="/dev/${DATA}"
+clear
 
+display_drives ${DRIVE_ESP}
 ssp "Select device or partition for swap space"
 DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
 DRIVE_SWAP="/dev/${DATA}"
+clear
 
+display_drives ${DRIVE_ESP} ${DRIVE_SWAP}
 ssp "Select device or partition for root filesystem"
 DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
 DRIVE_ROOT="/dev/${DATA}"
+clear
 
 # prompt for chezmoi URL
 ssp "Enter URL for chezmoi repository"
 CHEZMOI_URL=$(gum input --value "https://github.com/tyrumus/dotfiles")
+clear
 
 # prompt for chassis type
 ssp "Select chassis type"
 CHASSIS_TYPE=$(gum choose {desktop,laptop,convertible,server,tablet,handset,watch,embedded,vm,container})
 hostnamectl chassis "${CHASSIS_TYPE}"
+clear
 
 POTENTIAL_PACKAGES="base base-devel efibootmgr linux-lts linux-firmware chezmoi dhcpcd git sudo wget zsh"
 LAPTOP_PACKAGES="iwd"
 NVIDIA_PACKAGES="nvidia-lts nvidia-settings"
 ALL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES} ${NVIDIA_PACKAGES} linux nvidia"
 
-# TODO: auto select packages based on detected system components. Waiting on gum v0.7 for --selected in choose option
 if [ ! -z "$(ls -a /sys/class/power_supply)" ]; then
     POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES}"
 fi
@@ -100,12 +118,22 @@ if [ ! -z "$(lspci | grep -i nvidia)" ]; then
     POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${NVIDIA_PACKAGES}"
 fi
 POTENTIAL_PACKAGES=$(echo ${POTENTIAL_PACKAGES} | sed -r "s/[ ]+/,/g")
-echo ${POTENTIAL_PACKAGES}
 
 # let user select which packages they want
 ssp "Select packages to install. To select nothing, press Escape"
 SELECTED_PACKAGES=$(gum choose --height=15 --no-limit --selected=${POTENTIAL_PACKAGES} ${=ALL_PACKAGES})
-echo ${SELECTED_PACKAGES}
+clear
+PRETTY_SELECTED_PACKAGES=$(echo ${=SELECTED_PACKAGES} | sed -r "s/[\\n]+/ /g")
+
+ssp --underline "Installation preferences"
+sp "sudoer account       -> ${USRNAME}"
+sp "Hostname             -> ${HOSTNAME}"
+sp "Timezone             -> ${TIMEZONE}"
+display_drives ${DRIVE_ESP} ${DRIVE_SWAP} ${DRIVE_ROOT}
+sp "Chezmoi URL          -> ${CHEZMOI_URL}"
+sp "Chassis type:        -> ${CHASSIS_TYPE}"
+sp "Packages             -> ${PRETTY_SELECTED_PACKAGES}"
+
 
 ssp "Starting unattended install..."
 
