@@ -93,16 +93,19 @@ NVIDIA_PACKAGES="nvidia-lts nvidia-settings"
 ALL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES} ${NVIDIA_PACKAGES} linux nvidia"
 
 # TODO: auto select packages based on detected system components. Waiting on gum v0.7 for --selected in choose option
-# if [ ! -z "$(ls -a /sys/class/power_supply)" ]; then
-#     POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES}"
-# fi
-# if [ ! -z "$(lspci | grep -i nvidia)" ]; then
-#     POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${NVIDIA_PACKAGES}"
-# fi
+if [ ! -z "$(ls -a /sys/class/power_supply)" ]; then
+    POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES}"
+fi
+if [ ! -z "$(lspci | grep -i nvidia)" ]; then
+    POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${NVIDIA_PACKAGES}"
+fi
+POTENTIAL_PACKAGES=$(echo ${POTENTIAL_PACKAGES} | sed -r "s/[ ]+/,/g")
+echo ${POTENTIAL_PACKAGES}
 
 # let user select which packages they want
-ssp "Select packages to install"
-SELECTED_PACKAGES=$(gum choose --height=15 --no-limit ${=ALL_PACKAGES})
+ssp "Select packages to install. To select nothing, press Escape"
+SELECTED_PACKAGES=$(gum choose --height=15 --no-limit --selected=${POTENTIAL_PACKAGES} ${=ALL_PACKAGES})
+echo ${SELECTED_PACKAGES}
 
 ssp "Starting unattended install..."
 
