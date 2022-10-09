@@ -72,6 +72,12 @@ cat >>/etc/sudoers.d/20-win-reboot <<EOL
 greeter ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/win-reboot-now
 %sudo ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/win-reboot-now
 EOL
+
+sp "Writing hamachi override for haguichi"
+
+cat >>/var/lib/logmein-hamachi/h2-engine-override.cfg <<EOL
+Ipc.User {{ .chezmoi.username -}}
+EOL
 {{- end }}
 
 # sshd
@@ -156,11 +162,15 @@ EOL
 ssp "ENABLING SERVICES"
 
 sp "Enabling systemd services"
-systemctl enable greetd.service
 systemctl enable sshd.service
+systemctl enable --now reflector.timer
+
+{{ if not (eq .chassistype "wsl") }}
+sp "Enabling non-WSL services"
+systemctl enable greetd.service
 systemctl enable syncthing@{{- .chezmoi.username -}}.service
-systemctl enable reflector.timer
-systemctl start reflector.timer
+systemctl enable logmein-hamachi.service
+{{- end }}
 
 # laptop services
 {{- if eq .chassistype "laptop" }}
