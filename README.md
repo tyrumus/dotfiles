@@ -8,20 +8,25 @@ This new repo is managed by [chezmoi](https://www.chezmoi.io/)
 
 Some details about the current setup, and links to their respective install/config information (Arch Wiki preferred).
 
-- Distro: [Arch Linux](https://archlinux.org/)
-- Window Manager: [Sway](https://wiki.archlinux.org/title/Sway)
-- Shell: [Zsh](https://wiki.archlinux.org/title/Zsh)
-- Terminal Emulator: [Kitty](https://wiki.archlinux.org/title/Kitty)
-- Display Manager: [greetd](https://wiki.archlinux.org/title/Greetd) with greeter [greetd-tuigreet](https://wiki.archlinux.org/title/Greetd#tuigreet)
-- App Launcher: [rofi](https://wiki.archlinux.org/title/Rofi)
-- Widgets: [eww](https://github.com/elkowar/eww)
-- Panel: [waybar](https://github.com/Alexays/Waybar)
-- Text Editor: [Neovim](https://wiki.archlinux.org/title/Neovim)
-- File Manager: [ranger](https://wiki.archlinux.org/title/Ranger)
-- Notification Daemon: [dunst](https://wiki.archlinux.org/title/Dunst)
-- Music Player: [Spotify](https://wiki.archlinux.org/title/Spotify)
-- Lockscreen: [swaylock-effects](https://github.com/jirutka/swaylock-effects)
-- Color scheme: [gruvbox](https://github.com/morhetz/gruvbox)
+Component | Software
+--- | ---
+Distro | [Arch Linux](https://archlinux.org/)
+Shell | [Zsh](https://wiki.archlinux.org/title/Zsh)
+Display Manager | [greetd](https://wiki.archlinux.org/title/Greetd) with greeter [greetd-tuigreet](https://wiki.archlinux.org/title/Greetd#tuigreet)
+Wayland Compositor | [Sway](https://wiki.archlinux.org/title/Sway)
+Lockscreen | [swaylock-effects](https://github.com/jirutka/swaylock-effects)
+App Launcher | [rofi-lbonn-wayland](https://aur.archlinux.org/packages/rofi-lbonn-wayland)
+Panel | [waybar](https://github.com/Alexays/Waybar)
+Widgets | [eww](https://github.com/elkowar/eww)
+Notification Daemon | [dunst](https://wiki.archlinux.org/title/Dunst)
+Terminal Emulator | [Kitty](https://wiki.archlinux.org/title/Kitty)
+Text Editor | [Neovim](https://wiki.archlinux.org/title/Neovim)
+File Manager | [ranger](https://wiki.archlinux.org/title/Ranger)
+Color scheme | [gruvbox](https://github.com/morhetz/gruvbox)
+Music Player | [Spotify](https://wiki.archlinux.org/title/Spotify)
+Screenshot tool | [grimshot](https://github.com/swaywm/sway/blob/master/contrib/grimshot) / [grim](https://sr.ht/~emersion/grim/)
+
+If you want to know more, see what's installed by default in the [install-utils script.](run_+02-install-utils.zsh.tmpl)
 
 ## Screenshot
 
@@ -30,21 +35,21 @@ Some details about the current setup, and links to their respective install/conf
 ## Setup
 Install chezmoi with your distro's package manager, then run the following:
 ```
-$ chezmoi init https://github.com/tyrumus/dotfiles.git
+chezmoi init https://github.com/tyrumus/dotfiles.git
 ```
 
-My `run_once` scripts are intended to deploy [an entirely new Arch Linux install.](https://github.com/tyrumus/dotfiles#run-unattended-arch-linux-install) **This will install tons of packages and enable systemd services.**
+My `run` scripts are intended to deploy [an entirely new Arch Linux install.](https://github.com/tyrumus/dotfiles#run-unattended-arch-linux-install) **This will install tons of packages and enable systemd services.**
 
 If you don't want my automated scripts to mess up your Linux install, run the following command:
 ```
-$ chezmoi cd
-$ sh install/disable-install.sh
-$ exit
+chezmoi cd
+sh install/disable-install.sh
+exit
 ```
 
 Finally, apply the dotfiles:
 ```
-$ chezmoi apply
+chezmoi apply
 ```
 
 Logout of your session, and log back in. Enjoy!
@@ -66,7 +71,7 @@ Linux x86-64 root (/) | remainder of drive
 
 Once that's done, run the install script:
 ```
-$ curl -L https://tyrumus.dev/ai | zsh
+curl -L https://tyrumus.dev/ai | zsh
 ```
 
 ## TODO
