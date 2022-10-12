@@ -5,7 +5,7 @@
 source shared-vars.zsh
 
 # Wayland-specific environment vars for various applications
-export QT_QPA_PLATFORM=wayland
+export QT_QPA_PLATFORM="wayland;xcb"
 export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
 # export QT_SCREEN_SCALE_FACTORS=1.5
 export ECORE_EVAS_ENGINE=wayland_egl
