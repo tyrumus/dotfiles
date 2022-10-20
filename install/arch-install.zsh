@@ -30,6 +30,9 @@ else
     exit 1
 fi
 
+# exit script if any command returns nonzero
+set -e
+
 ### USER INPUT FOR OPTIONS ###
 echo
 echo
@@ -133,7 +136,7 @@ display_drives ${DRIVE_ESP} ${DRIVE_SWAP} ${DRIVE_ROOT}
 sp "Chezmoi URL          -> ${CHEZMOI_URL}"
 sp "Chassis type:        -> ${CHASSIS_TYPE}"
 sp "Packages             -> ${PRETTY_SELECTED_PACKAGES}"
-
+gum confirm "Proceed with install?" --selected.background=45 --selected.foreground=0
 
 ssp "Starting unattended install..."
 
@@ -213,3 +216,4 @@ ssp "Installation complete."
 unalias ssp
 unalias sp
 unalias load
+exit 0
