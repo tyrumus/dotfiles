@@ -6,7 +6,7 @@
 # check for functioning internet connection
 # probably pointless, since this script is intended to be downloaded from the internet
 echo -n "Checking internet connection: "
-ping -c 1 archlinux.org &> /dev/null
+curl https://archlinux.org &> /dev/null
 if [[ $? = 0 ]]; then
     echo "SUCCESS"
 else
@@ -203,7 +203,7 @@ ssp "Adding finishing touches"
 sp "Adding Chezmoi init"
 cat >>/mnt/home/${USRNAME}/.zshrc <<EOL
 rm \$0
-chezmoi init ${CHEZMOI_URL}
+chezmoi init ${CHEZMOI_URL} --apply
 EOL
 
 load --title "Syncing drives" -- sync
