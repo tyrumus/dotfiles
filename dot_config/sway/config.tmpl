@@ -165,6 +165,9 @@ xwayland enable
 workspace_auto_back_and_forth no
 
 ### Userspace stuffs
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+exec dbus-update-activation-environment --systemd --all
+exec systemctl --user restart xdg-desktop-portal xdg-desktop-portal-wlr
 exec xrdb -load ~/.Xresources
 exec /usr/bin/dunst &
 exec eww open main-top
@@ -176,4 +179,3 @@ bar {
     position top
 }
 
-include /etc/sway/config.d/*
