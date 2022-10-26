@@ -1,0 +1,7 @@
+#{include base}
+#{include terminal}
+#{include gui}
+acpi
+bluez
+brightnessctl
+tlp

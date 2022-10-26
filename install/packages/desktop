@@ -1,0 +1,9 @@
+#{include base}
+#{include terminal}
+#{include gui}
+bitwig-studio
+blender
+obs-studio
+qt6-wayland
+reaper
+steam
