@@ -155,7 +155,7 @@ gaps top 1
 
 ### Misc extra stuff
 input * xkb_numlock enable
-seat seat0 xcursor_theme Adwaita 16
+seat seat0 xcursor_theme macOS-Monterey 24
 floating_modifier $mod normal
 focus_follows_mouse yes
 default_border pixel 2
@@ -169,6 +169,8 @@ exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CU
 exec dbus-update-activation-environment --systemd --all
 exec systemctl --user restart xdg-desktop-portal xdg-desktop-portal-wlr
 exec xrdb -load ~/.Xresources
+exec_always gsettings set org.gnome.desktop.interface cursor-theme macOS-Monterey
+exec_always gsettings set org.gnome.desktop.interface cursor-size 24
 exec /usr/bin/dunst &
 exec eww open main-top
 mode "ewwmenu"
