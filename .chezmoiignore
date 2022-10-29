@@ -15,4 +15,5 @@ img/
 .fonts
 .local
 .face
+.Xresources
 {{- end }}
