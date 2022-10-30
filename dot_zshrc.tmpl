@@ -60,14 +60,6 @@ search() {
     find . -name "$1" -exec grep -i "$2" {} +
 }
 
-ranger() {
-    if [ -z "$RANGER_LEVEL" ]; then
-        /usr/bin/ranger "$@"
-    else
-        exit
-    fi
-}
-
 # fzf plugins
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh

@@ -10,4 +10,3 @@ export EDITOR=/usr/bin/nvim
 # Misc stuffs
 export WINEFSYNC=1
 export BAT_THEME="gruvbox-dark"
-export RANGER_LOAD_DEFAULT_RC=FALSE

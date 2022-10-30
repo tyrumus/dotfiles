@@ -551,3 +551,6 @@ nnoremap <c-t> :tabnew<cr>
 nnoremap <Tab> :tabnext<cr>
 nnoremap <S-Tab> :tabprevious<cr>
 nnoremap <S-e> :edit<cr>
+nnoremap zh za
+set number
+set relativenumber
