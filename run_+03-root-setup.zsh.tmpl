@@ -147,6 +147,116 @@ IdleAction=suspend
 IdleActionSec=300
 EOL
 
+# automount samba shares
+{{- if eq .chassistype "desktop" }}
+cat >>/etc/systemd/system/mnt-backup.mount <<EOL
+[Unit]
+Description=Mount trogdor.lan ty-backup share
+Requires=network-online.target
+After=network-online.service
+
+[Mount]
+What=//trogdor.lan/ty-backup
+Where=/mnt/backup
+Options=_netdev,credentials=/etc/samba/credentials/trogdor,iocharset=utf8,rw,uid=naddan,gid=naddan
+Type=cifs
+TimeoutSec=10
+ForceUnmount=true
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-backup.automount <<EOL
+[Unit]
+Description=Automount trogdor ty-backup share
+Requires=network-online.target
+After=network-online.service
+
+[Automount]
+Where=/mnt/backup
+TimeoutIdleSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-mov.mount <<EOL
+[Unit]
+Description=Mount trogdor.lan mov share
+Requires=network-online.target
+After=network-online.service
+
+[Mount]
+What=//trogdor.lan/mov
+Where=/mnt/mov
+Options=_netdev,credentials=/etc/samba/credentials/trogdor,iocharset=utf8,rw,uid=naddan,gid=naddan
+Type=cifs
+TimeoutSec=10
+ForceUnmount=true
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-mov.automount <<EOL
+[Unit]
+Description=Automount trogdor mov share
+Requires=network-online.target
+After=network-online.service
+
+[Automount]
+Where=/mnt/mov
+TimeoutIdleSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-public.mount <<EOL
+[Unit]
+Description=Mount trogdor.lan backup share
+Requires=network-online.target
+After=network-online.service
+
+[Mount]
+What=//trogdor.lan/backup
+Where=/mnt/public
+Options=_netdev,credentials=/etc/samba/credentials/trogdor,iocharset=utf8,rw,uid=naddan,gid=naddan
+Type=cifs
+TimeoutSec=10
+ForceUnmount=true
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-public.automount <<EOL
+[Unit]
+Description=Automount trogdor backup share
+Requires=network-online.target
+After=network-online.service
+
+[Automount]
+Where=/mnt/public
+TimeoutIdleSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+mkdir -p /etc/samba/credentials
+chmod 700 /etc/samba/credentials
+cat >>/etc/samba/credentials/trogdor <<EOL
+username=
+password=
+EOL
+chmod 400 /etc/samba/credentials/trogdor
+
+cat >>/home/{{- .chezmoi.username -}}/.cache/chezmoi-reminders.zsh <<EOL
+echo "Edit the Samba credentials file at /etc/samba/credentials/trogdor"
+echo "It should contain the following:"
+echo
+echo "username=<samba_username>"
+echo "password=<samba_password>"
+EOL
+{{- end }}
+
 # reflector
 sp "Writing reflector config"
 mkdir -p /etc/xdg/reflector
