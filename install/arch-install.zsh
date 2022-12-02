@@ -160,6 +160,10 @@ pacstrap /mnt ${=PACKAGES}
 ssp "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
 
+# workaround for Intel Arc graphics support
+sp "Including Intel Arc Graphics support"
+EXTRA_KERNEL_PARAMS=i915.force_probe=56a0
+
 # perform chrooted operations
 # may need to add -e 3 to the efibootmgr command if the motherboard deletes the boot entry on reboot
 load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
@@ -182,7 +186,7 @@ echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
 mkinitcpio -P
-efibootmgr -e 3 -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux-lts -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet initrd=/initramfs-linux-lts.img"
+efibootmgr -e 3 -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux-lts -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) ${EXTRA_KERNEL_PARAMS} rw quiet initrd=/initramfs-linux-lts.img"
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
 hostnamectl chassis "${CHASSIS_TYPE}"
