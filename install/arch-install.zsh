@@ -109,16 +109,12 @@ CHASSIS_TYPE=$(gum choose {desktop,laptop,convertible,server,tablet,handset,watc
 hostnamectl chassis "${CHASSIS_TYPE}"
 clear
 
-POTENTIAL_PACKAGES="base base-devel efibootmgr linux-lts linux-firmware chezmoi dhcpcd git sudo wget zsh"
+POTENTIAL_PACKAGES="base base-devel efibootmgr linux linux-firmware chezmoi dhcpcd git sudo wget zsh"
 LAPTOP_PACKAGES="iwd"
-NVIDIA_PACKAGES="nvidia-lts nvidia-settings"
-ALL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES} ${NVIDIA_PACKAGES} linux nvidia"
+ALL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES} linux-lts nvidia nvidia-lts"
 
 if [ ! -z "$(ls -a /sys/class/power_supply)" ]; then
     POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES}"
-fi
-if [ ! -z "$(lspci | grep -i nvidia)" ]; then
-    POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${NVIDIA_PACKAGES}"
 fi
 POTENTIAL_PACKAGES=$(echo ${POTENTIAL_PACKAGES} | sed -r "s/[ ]+/,/g")
 

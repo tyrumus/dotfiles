@@ -13,13 +13,6 @@
 {{- else if (eq .chezmoi.os "windows") }}
 {{-     $chassisType = (output "powershell.exe" "-noprofile" "-command" "if (Get-WmiObject -Class win32_battery -ComputerName localhost) { echo laptop } else { echo desktop }") }}
 {{- end }}
-{{- $hasNvidia := "no" }}
-{{- if contains "NVIDIA" (output "lspci") }}
-{{-     writeToStdout "chezmoi has determined there is an NVIDIA card present.\n" }}
-{{-     if (promptBool "Is this correct? [Y/n]" true) }}
-{{-         $hasNvidia = "yes" }}
-{{-     end }}
-{{- end }}
 {{- writeToStdout (cat "available options: desktop (3 screen setup), laptop (1 screen setup), wsl (basic terminal-only setup in Arch distro)\n") }}
 {{- writeToStdout (cat "chezmoi has determined it is running on" $chassisType "\n") }}
 {{- if (not (promptBool "Is this correct? [Y/n]" true)) }}
@@ -40,7 +33,6 @@
 
 [data]
     chassistype = {{ $chassisType | quote }}
-    hasnvidia = {{ $hasNvidia | quote }}
 
 # [diff]
 #     command = "nvim"

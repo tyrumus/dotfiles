@@ -137,12 +137,7 @@ exec swaymsg focus output $monprimary
 
 ### Lockscreen and idle configuration
 set $lock /home/{{- .chezmoi.username -}}/.local/bin/lockscreen
-{{- if eq .hasnvidia "yes" }}
-# idlehint temporarily removed until nvidia driver plays nice with suspend on wayland
-exec swayidle -w timeout 300 '$lock' before-sleep '$lock' timeout 310 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
-{{- else }}
 exec swayidle -w timeout 300 $lock before-sleep $lock idlehint 300
-{{- end }}
 
 ### Theming
 output * bg /home/{{- .chezmoi.username -}}/.config/sway/gruvbox_city.png fill

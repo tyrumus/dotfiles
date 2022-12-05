@@ -1,9 +1,9 @@
 # vim: ft=conf
-{{- if eq .chassistype "desktop" -}}
+{{- if eq .chassistype "desktop" }}
 ### Output configuration
 set $monprimary DP-2
-set $monsecondary DP-3
-set $montertiary DP-1
+set $monsecondary DP-4
+set $montertiary DP-3
 
 output * scale 1
 output $monprimary mode 1920x1080@144.001Hz
@@ -27,8 +27,8 @@ mode "ewwmenu" {
     bindsym $alt+w exec win-reboot-now
 }
 bindsym Print exec --no-startup-id grimshot copy area
-{{- end -}}
-{{- if eq .chassistype "laptop" -}}
+{{- end }}
+{{- if eq .chassistype "laptop" }}
 ### Output configuration
 set $monprimary eDP-1
 
@@ -60,4 +60,4 @@ bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
 bindsym XF86AudioMedia exec keepassxc &
 bindsym Print exec --no-startup-id flameshot gui
 bindswitch lid:on exec systemctl suspend
-{{- end -}}
+{{- end }}
