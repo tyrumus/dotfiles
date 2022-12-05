@@ -74,25 +74,32 @@ TIMEZONE=$(gum input --value "Europe/Zurich")
 clear
 
 function display_drives() {
-    sp "EFI system partition -> $1"
-    sp "Swap space partition -> $2"
-    sp "Root partition       -> $3"
+    sp "Boot drive           -> $1"
+    sp "EFI system partition -> $2"
+    sp "Swap space partition -> $3"
+    sp "Root partition       -> $4"
 }
 
 # prompt for drive info
 display_drives
-ssp "Select device or partition for EFI system partition"
+ssp "Select device for boot drive. Cannot be a partition, and must be the device that has the EFI partition on it"
+DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
+DRIVE="/dev/${DATA}"
+clear
+
+display_drives ${DRIVE}
+ssp "Select device or partition for EFI system partition. Must be the same storage device as selected for boot drive."
 DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
 DRIVE_ESP="/dev/${DATA}"
 clear
 
-display_drives ${DRIVE_ESP}
+display_drives ${DRIVE} ${DRIVE_ESP}
 ssp "Select device or partition for swap space"
 DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
 DRIVE_SWAP="/dev/${DATA}"
 clear
 
-display_drives ${DRIVE_ESP} ${DRIVE_SWAP}
+display_drives ${DRIVE} ${DRIVE_ESP} ${DRIVE_SWAP}
 ssp "Select device or partition for root filesystem"
 DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
 DRIVE_ROOT="/dev/${DATA}"
@@ -113,8 +120,11 @@ POTENTIAL_PACKAGES="base base-devel efibootmgr linux linux-firmware chezmoi dhcp
 LAPTOP_PACKAGES="iwd"
 ALL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES} linux-lts nvidia nvidia-lts"
 
-if [ ! -z "$(ls -a /sys/class/power_supply)" ]; then
+if [ ! -z "$(ls /sys/class/power_supply)" ]; then
+    echo "power supply discovered"
     POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES}"
+else
+    echo "no power supply"
 fi
 POTENTIAL_PACKAGES=$(echo ${POTENTIAL_PACKAGES} | sed -r "s/[ ]+/,/g")
 
@@ -128,7 +138,7 @@ ssp --underline "Installation preferences"
 sp "sudoer account       -> ${USRNAME}"
 sp "Hostname             -> ${HOSTNAME}"
 sp "Timezone             -> ${TIMEZONE}"
-display_drives ${DRIVE_ESP} ${DRIVE_SWAP} ${DRIVE_ROOT}
+display_drives ${DRIVE} ${DRIVE_ESP} ${DRIVE_SWAP} ${DRIVE_ROOT}
 sp "Chezmoi URL          -> ${CHEZMOI_URL}"
 sp "Chassis type:        -> ${CHASSIS_TYPE}"
 sp "Packages             -> ${PRETTY_SELECTED_PACKAGES}"
@@ -151,38 +161,67 @@ mount ${DRIVE_ESP} /mnt/boot
 swapon ${DRIVE_SWAP}
 
 ssp "Installing all packages"
-pacstrap /mnt ${=PACKAGES}
+pacstrap /mnt ${=SELECTED_PACKAGES}
 
 ssp "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # perform chrooted operations
-# may need to add -e 3 to the efibootmgr command if the motherboard deletes the boot entry on reboot
-load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
-ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
-hwclock --systohc
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-locale-gen
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
-echo "${HOSTNAME}" > /etc/hostname
-echo "127.0.0.1 localhost" >> /etc/hosts
-echo "::1 localhost" >> /etc/hosts
-echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
-groupadd sudo
-useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
-systemctl enable dhcpcd.service
-sed -i "s/#Color.*/Color/" /etc/pacman.conf
-sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
-echo "[multilib]" >> /etc/pacman.conf
-echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
-sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
-echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
-mkinitcpio -P
-efibootmgr -e 3 -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux-lts -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet initrd=/initramfs-linux-lts.img"
-echo root:${ROOT_PASSWD} | chpasswd
-echo ${USRNAME}:${USER_PASSWD} | chpasswd
-hostnamectl chassis "${CHASSIS_TYPE}"
-EOF
+### NOTE: may need to add -e 3 to the efibootmgr command if the motherboard deletes the boot entry on reboot
+
+if [[ "${SELECTED_PACKAGES}" == *"linux-lts"* ]]; then
+    load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
+    ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+    hwclock --systohc
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen
+    echo "LANG=en_US.UTF-8" > /etc/locale.conf
+    echo "${HOSTNAME}" > /etc/hostname
+    echo "127.0.0.1 localhost" >> /etc/hosts
+    echo "::1 localhost" >> /etc/hosts
+    echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
+    groupadd sudo
+    useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
+    systemctl enable dhcpcd.service
+    sed -i "s/#Color.*/Color/" /etc/pacman.conf
+    sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
+    echo "[multilib]" >> /etc/pacman.conf
+    echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+    sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
+    echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
+    mkinitcpio -P
+    efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux-lts -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet i915.force_probe=56a0 initrd=/initramfs-linux-lts.img"
+    echo root:${ROOT_PASSWD} | chpasswd
+    echo ${USRNAME}:${USER_PASSWD} | chpasswd
+    hostnamectl chassis "${CHASSIS_TYPE}"
+    EOF
+else
+    load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
+    ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+    hwclock --systohc
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen
+    echo "LANG=en_US.UTF-8" > /etc/locale.conf
+    echo "${HOSTNAME}" > /etc/hostname
+    echo "127.0.0.1 localhost" >> /etc/hosts
+    echo "::1 localhost" >> /etc/hosts
+    echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
+    groupadd sudo
+    useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
+    systemctl enable dhcpcd.service
+    sed -i "s/#Color.*/Color/" /etc/pacman.conf
+    sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
+    echo "[multilib]" >> /etc/pacman.conf
+    echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+    sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
+    echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
+    mkinitcpio -P
+    efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet i915.force_probe=56a0 initrd=/initramfs-linux.img"
+    echo root:${ROOT_PASSWD} | chpasswd
+    echo ${USRNAME}:${USER_PASSWD} | chpasswd
+    hostnamectl chassis "${CHASSIS_TYPE}"
+    EOF
+fi
 
 # enable iwd
 if [ ! -z $(echo ${SELECTED_PACKAGES} | grep iwd) ]; then
