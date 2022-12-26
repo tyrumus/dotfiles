@@ -3,6 +3,7 @@ LICENSE.md
 nvim/plugin/packer_
 install/
 img/
+ff-chrome/
 {{- if eq .chassistype "wsl" }}
 .config/dunst
 .config/eww

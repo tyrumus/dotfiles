@@ -33,3 +33,6 @@
 
 [data]
     chassistype = {{ $chassisType | quote }}
+{{- if not (eq $chassisType "wsl") }}
+    firefoxhash = {{ mozillaInstallHash "/usr/lib/firefox" | quote }}
+{{- end -}}
