@@ -47,7 +47,6 @@ alias sleeplevi="ssh -t leviticus /usr/bin/sudo /usr/bin/systemctl suspend"
 
 {{- if not (eq .chassistype "wsl") }}
 ### kitty support
-source <(kitty + complete setup zsh)
 alias clip="kitty +kitten clipboard"
 alias c="pwd | clip"
 alias ssh="TERM=xterm-256color ssh"
