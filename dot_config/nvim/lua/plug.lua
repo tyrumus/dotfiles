@@ -1,121 +1,104 @@
-pcall(vim.cmd, "packadd packer.nvim")
-
-local present, packer = pcall(require, "packer")
-local firstRun = false
-
-if not present then
-    -- Packer is not installed
-    local packer_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-    vim.fn.delete(packer_path, "rf")
-    vim.fn.system({"git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", packer_path})
-    vim.cmd("packadd packer.nvim")
-    present, packer = pcall(require, "packer")
-    if not present then
-        error("Couldn't install packer")
-        return false
-    end
-    firstRun = true
+-- lazy.nvim stuff
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable",
+        lazypath,
+    })
 end
+vim.opt.rtp:prepend(lazypath)
 
-packer.init({
-    git = {
-        clone_timeout = 120
-    }
-})
-
--- auto source this file on write
-vim.cmd([[autocmd BufWritePost plug.lua luafile %]])
-
-local plugs = {
-    {
-        "wbthomason/packer.nvim"
-    },
-    {
-        "goolord/alpha-nvim",
-        config = function()
-            require("alpha").setup(require("dashboard").opts)
-        end
-    },
-    {
-        "kyazdani42/nvim-web-devicons",
-        config = function()
-            require("nvim-web-devicons").setup({
-                default = true
-            })
-        end
-    },
-    {
-        "nvim-lualine/lualine.nvim",
-        config = function()
-            require("lualine").setup({
-                options = {
-                    theme = "auto",
-                    section_separators = {left = "", right = ""},
-                    component_separators = {"", ""},
-                    icons_enabled = true,
-                    refresh = {
-                        statusline = 250,
-                    }
-                }
-            })
-        end,
-        requires = {"kyazdani42/nvim-web-devicons", opt = true}
-    },
+local plugins = {
     {
         "eddyekofo94/gruvbox-flat.nvim",
+        priority = 1000,
         config = function()
             vim.cmd("colorscheme gruvbox-flat")
         end
     },
     {
-        "lukas-reineke/indent-blankline.nvim",
-        config = function()
-            require("indent_blankline").setup({
-                char = "▎",
-                space_char_blankline = " ",
-                show_end_of_line = true,
-                show_current_context = true,
-                show_current_context_start = true,
-                buftype_exclude = {"terminal", "nofile", "help"},
-                filetype_exclude = {
-                    "alpha",
-                    "man",
-                    "gitmessengerpopup",
-                    "diagnosticpopup",
-                    "lspinfo",
-                    "packer",
-                    "checkhealth",
-                    "help",
-                    "json",
-                    "terminal",
+        "goolord/alpha-nvim",
+        opts = require("dashboard").opts
+    },
+    {
+        "kyazdani42/nvim-web-devicons",
+        opts = { default = true }
+    },
+    {
+        "nvim-lualine/lualine.nvim",
+        opts = {
+            options = {
+                theme = "auto",
+                section_separators = {left = "", right = ""},
+                component_separators = {"", ""},
+                icons_enabled = true,
+                refresh = {
+                    statusline = 250,
                 }
-            })
-        end
+            }
+        },
+        dependencies = {
+            "kyazdani42/nvim-web-devicons",
+        }
+    },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        opts = {
+            char = "▎",
+            space_char_blankline = " ",
+            show_end_of_line = true,
+            show_current_context = true,
+            show_current_context_start = true,
+            buftype_exclude = {"terminal", "nofile", "help"},
+            filetype_exclude = {
+                "alpha",
+                "man",
+                "gitmessengerpopup",
+                "diagnosticpopup",
+                "lspinfo",
+                "packer",
+                "checkhealth",
+                "help",
+                "json",
+                "terminal",
+            }
+        }
     },
     {
         "ibhagwan/fzf-lua",
-        config = function()
-            require("fzf-lua").setup({
-                files = {
-                    multiprocess = true,
-                    git_icons = true,
-                    file_icons = true,
-                    color_icons = true,
-                    rg_opts = "--color=never --files --hidden --follow --ignore -g '!.git' -g '!node_modules'"
-                }
-            })
-        end,
-        requires = {"vijaymarupudi/nvim-fzf", "kyazdani42/nvim-web-devicons"}
+        lazy = true,
+        opts = {
+            files = {
+                multiprocess = true,
+                git_icons = true,
+                file_icons = true,
+                color_icons = true,
+                rg_opts = "--color=never --files --hidden --follow --ignore -g '!.git' -g '!node_modules'"
+            }
+        },
+        dependencies = {
+            "vijaymarupudi/nvim-fzf",
+            "kyazdani42/nvim-web-devicons"
+        }
     },
     {
-        "kdheepak/lazygit.nvim"
+        "kdheepak/lazygit.nvim",
+        lazy = true,
+        cmd = "LazyGit"
     },
     {
         "folke/todo-comments.nvim",
-        config = function()
-            require("todo-comments").setup()
-        end,
-        requires = {{"nvim-lua/plenary.nvim"}, {"folke/trouble.nvim"}}
+        lazy = true,
+        cmd = "TodoTrouble",
+        config = true,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "folke/trouble.nvim"
+        }
     },
     {
         "terrortylor/nvim-comment",
@@ -124,19 +107,24 @@ local plugs = {
         end
     },
     {
-        "tpope/vim-surround"
+        "tpope/vim-surround",
     },
     {
         "lewis6991/gitsigns.nvim",
-        config = function()
-            require("gitsigns").setup()
-        end
+        config = true,
+        dependencies = {
+            "folke/trouble.nvim"
+        }
     },
     {
         "sindrets/diffview.nvim",
-        config = function()
-            require("diffview").setup()
-        end
+        config = true,
+        lazy = true,
+        cmd = "DiffviewOpen",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "kyazdani42/nvim-web-devicons"
+        }
     },
     {
         "hrsh7th/nvim-cmp",
@@ -151,10 +139,6 @@ local plugs = {
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
                     ["<C-e>"] = cmp.mapping.close(),
                     ["<TAB>"] = cmp.mapping.confirm({
-                        behavior = cmp.ConfirmBehavior.Insert,
-                        select = true,
-                    }),
-                    ["<CR>"]  = cmp.mapping.confirm({
                         behavior = cmp.ConfirmBehavior.Insert,
                         select = true,
                     })
@@ -179,7 +163,11 @@ local plugs = {
                 }
             })
         end,
-        requires = {{"hrsh7th/cmp-nvim-lsp"}, {"hrsh7th/cmp-buffer"}, {"onsails/lspkind.nvim"}}
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-buffer",
+            "onsails/lspkind.nvim"
+        }
     },
     {
         "williamboman/nvim-lsp-installer",
@@ -194,42 +182,49 @@ local plugs = {
                     }
                 }
             })
-    
             require("lspconfig").pyright.setup({})
             require("lspconfig").svelte.setup({})
             require("lspconfig").tailwindcss.setup({})
         end,
-        after = "nvim-lspconfig"
+        dependencies = {
+            "nvim-lspconfig"
+        }
     },
     {
         "neovim/nvim-lspconfig"
     },
     {
         "nvim-treesitter/nvim-treesitter",
-        run = function()
+        init = function()
             require("nvim-treesitter.install").update({with_sync = true})
         end,
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = {"bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
-                highlight = {
-                    enable = true
-                }
-            })
-        end,
-        after = "nvim-lsp-installer"
+        opts = {
+            ensure_installed = {"bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
+            highlight = {
+                enable = true
+            }
+        },
+        dependencies = {
+            "nvim-lsp-installer"
+        }
     },
     {
-        "fladson/vim-kitty"
+        "fladson/vim-kitty",
+        lazy = true,
+        ft = "kitty"
     },
     {
-        "folke/which-key.nvim"
+        "folke/which-key.nvim",
+        lazy = true,
+        cmd = "WhichKey"
     },
     {
         "lambdalisue/suda.vim"
     },
     {
-        "elkowar/yuck.vim"
+        "elkowar/yuck.vim",
+        lazy = true,
+        ft = "yuck"
     },
     {
         "nathom/filetype.nvim"
@@ -255,11 +250,7 @@ local plugs = {
     }
 }
 
-return packer.startup(function(use)
-    for _, v in pairs(plugs) do
-        use(v)
-    end
-    if firstRun then
-        packer.sync()
-    end
-end)
+local opts = {
+}
+
+require("lazy").setup(plugins, opts)

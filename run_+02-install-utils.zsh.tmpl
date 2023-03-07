@@ -73,7 +73,7 @@ mkdir "$HOME/notes"
 
 # nvim setup
 sp "Starting headless Neovim install"
-nvim --headless -c "autocmd User PackerComplete quitall"
+nvim --headless "+Lazy! sync" +qa
 
 sp "Installing Git LFS"
 git lfs install

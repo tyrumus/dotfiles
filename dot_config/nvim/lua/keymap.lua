@@ -70,5 +70,5 @@ map("<leader>lg", "<cmd>LazyGit<CR>")
 -- todo list
 map("<leader>t", "<cmd>TodoTrouble<CR>")
 
--- Packer Sync
-map("<leader>p", "<cmd>PackerSync<CR>")
+-- Lazy.nvim Sync
+map("<leader>l", "<cmd>Lazy sync<CR>")
