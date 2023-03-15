@@ -66,9 +66,9 @@ local buttons = {
     val = {
         button("e", "  New file", "<cmd>ene <CR>"),
         button("f", "  Find file", "<cmd>lua require('fzf-lua').files()<CR>"),
-        button("r", "  Update plugins", "<cmd>PackerSync<CR>"),
+        button("r", "  Update plugins", "<cmd>Lazy sync<CR>"),
         button("s", "  Settings", ":cd $HOME/.config/nvim | lua require('fzf-lua').files()<CR>"),
-        button("R", "  Reset", "<cmd>!rm -rf ~/.local/share/nvim/site/pack/packer && rm ~/.config/nvim/plugin/packer_compiled.lua<CR>"),
+        button("R", "  Reset", "<cmd>!rm -rf ~/.local/share/nvim/lazy<CR>"),
         button("q", "  Quit", "<cmd>q!<CR>"),
     },
     opts = {
