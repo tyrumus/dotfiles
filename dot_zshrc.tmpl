@@ -40,6 +40,8 @@ alias rsync="~/.local/share/zsh-scripts/rsync-fixed.zsh"
 alias chezgit="lazygit -p ~/.local/share/chezmoi"
 alias cedit="chezmoi edit"
 alias lg="lazygit"
+alias disablehistory="function zshaddhistory(){ return 1 }"
+alias enablehistory="unset -f zshaddhistory"
 {{- if not (eq .chezmoi.hostname "leviticus") }}
 alias wakelevi="ssh pi \"/home/pi/wake.sh leviticus\""
 alias sleeplevi="ssh -t leviticus /usr/bin/sudo /usr/bin/systemctl suspend"
