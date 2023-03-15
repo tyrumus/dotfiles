@@ -14,6 +14,7 @@ else
     exit 1
 fi
 
+pacman -Sy
 pacman -S --noconfirm gum &> /dev/null
 
 alias ssp="gum style --foreground 45 --bold"
