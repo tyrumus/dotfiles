@@ -13,36 +13,31 @@ cache_weather_humidity="${cache_dir}/weather-humidity"
 cache_weather_high="${cache_dir}/weather-high"
 cache_weather_low="${cache_dir}/weather-low"
 
-cache_weather_data="${cache_dir}/weather-data"
-cache_weather_forecast="${cache_dir}/weather-forecast"
-
 ## Make cache dir
 if [[ ! -d "${cache_dir}" ]]; then
 	mkdir -p "${cache_dir}"
 fi
 
 get_last_time() {
+    declare -i do_update=1
     if [[ -f "${cache_last_get}" ]]; then
-        local last_time=$(cat ${cache_last_get})
+        declare -i last_time=$(cat ${cache_last_get})
 
         # add 1 hour
-        local comp_time=$((last_time + 3600))
-        local current_time=$(date +%s)
+        declare -i comp_time=$((last_time + 3600))
+        declare -i current_time=$(date +%s)
         if [[ ! -f "${lock_file}" ]]; then
             # there are no other instances of this script running
             if [[ "${current_time}" -gt "${comp_time}" ]]; then
                 # it's been 1 hour since data was last fetched from the API
-                return 0
-            else
-                return 1
+                do_update=0
             fi
-        else
-            return 1
         fi
     else
         # file doesn't exist, so API likely hasn't been called yet
-        return 0
+        do_update=0
     fi
+    return ${do_update}
 }
 
 ## Get data
@@ -56,27 +51,27 @@ update_weather_data() {
             source ${api_cfg}
 
             # API calls
-            weather=$(curl -sf "https://api.weatherbit.io/v2.0/current?key=${API_KEY}&lat=${LAT}&lon=${LONG}&units=${UNITS}")
-            sleep 2
-            forecast=$(curl -sf "https://api.weatherbit.io/v2.0/forecast/daily?key=${API_KEY}&lat=${LAT}&lon=${LONG}&units=${UNITS}&days=1")
-            echo ${weather} > ${cache_weather_data}
-            echo ${forecast} > ${cache_weather_forecast}
+            weather=$(curl -sf "https://api.pirateweather.net/forecast/${API_KEY}/${LAT},${LONG}?exclude=minutely,hourly,alerts&units=${UNITS}")
         fi
 
         if [ ! -z "$weather" ]; then
             # log last time API was called
             date +%s > ${cache_last_get}
-            weather_temp=$(echo "${weather}" | jq -r ".data[0].temp")
-            weather_icon_code=$(echo "${weather}" | jq -r ".data[0].weather.code")
-            weather_feel=$(echo "${weather}" | jq -r ".data[0].app_temp")
-            weather_wind=$(echo "${weather}" | jq -r ".data[0].wind_spd")
-            weather_hum=$(echo "${weather}" | jq -r ".data[0].rh")
+            weather_temp=$(echo "${weather}" | jq -r ".currently.temperature|round")
+            weather_icon_code=$(echo "${weather}" | jq -r ".currently.icon")
+            weather_feel=$(echo "${weather}" | jq -r ".currently.apparentTemperature|round")
+            weather_wind=$(echo "${weather}" | jq -r ".currently.windSpeed*10|round/10")
+            weather_hum=$(echo "${weather}" | jq -r ".currently.humidity*10|round/10")
+            weather_hi=$(echo "${weather}" | jq -r ".daily.data[0].temperatureMax*10|round/10")
+            weather_lo=$(echo "${weather}" | jq -r ".daily.data[0].temperatureMin*10|round/10")
         else
             weather_temp="0"
             weather_icon_code="0"
             weather_feel="0"
             weather_wind="0"
             weather_hum="0"
+            weather_hi="0"
+            weather_lo="0"
             rm ${cache_last_get}
         fi
         echo "${weather_temp}" > ${cache_weather_degree}
@@ -84,33 +79,26 @@ update_weather_data() {
         echo "${weather_wind}" > ${cache_weather_wind}
         echo "${weather_hum}" > ${cache_weather_humidity}
 
-        if [[ "${weather_icon_code}" -ge 200 && "${weather_icon_code}" -lt 300 ]]; then
-            weather_icon=""
-        elif [[ "${weather_icon_code}" -ge 300 && "${weather_icon_code}" -lt 600 ]]; then
+        if [[ "${weather_icon_code}" == "rain" ]]; then
             weather_icon=""
-        elif [[ "${weather_icon_code}" -ge 600 && "${weather_icon_code}" -lt 700 ]]; then
+        elif [[ "${weather_icon_code}" == "snow" || "${weather_icon_code}" == "sleet" ]]; then
             weather_icon=""
-        elif [[ "${weather_icon_code}" -ge 700 && "${weather_icon_code}" -lt 800 ]]; then
+        elif [[ "${weather_icon_code}" == "wind" || "${weather_icon_code}" == "fog" ]]; then
             weather_icon=""
-        elif [ "${weather_icon_code}" == "800" ]; then
+        elif [[ "${weather_icon_code}" == "clear-day" ]]; then
             weather_icon=""
-        elif [[ "${weather_icon_code}" -ge 801 && "${weather_icon_code}" -le 900 ]]; then
+        elif [[ "${weather_icon_code}" == "clear-night" ]]; then
+            weather_icon=""
+        elif [[ "${weather_icon_code}" == "cloudy" ]]; then
             weather_icon=""
+        elif [[ "${weather_icon_code}" == "partly-cloudy-day" ]]; then
+            weather_icon=""
+        elif [[ "${weather_icon_code}" == "partly-cloudy-night" ]]; then
+            weather_icon=""
         else
             weather_icon=""
         fi
         echo "${weather_icon}" > ${cache_weather_icon}
-
-
-
-        if [ ! -z "${forecast}" ]; then
-            weather_hi=$(echo "${forecast}" | jq -r ".data[0].high_temp")
-            weather_lo=$(echo "${forecast}" | jq -r ".data[0].low_temp")
-        else
-            weather_hi="0"
-            weather_lo="0"
-            rm ${cache_last_get}
-        fi
         echo "${weather_hi}" > ${cache_weather_high}
         echo "${weather_lo}" > ${cache_weather_low}
 
