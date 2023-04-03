@@ -14,6 +14,9 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
     {
+        "lewis6991/impatient.nvim"
+    },
+    {
         "eddyekofo94/gruvbox-flat.nvim",
         priority = 1000,
         config = function()
@@ -26,18 +29,117 @@ local plugins = {
     },
     {
         "kyazdani42/nvim-web-devicons",
+        lazy = true,
         opts = { default = true }
     },
     {
+        "williamboman/nvim-lsp-installer",
+        config = function()
+            require("nvim-lsp-installer").setup({
+                automatic_installation = true,
+                ui = {
+                    icons = {
+                        server_installed = "✓",
+                        server_pending = "➜",
+                        server_uninstalled = "✗"
+                    }
+                }
+            })
+            require("lspconfig").pyright.setup({})
+            require("lspconfig").svelte.setup({})
+            require("lspconfig").tailwindcss.setup({})
+            require("lspconfig").rust_analyzer.setup({
+                on_attach = on_attach,
+                settings = {
+                    ["rust-analyzer"] = {
+                        imports = {
+                            granularity = {
+                                group = "module",
+                            },
+                            prefix = "self",
+                        },
+                        cargo = {
+                            buildScripts = {
+                                enable = true,
+                            },
+                        },
+                        procMacro = {
+                            enable = true
+                        },
+                    }
+                }
+            })
+        end,
+        event = { "BufRead" },
+        dependencies = {
+            "nvim-lspconfig"
+        }
+    },
+    {
+        "neovim/nvim-lspconfig",
+        lazy = true
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = function()
+            require("nvim-treesitter.install").update({with_sync = true})
+        end,
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = {"bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
+                highlight = {
+                    enable = true
+                },
+                indent = {
+                    enable = true
+                },
+                autotag = {
+                    enable = true
+                },
+                rainbow = {
+                    enable = true,
+                    extended_mode = true
+                }
+            })
+        end,
+        event = { "BufRead" }
+    },
+    {
+        "mrjones2014/nvim-ts-rainbow",
+        lazy = true,
+        event = { "BufRead" },
+        dependencies = {
+            "nvim-treesitter"
+        }
+    },
+    {
+        "windwp/nvim-ts-autotag",
+        lazy = true,
+        event = { "BufRead" },
+        dependencies = {
+            "nvim-treesitter"
+        }
+    },
+    {
         "nvim-lualine/lualine.nvim",
+        lazy = true,
+        event = "VeryLazy",
         opts = {
             options = {
-                theme = "auto",
+                theme = "gruvbox-flat",
                 section_separators = {left = "", right = ""},
                 component_separators = {"", ""},
                 icons_enabled = true,
                 refresh = {
                     statusline = 250,
+                },
+                sections = {
+                    lualine_a = {"mode"},
+                    lualine_b = {"branch", "diff"},
+                    lualine_c = {"filename"},
+                    lualine_x = {"encoding", "fileformat", "filetype"},
+                    lualine_y = {"progress"},
+                    lualine_z = {"location"}
                 }
             }
         },
@@ -47,6 +149,8 @@ local plugins = {
     },
     {
         "lukas-reineke/indent-blankline.nvim",
+        lazy = true,
+        event = { "BufRead" },
         opts = {
             char = "▎",
             space_char_blankline = " ",
@@ -81,7 +185,6 @@ local plugins = {
             }
         },
         dependencies = {
-            "vijaymarupudi/nvim-fzf",
             "kyazdani42/nvim-web-devicons"
         }
     },
@@ -102,15 +205,21 @@ local plugins = {
     },
     {
         "terrortylor/nvim-comment",
+        lazy = true,
+        event = { "BufRead" },
         config = function()
             require("nvim_comment").setup()
         end
     },
     {
         "tpope/vim-surround",
+        lazy = true,
+        event = { "BufRead" }
     },
     {
         "lewis6991/gitsigns.nvim",
+        lazy = true,
+        event = { "BufRead" },
         config = true,
         dependencies = {
             "folke/trouble.nvim"
@@ -163,49 +272,12 @@ local plugins = {
                 }
             })
         end,
+        lazy = true,
+        event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-buffer",
             "onsails/lspkind.nvim"
-        }
-    },
-    {
-        "williamboman/nvim-lsp-installer",
-        config = function()
-            require("nvim-lsp-installer").setup({
-                automatic_installation = true,
-                ui = {
-                    icons = {
-                        server_installed = "✓",
-                        server_pending = "➜",
-                        server_uninstalled = "✗"
-                    }
-                }
-            })
-            require("lspconfig").pyright.setup({})
-            require("lspconfig").svelte.setup({})
-            require("lspconfig").tailwindcss.setup({})
-        end,
-        dependencies = {
-            "nvim-lspconfig"
-        }
-    },
-    {
-        "neovim/nvim-lspconfig"
-    },
-    {
-        "nvim-treesitter/nvim-treesitter",
-        init = function()
-            require("nvim-treesitter.install").update({with_sync = true})
-        end,
-        opts = {
-            ensure_installed = {"bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
-            highlight = {
-                enable = true
-            }
-        },
-        dependencies = {
-            "nvim-lsp-installer"
         }
     },
     {
@@ -219,7 +291,8 @@ local plugins = {
         cmd = "WhichKey"
     },
     {
-        "lambdalisue/suda.vim"
+        "lambdalisue/suda.vim",
+        lazy = true
     },
     {
         "elkowar/yuck.vim",
@@ -227,10 +300,14 @@ local plugins = {
         ft = "yuck"
     },
     {
-        "nathom/filetype.nvim"
+        "nathom/filetype.nvim",
+        lazy = true,
+        event = { "BufRead" }
     },
     {
         "ahmedkhalf/project.nvim",
+        lazy = true,
+        event = { "VeryLazy" },
         config = function()
             require("project_nvim").setup({
                 patterns = {".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", ".project_root"}
@@ -239,6 +316,8 @@ local plugins = {
     },
     {
         "andweeb/presence.nvim",
+        lazy = true,
+        event = { "BufRead" },
         config = function()
             require("presence"):setup({
                 neovim_image_text = "8==========>",
