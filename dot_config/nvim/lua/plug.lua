@@ -33,15 +33,39 @@ local plugins = {
         opts = { default = true }
     },
     {
-        "williamboman/nvim-lsp-installer",
+        "williamboman/mason.nvim",
+        build = ":MasonUpdate",
+        opts = {
+            ui = {
+                icons = {
+                    package_installed = "✓",
+                    package_pending = "➜",
+                    package_uninstalled = "✗"
+                }
+            }
+        }
+    },
+    {
+        "neovim/nvim-lspconfig",
         config = function()
-            require("nvim-lsp-installer").setup({
-                automatic_installation = true,
-                ui = {
-                    icons = {
-                        server_installed = "✓",
-                        server_pending = "➜",
-                        server_uninstalled = "✗"
+            require("lspconfig").lua_ls.setup({
+                update_in_insert = true,
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = "LuaJIT"
+                        },
+                        diagnostics = {
+                            globals = { "vim" },
+                            unusedLocalExclude = { "_*" },
+                        },
+                        workspace = {
+                            library = vim.api.nvim_get_runtime_file("", true),
+                            checkThirdParty = false,
+                        },
+                        telemetry = {
+                            enable = false
+                        }
                     }
                 }
             })
@@ -49,7 +73,6 @@ local plugins = {
             require("lspconfig").svelte.setup({})
             require("lspconfig").tailwindcss.setup({})
             require("lspconfig").rust_analyzer.setup({
-                on_attach = on_attach,
                 settings = {
                     ["rust-analyzer"] = {
                         imports = {
@@ -70,14 +93,20 @@ local plugins = {
                 }
             })
         end,
+        lazy = true,
         event = { "BufRead" },
         dependencies = {
-            "nvim-lspconfig"
+            "mason.nvim",
+            "mason-lspconfig.nvim"
         }
     },
     {
-        "neovim/nvim-lspconfig",
-        lazy = true
+        "williamboman/mason-lspconfig.nvim",
+        lazy = true,
+        config = true,
+        dependencies = {
+            "mason.nvim"
+        }
     },
     {
         "nvim-treesitter/nvim-treesitter",
