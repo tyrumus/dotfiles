@@ -67,6 +67,8 @@ search() {
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
 
+eval "$(zoxide init zsh --cmd j)"
+
 ### Z shell stuffs
 # Ctrl+left, Ctrl+right moves a whole word
 bindkey "^[[1;5C" forward-word
