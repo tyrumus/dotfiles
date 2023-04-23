@@ -9,6 +9,7 @@ ff-chrome/
 .config/eww
 .config/fontconfig
 .config/kitty
+.config/looking-glass
 .config/rofi
 .config/sway
 .config/systemd
