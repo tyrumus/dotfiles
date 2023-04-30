@@ -18,7 +18,7 @@ local plugins = {
     },
     {
         "eddyekofo94/gruvbox-flat.nvim",
-        priority = 1000,
+        priority = 900,
         config = function()
             vim.cmd("colorscheme gruvbox-flat")
         end
@@ -111,11 +111,12 @@ local plugins = {
     {
         "nvim-treesitter/nvim-treesitter",
         build = function()
-            require("nvim-treesitter.install").update({with_sync = true})
+            require("nvim-treesitter.install").update({ with_sync = true })
         end,
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = {"bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua", "rust", "python", "svelte"},
+                ensure_installed = { "bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua",
+                    "rust", "python", "svelte" },
                 highlight = {
                     enable = true
                 },
@@ -156,19 +157,19 @@ local plugins = {
         opts = {
             options = {
                 theme = "gruvbox-flat",
-                section_separators = {left = "", right = ""},
-                component_separators = {"", ""},
+                section_separators = { left = "", right = "" },
+                component_separators = { "", "" },
                 icons_enabled = true,
                 refresh = {
                     statusline = 250,
                 },
                 sections = {
-                    lualine_a = {"mode"},
-                    lualine_b = {"branch", "diff"},
-                    lualine_c = {"filename"},
-                    lualine_x = {"encoding", "fileformat", "filetype"},
-                    lualine_y = {"progress"},
-                    lualine_z = {"location"}
+                    lualine_a = { "mode" },
+                    lualine_b = { "branch", "diff" },
+                    lualine_c = { "filename" },
+                    lualine_x = { "encoding", "fileformat", "filetype" },
+                    lualine_y = { "progress" },
+                    lualine_z = { "location" }
                 }
             }
         },
@@ -178,15 +179,37 @@ local plugins = {
     },
     {
         "lukas-reineke/indent-blankline.nvim",
-        lazy = true,
-        event = { "BufRead" },
+        priority = 1000,
         opts = {
+            viewport_buffer = 300,
             char = "▎",
+            context_char = "▎",
             space_char_blankline = " ",
             show_end_of_line = true,
             show_current_context = true,
             show_current_context_start = true,
-            buftype_exclude = {"terminal", "nofile", "help"},
+            buftype_exclude = { "terminal", "nofile", "help" },
+            context_patterns = {
+                "arrow_function",
+                "class",
+                "^func",
+                "method",
+                "^if",
+                "while",
+                "for",
+                "with",
+                "try",
+                "except",
+                "match",
+                "arguments",
+                "argument_list",
+                "object",
+                "dictionary",
+                "element",
+                "table",
+                "tuple",
+                "do_block",
+            },
             filetype_exclude = {
                 "alpha",
                 "man",
@@ -281,6 +304,9 @@ local plugins = {
                         select = true,
                     })
                 },
+                snippet = {
+                    expand = function(args) require("luasnip").lsp_expand(args.body) end,
+                },
                 formatting = {
                     format = lspkind.cmp_format({
                         with_text = true,
@@ -292,9 +318,9 @@ local plugins = {
                     })
                 },
                 sources = {
-                    {name = "nvim_lsp"},
-                    {name = "path"},
-                    {name = "buffer", keyword_length = 5}
+                    { name = "nvim_lsp" },
+                    { name = "path" },
+                    { name = "buffer",  keyword_length = 5 }
                 },
                 experimental = {
                     ghost_text = true
@@ -305,9 +331,15 @@ local plugins = {
         event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-nvim-lua",
             "hrsh7th/cmp-buffer",
+            "saadparwaiz1/cmp_luasnip",
             "onsails/lspkind.nvim"
         }
+    },
+    {
+        "L3MON4D3/LuaSnip",
+        config = true,
     },
     {
         "fladson/vim-kitty",
@@ -339,7 +371,7 @@ local plugins = {
         event = { "VeryLazy" },
         config = function()
             require("project_nvim").setup({
-                patterns = {".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", ".project_root"}
+                patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", ".project_root" }
             })
         end
     },
@@ -350,8 +382,8 @@ local plugins = {
         config = function()
             require("presence"):setup({
                 neovim_image_text = "8==========>",
-                buttons = {{label = "View Repository", url = "https://naddan.co/r"}}, -- :)
-                blacklist = {"/var/tmp", "cshw"},
+                buttons = { { label = "View Repository", url = "https://naddan.co/r" } }, -- :)
+                blacklist = { "/var/tmp", "cshw" },
                 reading_text = "Browsing files"
             })
         end
