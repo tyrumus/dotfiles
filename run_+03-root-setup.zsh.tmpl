@@ -147,80 +147,46 @@ IdleAction=suspend
 IdleActionSec=300
 EOL
 
-# automount samba shares
+# automount things
 {{- if eq .chassistype "desktop" }}
-cat >>/etc/systemd/system/mnt-backup.mount <<EOL
+cat >>/etc/systemd/system/mnt-oldbackup.mount <<EOL
 [Unit]
-Description=Mount trogdor.lan ty-backup share
-Requires=network-online.target
-After=network-online.service
+Description=Mount /mnt/oldbackup on demand
+After=network.target network-online.target remote-fs-pre.target nss-lookup.target
 
 [Mount]
-What=//trogdor.lan/ty-backup
-Where=/mnt/backup
-Options=_netdev,credentials=/etc/samba/credentials/trogdor,iocharset=utf8,rw,uid=naddan,gid=naddan
+What=//nas.baywood.cc/oldbackup
+Where=/mnt/oldbackup
+Options=_netdev,credentials=/etc/samba/credentials/nas,iocharset=utf8,rw,noauto,uid=1000,gid=1001
 Type=cifs
-TimeoutSec=10
+TimeoutSec=30
 ForceUnmount=true
 
 [Install]
 WantedBy=multi-user.target
 EOL
-cat >>/etc/systemd/system/mnt-backup.automount <<EOL
+cat >>/etc/systemd/system/mnt-oldbackup.automount <<EOL
 [Unit]
-Description=Automount trogdor ty-backup share
-Requires=network-online.target
-After=network-online.service
+Description=Automount /mnt/oldbackup
+After=network.target network-online.target remote-fs-pre.target nss-lookup.target
 
 [Automount]
-Where=/mnt/backup
-TimeoutIdleSec=300
-
-[Install]
-WantedBy=multi-user.target
-EOL
-cat >>/etc/systemd/system/mnt-mov.mount <<EOL
-[Unit]
-Description=Mount trogdor.lan mov share
-Requires=network-online.target
-After=network-online.service
-
-[Mount]
-What=//trogdor.lan/mov
-Where=/mnt/mov
-Options=_netdev,credentials=/etc/samba/credentials/trogdor,iocharset=utf8,rw,uid=naddan,gid=naddan
-Type=cifs
-TimeoutSec=10
-ForceUnmount=true
-
-[Install]
-WantedBy=multi-user.target
-EOL
-cat >>/etc/systemd/system/mnt-mov.automount <<EOL
-[Unit]
-Description=Automount trogdor mov share
-Requires=network-online.target
-After=network-online.service
-
-[Automount]
-Where=/mnt/mov
-TimeoutIdleSec=300
+Where=/mnt/oldbackup
 
 [Install]
 WantedBy=multi-user.target
 EOL
 cat >>/etc/systemd/system/mnt-public.mount <<EOL
 [Unit]
-Description=Mount trogdor.lan backup share
-Requires=network-online.target
-After=network-online.service
+Description=Mount /mnt/public on demand
+After=network.target network-online.target remote-fs-pre.target nss-lookup.target
 
 [Mount]
-What=//trogdor.lan/backup
+What=//nas.baywood.cc/public
 Where=/mnt/public
-Options=_netdev,credentials=/etc/samba/credentials/trogdor,iocharset=utf8,rw,uid=naddan,gid=naddan
+Options=_netdev,credentials=/etc/samba/credentials/nas,iocharset=utf8,rw,noauto,uid=1000,gid=1001
 Type=cifs
-TimeoutSec=10
+TimeoutSec=30
 ForceUnmount=true
 
 [Install]
@@ -228,13 +194,35 @@ WantedBy=multi-user.target
 EOL
 cat >>/etc/systemd/system/mnt-public.automount <<EOL
 [Unit]
-Description=Automount trogdor backup share
-Requires=network-online.target
-After=network-online.service
+Description=Automount /mnt/public
+After=network.target network-online.target remote-fs-pre.target nss-lookup.target
 
 [Automount]
 Where=/mnt/public
-TimeoutIdleSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-win.mount <<EOL
+[Unit]
+Description=Mount /mnt/win on demand
+
+[Mount]
+What=/dev/sdc2
+Where=/mnt/win
+Options=noexec,nosuid,iocharset=utf8,rw,noauto,uid=1000,gid=1001
+TimeoutSec=30
+ForceUnmount=true
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-win.automount <<EOL
+[Unit]
+Description=Automount /mnt/win
+
+[Automount]
+Where=/mnt/win
 
 [Install]
 WantedBy=multi-user.target
@@ -242,14 +230,14 @@ EOL
 
 mkdir -p /etc/samba/credentials
 chmod 700 /etc/samba/credentials
-cat >>/etc/samba/credentials/trogdor <<EOL
+cat >>/etc/samba/credentials/nas <<EOL
 username=
 password=
 EOL
-chmod 400 /etc/samba/credentials/trogdor
+chmod 400 /etc/samba/credentials/nas
 
 cat >>/home/{{- .chezmoi.username -}}/.cache/chezmoi-reminders.zsh <<EOL
-echo "Edit the Samba credentials file at /etc/samba/credentials/trogdor"
+echo "Edit the Samba credentials file at /etc/samba/credentials/nas"
 echo "It should contain the following:"
 echo
 echo "username=<samba_username>"
@@ -280,6 +268,14 @@ sp "Enabling non-WSL services"
 systemctl enable greetd.service
 systemctl enable syncthing@{{- .chezmoi.username -}}.service
 systemctl enable logmein-hamachi.service
+{{- end }}
+
+# desktop services
+{{- if eq .chassistype "laptop" }}
+sp "Enabling desktop systemd services"
+systemctl enable mnt-oldbackup.automount
+systemctl enable mnt-public.automount
+systemctl enable mnt-win.automount
 {{- end }}
 
 # laptop services
