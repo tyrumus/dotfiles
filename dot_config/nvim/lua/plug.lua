@@ -115,7 +115,7 @@ local plugins = {
         end,
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = { "bash", "toml", "yaml", "html", "css", "javascript", "json", "c", "cpp", "lua",
+                ensure_installed = { "bash", "toml", "yaml", "html", "scss", "css", "javascript", "typescript", "json", "c", "cpp", "lua",
                     "rust", "python", "svelte" },
                 highlight = {
                     enable = true
@@ -125,22 +125,15 @@ local plugins = {
                 },
                 autotag = {
                     enable = true
-                },
-                rainbow = {
-                    enable = true,
-                    extended_mode = true
                 }
             })
         end,
         event = { "BufRead" }
     },
     {
-        "mrjones2014/nvim-ts-rainbow",
+        "HiPhish/rainbow-delimiters.nvim",
         lazy = true,
-        event = { "BufRead" },
-        dependencies = {
-            "nvim-treesitter"
-        }
+        event = { "BufRead" }
     },
     {
         "windwp/nvim-ts-autotag",
