@@ -1,4 +1,5 @@
 # vim: ft=conf
+set $grimshot /usr/share/sway/scripts/grimshot
 {{- if eq .chassistype "desktop" }}
 ### Output configuration
 set $monprimary DP-2
@@ -27,7 +28,6 @@ mode "ewwmenu" {
     bindsym $alt+w exec win-reboot-now
     bindsym $mod+Insert output $monprimary power toggle; output $monsecondary power toggle; output $montertiary power toggle
 }
-bindsym Print exec --no-startup-id grimshot copy area
 bindsym $mod+Insert output $monprimary power toggle; output $monsecondary power toggle; output $montertiary power toggle
 {{- end }}
 {{- if eq .chassistype "laptop" }}
@@ -63,7 +63,7 @@ mode "ewwmenu" {
 bindsym XF86MonBrightnessUp exec brightnessctl -q -d intel_backlight s 5%+
 bindsym XF86MonBrightnessDown exec brightnessctl -q -d intel_backlight s 5%-
 bindsym XF86AudioMedia exec keepassxc &
-bindsym Print exec --no-startup-id flameshot gui
 bindswitch lid:on exec systemctl suspend
 bindsym $mod+Insert output $monprimary power toggle
 {{- end }}
+bindsym Print exec --no-startup-id $grimshot copy area
