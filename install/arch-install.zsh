@@ -21,13 +21,12 @@ alias ssp="gum style --foreground 45 --bold"
 alias sp="gum style --foreground 45 --faint"
 alias load="gum spin --spinner dot"
 
-# verify boot mode (is it UEFI?)
+# verify boot mode (is it 64-bit UEFI?)
 ssp "Verifying boot mode..."
-ls /sys/firmware/efi/efivars &> /dev/null
-if [[ $? = 0 ]]; then
+if [[ $(cat /sys/firmware/efi/fw_platform_size) = "64" ]]; then
     gum style --foreground 2 --bold "SUCCESS"
 else
-    gum style --foreground 1 --bold "FAIL: UEFI boot not detected."
+    gum style --foreground 1 --bold "FAIL: 64-bit UEFI boot not detected."
     exit 1
 fi
 
@@ -162,7 +161,7 @@ mount ${DRIVE_ESP} /mnt/boot
 swapon ${DRIVE_SWAP}
 
 ssp "Installing all packages"
-pacstrap /mnt ${=SELECTED_PACKAGES}
+pacstrap -K /mnt ${=SELECTED_PACKAGES}
 
 ssp "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -170,59 +169,36 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # perform chrooted operations
 ### NOTE: may need to add -e 3 to the efibootmgr command if the motherboard deletes the boot entry on reboot
 
+KERNEL_NAME=linux
 if [[ "${SELECTED_PACKAGES}" == *"linux-lts"* ]]; then
-    load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
-    ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
-    hwclock --systohc
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-    locale-gen
-    echo "LANG=en_US.UTF-8" > /etc/locale.conf
-    echo "${HOSTNAME}" > /etc/hostname
-    echo "127.0.0.1 localhost" >> /etc/hosts
-    echo "::1 localhost" >> /etc/hosts
-    echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
-    groupadd sudo
-    useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
-    systemctl enable dhcpcd.service
-    sed -i "s/#Color.*/Color/" /etc/pacman.conf
-    sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
-    echo "[multilib]" >> /etc/pacman.conf
-    echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
-    sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
-    echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
-    mkinitcpio -P
-    efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux-lts -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet i915.force_probe=56a0 initrd=/initramfs-linux-lts.img"
-    echo root:${ROOT_PASSWD} | chpasswd
-    echo ${USRNAME}:${USER_PASSWD} | chpasswd
-    hostnamectl chassis "${CHASSIS_TYPE}"
-    EOF
-else
-    load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
-    ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
-    hwclock --systohc
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-    locale-gen
-    echo "LANG=en_US.UTF-8" > /etc/locale.conf
-    echo "${HOSTNAME}" > /etc/hostname
-    echo "127.0.0.1 localhost" >> /etc/hosts
-    echo "::1 localhost" >> /etc/hosts
-    echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
-    groupadd sudo
-    useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
-    systemctl enable dhcpcd.service
-    sed -i "s/#Color.*/Color/" /etc/pacman.conf
-    sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
-    echo "[multilib]" >> /etc/pacman.conf
-    echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
-    sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
-    echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
-    mkinitcpio -P
-    efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-linux -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet i915.force_probe=56a0 initrd=/initramfs-linux.img"
-    echo root:${ROOT_PASSWD} | chpasswd
-    echo ${USRNAME}:${USER_PASSWD} | chpasswd
-    hostnamectl chassis "${CHASSIS_TYPE}"
-    EOF
+    KERNEL_NAME=linux-lts
 fi
+
+load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
+ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+hwclock --systohc
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "${HOSTNAME}" > /etc/hostname
+echo "127.0.0.1 localhost" >> /etc/hosts
+echo "::1 localhost" >> /etc/hosts
+echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
+groupadd sudo
+useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
+systemctl enable dhcpcd.service
+sed -i "s/#Color.*/Color/" /etc/pacman.conf
+sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
+echo "[multilib]" >> /etc/pacman.conf
+echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
+echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
+mkinitcpio -P
+efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-${KERNEL_NAME} -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet i915.force_probe=56a0 initrd=/initramfs-${KERNEL_NAME}.img"
+echo root:${ROOT_PASSWD} | chpasswd
+echo ${USRNAME}:${USER_PASSWD} | chpasswd
+hostnamectl chassis "${CHASSIS_TYPE}"
+EOF
 
 # enable iwd
 if [ ! -z $(echo ${SELECTED_PACKAGES} | grep iwd) ]; then
