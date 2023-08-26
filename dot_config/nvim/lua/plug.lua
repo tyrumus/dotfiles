@@ -367,19 +367,6 @@ local plugins = {
                 patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", ".project_root" }
             })
         end
-    },
-    {
-        "andweeb/presence.nvim",
-        lazy = true,
-        event = { "BufRead" },
-        config = function()
-            require("presence"):setup({
-                neovim_image_text = "8==========>",
-                buttons = { { label = "View Repository", url = "https://naddan.co/r" } }, -- :)
-                blacklist = { "/var/tmp", "cshw" },
-                reading_text = "Browsing files"
-            })
-        end
     }
 }
 
