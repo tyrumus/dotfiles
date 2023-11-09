@@ -61,6 +61,23 @@ systemctl reboot
 EOL
 
 chmod +x /usr/local/bin/win-reboot-now
+
+sp "Writing reboot-kexec script"
+
+cat >>/usr/local/bin/reboot-kexec <<EOL
+#!/bin/bash
+
+# run this script only as root
+if [ "\$EUID" != 0 ]; then
+    sudo "\$0" "\$@"
+    exit \$?
+fi
+
+kexec -l /boot/vmlinuz-linux --initrd=/boot/initramfs-linux.img --reuse-cmdline
+systemctl kexec
+EOL
+
+chmod +x /usr/local/bin/reboot-kexec
 {{- end }}
 
 ssp "WRITING SYSTEM CONFIG FILES"
@@ -71,6 +88,12 @@ sp "Writing win-reboot-now sudoer file"
 cat >>/etc/sudoers.d/20-win-reboot <<EOL
 greeter ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/win-reboot-now
 %sudo ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/win-reboot-now
+EOL
+
+sp "Writing reboot-kexec sudoer file"
+
+cat >>/etc/sudoers.d/30-kexec <<EOL
+%sudo ALL=(ALL:ALL) NOPASSWD: /usr/local/bin/reboot-kexec
 EOL
 
 sp "Writing hamachi override for haguichi"
@@ -147,6 +170,47 @@ HandleRebootKey=ignore
 IdleAction=suspend
 IdleActionSec=300
 EOL
+
+{{- if eq .chassistype "desktop" }}
+sp "Writing custom service units"
+
+sp "Writing unmodeset service for kexec"
+cat >>/etc/systemd/system/unmodeset.service <<EOL
+[Unit]
+Description=Unload i915 modesetting modules from kernel
+Documentation=man:modprobe(8)
+DefaultDependencies=no
+After=umount.target
+Before=kexec.target
+
+[Service]
+Type=oneshot
+ExecStart=modprobe -r i915
+
+[Install]
+WantedBy=kexec.target
+EOL
+
+sp "Writing kexec-load service"
+cat >>/etc/systemd/system/kexec-load@.service <<EOL
+[Unit]
+Description=hook to load vmlinuz-%i kernel upon kexec
+Documentation=man:kexec(8)
+DefaultDependencies=no
+Requires=sysinit.target
+After=sysinit.target
+
+[Service]
+Type=oneshot
+ExecStart=-/usr/bin/true
+RemainAfterExit=yes
+ExecStop=/usr/bin/kexec -l /boot/vmlinuz-%i --initrd=/boot/initramfs-%i.img --reuse-cmdline
+
+[Install]
+WantedBy=basic.target
+EOL
+
+{{- end }}
 
 # automount things
 {{- if eq .chassistype "desktop" }}
@@ -260,6 +324,8 @@ EOL
 ### INIT SERVICES ###
 ssp "ENABLING SERVICES"
 
+systemctl daemon-reload
+
 sp "Enabling systemd services"
 systemctl enable sshd.service
 systemctl enable --now reflector.timer
@@ -272,11 +338,20 @@ systemctl enable logmein-hamachi.service
 {{- end }}
 
 # desktop services
-{{- if eq .chassistype "laptop" }}
+{{- if eq .chassistype "desktop" }}
 sp "Enabling desktop systemd services"
 systemctl enable mnt-oldbackup.automount
 systemctl enable mnt-public.automount
 systemctl enable mnt-win.automount
+systemctl enable unmodeset.service
+
+{{- if (stat "/boot/vmlinuz-linux-lts") }}
+systemctl enable kexec-load@linux-lts.service
+{{- else if (stat "/boot/vmlinuz-linux") }}
+systemctl enable kexec-load@linux.service
+{{- else }}
+sp "No kernel found to set for kexec-load service. Will need to be enabled manually."
+{{- end }}
 {{- end }}
 
 # laptop services
