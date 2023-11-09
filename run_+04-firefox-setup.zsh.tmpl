@@ -27,13 +27,18 @@ for file in ${SRC_PATH}/*; do
     if [ -f "${file}" ]; then
         DEST_NAME=$(basename "${file}")
         DEST="${FF_PATH_RESULT}/chrome/${DEST_NAME}"
-        if [[ "${DEST}" -ot "${file}" ]]; then
-            # overwrite
+        mkdir -p "${FF_PATH_RESULT}/chrome"
+        if [[ -f "${DEST_NAME}" ]]; then
+            if [[ "${DEST}" -ot "${file}" ]]; then
+                # overwrite
+                cp -f "${file}" "${DEST}"
+            elif [[ "${DEST}" -nt "${file}" ]]; then
+                # warn user and don't overwrite
+                echo "FF WARNING: this computer has a newer version of ${DEST_NAME} than the chezmoi repo. Skipping copy..."
+            fi # files are otherwise the same age
+        else
             cp -f "${file}" "${DEST}"
-        elif [[ "${DEST}" -nt "${file}" ]]; then
-            # warn user and don't overwrite
-            echo "FF WARNING: this computer has a newer version of ${DEST_NAME} than the chezmoi repo. Skipping copy..."
-        fi # files are otherwise the same age
+        fi
     fi
 done
 

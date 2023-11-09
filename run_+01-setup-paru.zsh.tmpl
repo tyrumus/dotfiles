@@ -24,9 +24,9 @@ ssp() {
 }
 
 ssp "INSTALLING NECESSARY UTILITIES"
-pacman -S base-devel git rustup
+sudo pacman -S base-devel git rustup
 
-sp "Installing latest Rust toolchain"
+ssp "Installing latest Rust toolchain"
 rustup toolchain install stable
 
 # download and setup paru

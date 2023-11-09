@@ -75,6 +75,7 @@ EOL
 
 sp "Writing hamachi override for haguichi"
 
+mkdir -p /var/lib/logmein-hamachi
 cat >>/var/lib/logmein-hamachi/h2-engine-override.cfg <<EOL
 Ipc.User {{ .chezmoi.username -}}
 EOL
