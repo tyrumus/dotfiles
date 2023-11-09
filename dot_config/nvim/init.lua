@@ -1,8 +1,14 @@
 vim.opt.termguicolors = true
 
--- load plugins
-require("plug")
 require("keymap")
+
+-- load plugins if installed neovim is compatible
+local minVersion = vim.version.parse("0.9")
+local vimVersion = vim.version()
+if vim.version.gt(vimVersion, minVersion) then
+    require("plug")
+    require("keymap.plugins")
+end
 
 -- nvim options
 vim.opt.encoding = "UTF-8"

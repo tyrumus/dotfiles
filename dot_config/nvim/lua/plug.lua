@@ -12,10 +12,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.loader.enable()
 local plugins = {
-    {
-        "lewis6991/impatient.nvim"
-    },
     {
         "eddyekofo94/gruvbox-flat.nvim",
         priority = 900,
@@ -92,6 +90,7 @@ local plugins = {
                     }
                 }
             })
+            require("lspconfig").bashls.setup({})
         end,
         lazy = true,
         event = { "BufRead" },
@@ -173,48 +172,31 @@ local plugins = {
     {
         "lukas-reineke/indent-blankline.nvim",
         priority = 1000,
+        main = "ibl",
         opts = {
-            viewport_buffer = 300,
-            char = "▎",
-            context_char = "▎",
-            space_char_blankline = " ",
-            show_end_of_line = true,
-            show_current_context = true,
-            show_current_context_start = true,
-            buftype_exclude = { "terminal", "nofile", "help" },
-            context_patterns = {
-                "arrow_function",
-                "class",
-                "^func",
-                "method",
-                "^if",
-                "while",
-                "for",
-                "with",
-                "try",
-                "except",
-                "match",
-                "arguments",
-                "argument_list",
-                "object",
-                "dictionary",
-                "element",
-                "table",
-                "tuple",
-                "do_block",
+            viewport_buffer = {
+                min = 30,
+                max = 300
             },
-            filetype_exclude = {
-                "alpha",
-                "man",
-                "gitmessengerpopup",
-                "diagnosticpopup",
-                "lspinfo",
-                "packer",
-                "checkhealth",
-                "help",
-                "json",
-                "terminal",
-            }
+            indent = {
+                char = "▎"
+            },
+            exclude = {
+                filetypes = {
+                    "lspinfo",
+                    "lazy",
+                    "checkhealth",
+                    "help",
+                    "man",
+                    "gitcommit",
+                    "''",
+                    "alpha",
+                    "gitmessengerpopup",
+                    "diagnosticpopup",
+                    "json",
+                    "terminal",
+                }
+            },
         }
     },
     {
@@ -341,8 +323,13 @@ local plugins = {
     },
     {
         "folke/which-key.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+        config = true,
         lazy = true,
-        cmd = "WhichKey"
     },
     {
         "lambdalisue/suda.vim",
@@ -370,7 +357,6 @@ local plugins = {
     }
 }
 
-local opts = {
-}
+local opts = {}
 
 require("lazy").setup(plugins, opts)
