@@ -12,5 +12,5 @@
 	clean = git-lfs clean -- %f
 {{ if or (eq .chassistype "desktop") (eq .chassistype "laptop") }}
 [credential]
-	helper = keepassxc
+	helper = keepassxc --git-groups
 {{- end }}
