@@ -214,6 +214,34 @@ EOL
 
 # automount things
 {{- if eq .chassistype "desktop" }}
+cat >>/etc/systemd/system/mnt-backup.mount <<EOL
+[Unit]
+Description=Mount /mnt/backup on demand
+After=network.target network-online.target remote-fs-pre.target nss-lookup.target
+
+[Mount]
+What=//nas.baywood.cc/backup
+Where=/mnt/backup
+Options=_netdev,credentials=/etc/samba/credentials/nas,iocharset=utf8,rw,noauto,uid=1000,gid=1001
+Type=cifs
+TimeoutSec=30
+ForceUnmount=true
+
+[Install]
+WantedBy=multi-user.target
+EOL
+cat >>/etc/systemd/system/mnt-backup.automount <<EOL
+[Unit]
+Description=Automount /mnt/backup
+After=network.target network-online.target remote-fs-pre.target nss-lookup.target
+
+[Automount]
+Where=/mnt/backup
+TimeoutIdleSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOL
 cat >>/etc/systemd/system/mnt-oldbackup.mount <<EOL
 [Unit]
 Description=Mount /mnt/oldbackup on demand
@@ -340,6 +368,7 @@ systemctl enable logmein-hamachi.service
 # desktop services
 {{- if eq .chassistype "desktop" }}
 sp "Enabling desktop systemd services"
+systemctl enable mnt-backup.automount
 systemctl enable mnt-oldbackup.automount
 systemctl enable mnt-public.automount
 systemctl enable mnt-win.automount

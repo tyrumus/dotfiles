@@ -1,0 +1,8 @@
+[Unit]
+Description=Automatic check of restic backup of $HOME
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart={{ .chezmoi.homeDir }}/.local/bin/run-backup check

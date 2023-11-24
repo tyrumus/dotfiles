@@ -82,6 +82,8 @@ git lfs install
 ### INIT SERVICES ###
 
 sp "Enabling user systemd services"
+systemctl --user daemon-reload
+systemctl --user enable --now restic-backup-tool.timer
 systemctl enable --user pipewire.service
 systemctl enable --user pipewire-pulse.service
 systemctl enable --user flameshot.service
