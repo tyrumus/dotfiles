@@ -70,6 +70,7 @@ local plugins = {
             require("lspconfig").pyright.setup({})
             require("lspconfig").svelte.setup({})
             require("lspconfig").tailwindcss.setup({})
+            require("lspconfig").yamlls.setup({})
             require("lspconfig").rust_analyzer.setup({
                 settings = {
                     ["rust-analyzer"] = {
