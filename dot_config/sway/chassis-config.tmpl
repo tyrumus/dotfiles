@@ -27,6 +27,7 @@ workspace 10 output $montertiary
 mode "ewwmenu" {
     bindsym $alt+w exec win-reboot-now
     bindsym $mod+Insert output $monprimary power toggle; output $monsecondary power toggle; output $montertiary power toggle
+    bindsym $alt+k exec reboot-kexec
 }
 bindsym $mod+Insert output $monprimary power toggle; output $monsecondary power toggle; output $montertiary power toggle
 {{- end }}
