@@ -10,6 +10,7 @@ set $up k
 set $right l
 set $term kitty
 set $menu rofi -show combi -combi-modi "drun,ssh" -modi combi -normal-window | xargs swaymsg exec --
+set $grimshot /usr/share/sway/scripts/grimshot
 
 ## Chassis-specific Config
 include chassis-config
@@ -55,7 +56,7 @@ mode "ewwmenu" {
     bindsym $mod+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
     bindsym $mod+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -10%
     bindsym $mod+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +10%
-    bindsym Print exec --no-startup-id flameshot gui
+    bindsym Print exec --no-startup-id $grimshot copy area
     bindsym $mod+Print exec --no-startup-id $grimshot copy screen
     bindsym $mod+Shift+Print exec --no-startup-id $grimshot copy active
     bindsym XF86AudioPlay exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music toggle
@@ -76,6 +77,7 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
 bindsym $mod+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym $mod+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -10%
 bindsym $mod+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +10%
+bindsym Print exec --no-startup-id $grimshot copy area
 bindsym $mod+Print exec --no-startup-id $grimshot copy screen
 bindsym $mod+Shift+Print exec --no-startup-id $grimshot copy active
 bindsym XF86AudioPlay exec /home/{{- .chezmoi.username -}}/.config/eww/main/scripts/music toggle
