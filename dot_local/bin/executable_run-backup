@@ -10,6 +10,7 @@ run_restic() {
     export RESTIC_READ_CONCURRENCY
     export RESTIC_PACK_SIZE
     export GOMAXPROCS
+    notify-send "Auto backup" "See KeePassXC for password request"
     (set -x; systemd-inhibit --who "restic-backup" --why "Active restic command executing" restic -v -r ${RESTIC_REPOSITORY_PATH} $@)
 }
 
