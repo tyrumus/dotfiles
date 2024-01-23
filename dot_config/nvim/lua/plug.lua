@@ -342,9 +342,24 @@ local plugins = {
         ft = "yuck"
     },
     {
+        "earthly/earthly.vim",
+        lazy = true,
+        ft = "Earthfile"
+    },
+    {
         "nathom/filetype.nvim",
         lazy = true,
-        event = { "BufRead" }
+        event = { "BufRead" },
+        opts = {
+            overrides = {
+                extensions = {
+                    yuck = "yuck"
+                },
+                literal = {
+                    Earthfile = "Earthfile"
+                }
+            }
+        }
     },
     {
         "ahmedkhalf/project.nvim",
