@@ -358,7 +358,7 @@ sp "Enabling systemd services"
 systemctl enable sshd.service
 systemctl enable --now reflector.timer
 
-{{ if not (eq .chassistype "wsl") }}
+{{ if not (or (eq .chassistype "wsl") (eq .chassistype "kitty")) }}
 sp "Enabling non-WSL services"
 systemctl enable greetd.service
 systemctl enable syncthing@{{- .chezmoi.username -}}.service

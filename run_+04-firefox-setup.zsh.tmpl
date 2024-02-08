@@ -1,4 +1,4 @@
-{{- if not (eq .chassistype "wsl") -}}
+{{- if not (or (eq .chassistype "wsl") (eq .chassistype "kitty")) -}}
 #!/usr/bin/zsh
 # vim: ft=zsh
 

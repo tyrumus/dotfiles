@@ -4,18 +4,28 @@ nvim/plugin/packer_
 install/
 img/
 ff-chrome/
-{{- if eq .chassistype "wsl" }}
+{{- if (or (eq .chassistype "wsl") (eq .chassistype "kitty")) }}
 .config/dunst
 .config/eww
-.config/fontconfig
-.config/kitty
 .config/looking-glass
 .config/rofi
 .config/sway
 .config/systemd
 .config/waybar
-.fonts
 .local
 .face
 .Xresources
+.gnupg
+{{- end }}
+{{- if eq .chassistype "kitty" }}
+.config/macchina
+.config/paru
+.config/ranger
+.config/restic-backup
+.config/vifm
+{{- end }}
+{{- if eq .chassistype "wsl" }}
+.fonts
+.config/kitty
+.config/fontconfig
 {{- end }}
