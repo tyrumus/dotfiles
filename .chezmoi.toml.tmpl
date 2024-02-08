@@ -12,8 +12,8 @@
 {{-     end }}
 {{- end }}
 {{- if not (eq .chezmoi.osRelease.id "arch") }}
-{{-     writeToStdout (cat "chezmoi has detected that this is not an Arch Linux system, disabling install scripts...") }}
-{{-     output ("sh" .chezmoi.sourceDir "/install/disable-install.sh") }}
+{{-     writeToStdout (cat "chezmoi has detected that this is not an Arch Linux system, disabling install scripts...\n") }}
+{{-     output "sh" (joinPath .chezmoi.sourceDir "/install/disable-install.sh") }}
 {{- else }}
 {{-     writeToStdout "\nIf you don't want the setup scripts to run automatically,\nensure you execute " .chezmoi.sourceDir "/install/disable-install.sh prior to running \"chezmoi apply\"\n" }}
 {{- end }}
