@@ -1,6 +1,6 @@
 # vim: ft=toml
 {{- $chassisType := "desktop" }}
-{{- writeToStdout (cat "available options: desktop (3 screen setup), laptop (1 screen setup), wsl (basic terminal-only setup in Arch distro)\n") }}
+{{- writeToStdout (cat "available options: desktop (3 screen setup), laptop (1 screen setup), wsl (basic terminal-only setup in Arch distro), kitty\n") }}
 {{- writeToStdout (cat "chezmoi has determined it is running on" $chassisType "\n") }}
 {{- if (not (promptBool "Is this correct? [Y/n]" true)) }}
 {{-     $newChassisType := (promptString "what is the chassis type? [desktop, laptop, wsl, kitty]") }}
@@ -18,7 +18,7 @@
 {{- end }}
 {{- if (eq $chassisType "kitty") }}
 {{-     writeToStdout "\nYou've chosen a chassis type that expects numerous dependencies to be installed, available in the path:\n" }}
-{{-     writeToStdout "git, ssh, zsh, kitty, nvim, lazygit, rustup\n" }}
+{{-     writeToStdout "git, ssh, zsh, kitty, nvim, lazygit, rustup, ripgrep\n" }}
 {{- end }}
 
 [data]

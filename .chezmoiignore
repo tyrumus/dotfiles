@@ -5,6 +5,7 @@ install/
 img/
 ff-chrome/
 {{- if (or (eq .chassistype "wsl") (eq .chassistype "kitty")) }}
+.ssh/authorized_keys
 .config/dunst
 .config/eww
 .config/looking-glass
