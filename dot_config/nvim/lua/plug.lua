@@ -223,8 +223,6 @@ local plugins = {
     },
     {
         "folke/todo-comments.nvim",
-        lazy = true,
-        cmd = "TodoTrouble",
         config = true,
         dependencies = {
             "nvim-lua/plenary.nvim",
