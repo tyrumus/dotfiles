@@ -144,6 +144,25 @@ EOL
 sp "Writing systemd configs"
 mkdir -p /etc/systemd/system.conf.d
 
+{{- if eq .chassistype "desktop" }}
+cat >>/etc/systemd/network/50-wired.link <<EOL
+[Match]
+MACAddress=aa:aa:aa:aa:aa:aa
+
+[Link]
+NamePolicy=kernel database onboard slot path
+AutoNegotiation=no
+Duplex=full
+BitsPerSecond=1000M
+EOL
+
+cat >>/home/{{- .chezmoi.username -}}/.cache/chezmoi-reminders.zsh <<EOL
+echo "Edit the systemd network config file at /etc/systemd/network/50-wired.link"
+echo "Ensure to update the MAC address for the ethernet card"
+echo
+EOL
+{{- end }}
+
 {{- if eq .chassistype "laptop" }}
 cat >>/etc/systemd/system.conf.d/10-chezmoi-framework.conf <<EOL
 [Manager]
