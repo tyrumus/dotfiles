@@ -42,7 +42,10 @@ gum style --foreground 45 --italic "Please answer the following prompts for unat
 ssp "Enter password for root"
 ROOT_PASSWD=""
 ROOT_PASSWD_CONF="a"
+ROOT_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
+ROOT_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
 while [ ! "${ROOT_PASSWD}" = "${ROOT_PASSWD_CONF}" ]; do
+    sp "Passwords don't match!"
     ROOT_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
     ROOT_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
 done
@@ -57,7 +60,10 @@ clear
 ssp "Enter password for ${USRNAME}"
 USER_PASSWD=""
 USER_PASSWD_CONF="a"
+USER_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
+USER_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
 while [ ! "${USER_PASSWD}" = "${USER_PASSWD_CONF}" ]; do
+    sp "Passwords don't match!"
     USER_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
     USER_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
 done
@@ -106,7 +112,7 @@ DRIVE_ROOT="/dev/${DATA}"
 clear
 
 # prompt for chezmoi URL
-ssp "Enter URL for chezmoi repository"
+ssp "Enter URL for chezmoi repository. Leave blank to not deploy Chezmoi"
 CHEZMOI_URL=$(gum input --value "https://github.com/tyrumus/dotfiles")
 clear
 
@@ -121,10 +127,8 @@ LAPTOP_PACKAGES="iwd"
 ALL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES} linux-lts nvidia nvidia-lts"
 
 if [ ! -z "$(ls /sys/class/power_supply)" ]; then
-    echo "power supply discovered"
+    sp "Laptop power supply discovered"
     POTENTIAL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES}"
-else
-    echo "no power supply"
 fi
 POTENTIAL_PACKAGES=$(echo ${POTENTIAL_PACKAGES} | sed -r "s/[ ]+/,/g")
 
@@ -167,14 +171,15 @@ ssp "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # perform chrooted operations
-### NOTE: may need to add -e 3 to the efibootmgr command if the motherboard deletes the boot entry on reboot
+### NOTE: may need to add '-e 3' to the efibootmgr command if the motherboard deletes the boot entry on reboot
 
 KERNEL_NAME=linux
 if [[ "${SELECTED_PACKAGES}" == *"linux-lts"* ]]; then
     KERNEL_NAME=linux-lts
 fi
 
-load --title "Performing chrooted operations" -- cat << EOF | arch-chroot /mnt
+ssp "Performing chrooted operations"
+cat << EOF | arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
@@ -199,6 +204,7 @@ echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
 hostnamectl chassis "${CHASSIS_TYPE}"
 EOF
+ssp "Finished chrooted operations"
 
 # enable iwd
 if [ ! -z $(echo ${SELECTED_PACKAGES} | grep iwd) ]; then
@@ -212,11 +218,13 @@ fi
 
 # add self-destructing chezmoi install script
 ssp "Adding finishing touches"
-sp "Adding Chezmoi init"
+if [ ! -z "${CHEZMOI_URL}" ]; then
+    sp "Adding Chezmoi init"
 cat >>/mnt/home/${USRNAME}/.zshrc <<EOL
 rm \$0
 chezmoi init ${CHEZMOI_URL} --apply
 EOL
+fi
 
 load --title "Syncing drives" -- sync
 sp "Drives synced"
@@ -225,7 +233,4 @@ sp "Unmounting all the things"
 umount -R /mnt
 swapoff ${DRIVE_SWAP}
 ssp "Installation complete."
-unalias ssp
-unalias sp
-unalias load
 exit 0
