@@ -112,9 +112,11 @@ DRIVE_ROOT="/dev/${DATA}"
 clear
 
 # prompt for chezmoi URL
+set +e
 ssp "Enter URL for chezmoi repository. Press ESC to not deploy."
 CHEZMOI_URL=$(gum input --value "https://github.com/tyrumus/dotfiles")
 clear
+set -e
 
 # prompt for chassis type
 ssp "Select chassis type"
@@ -138,6 +140,16 @@ SELECTED_PACKAGES=$(gum choose --height=15 --no-limit --selected=${POTENTIAL_PAC
 clear
 PRETTY_SELECTED_PACKAGES=$(echo ${=SELECTED_PACKAGES} | sed -r "s/[\\n]+/ /g")
 
+KERNEL_NAME=linux
+if [[ "${SELECTED_PACKAGES}" == *"linux-lts"* ]]; then
+    KERNEL_NAME=linux-lts
+fi
+
+# let user set additional kernel parameters
+ssp "Enter additional kernel parameters, other than 'rw' and 'initrd', which are necessary for boot."
+KERNEL_PARAMS=$(gum input --value "quiet")
+clear
+
 ssp --underline "Installation preferences"
 sp "sudoer account       -> ${USRNAME}"
 sp "Hostname             -> ${HOSTNAME}"
@@ -150,6 +162,7 @@ else
 fi
 sp "Chassis type:        -> ${CHASSIS_TYPE}"
 sp "Packages             -> ${PRETTY_SELECTED_PACKAGES}"
+sp "All kernel params:   -> root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw ${KERNEL_PARAMS} initrd=/initramfs-${KERNEL_NAME}.img"
 gum confirm "Proceed with install?" --selected.background=45 --selected.foreground=0
 
 ssp "Starting unattended install..."
@@ -177,11 +190,6 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # perform chrooted operations
 ### NOTE: may need to add '-e 3' to the efibootmgr command if the motherboard deletes the boot entry on reboot
 
-KERNEL_NAME=linux
-if [[ "${SELECTED_PACKAGES}" == *"linux-lts"* ]]; then
-    KERNEL_NAME=linux-lts
-fi
-
 ssp "Performing chrooted operations"
 cat << EOF | arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
@@ -203,7 +211,7 @@ echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
 mkinitcpio -P
-efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-${KERNEL_NAME} -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet i915.force_probe=56a0 initrd=/initramfs-${KERNEL_NAME}.img"
+efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-${KERNEL_NAME} -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet initrd=/initramfs-${KERNEL_NAME}.img"
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
 EOF
