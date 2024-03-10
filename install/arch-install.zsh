@@ -112,7 +112,7 @@ DRIVE_ROOT="/dev/${DATA}"
 clear
 
 # prompt for chezmoi URL
-ssp "Enter URL for chezmoi repository. Leave blank to not deploy Chezmoi"
+ssp "Enter URL for chezmoi repository. Press ESC to not deploy."
 CHEZMOI_URL=$(gum input --value "https://github.com/tyrumus/dotfiles")
 clear
 
@@ -143,7 +143,11 @@ sp "sudoer account       -> ${USRNAME}"
 sp "Hostname             -> ${HOSTNAME}"
 sp "Timezone             -> ${TIMEZONE}"
 display_drives ${DRIVE} ${DRIVE_ESP} ${DRIVE_SWAP} ${DRIVE_ROOT}
-sp "Chezmoi URL          -> ${CHEZMOI_URL}"
+if [ ! -z "${CHEZMOI_URL}" ]; then
+    sp "Chezmoi URL          -> ${CHEZMOI_URL}"
+else
+    sp "Chezmoi URL          -> Not deploying"
+fi
 sp "Chassis type:        -> ${CHASSIS_TYPE}"
 sp "Packages             -> ${PRETTY_SELECTED_PACKAGES}"
 gum confirm "Proceed with install?" --selected.background=45 --selected.foreground=0
@@ -202,7 +206,6 @@ mkinitcpio -P
 efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-${KERNEL_NAME} -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet i915.force_probe=56a0 initrd=/initramfs-${KERNEL_NAME}.img"
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
-hostnamectl chassis "${CHASSIS_TYPE}"
 EOF
 ssp "Finished chrooted operations"
 
