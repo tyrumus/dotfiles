@@ -41,9 +41,9 @@ ssp "INSTALLING ALL PACKAGES"
 # packages expected to already be installed: chezmoi dhcpcd [iwd] git linux-lts [nvidia-lts] sudo wget zsh
 
 PACKAGES_SYS="ntfs-3g pam-u2f"
-PACKAGES_TERMINAL="hyperfine httpie bandwhich downgrade fd bottom bat bind duf exa git git-lfs github-cli gum fzf xdg-user-dirs imagemagick unzip zip zsh wget lazygit pacman-contrib openssh man-db macchina-bin neovim vifm vifm-colors-git reflector ripgrep smbclient speedtest-cli sudo which zsh-theme-powerlevel10k-git curlie procs rustup sd tokei zoxide yt-dlp jq"
-PACKAGES_GUI="handlr chromium sway swaybg waybar slurp eww-wayland swayidle swaylock-effects rofi-lbonn-wayland rofi-calc udiskie apple_cursor clipman discord dunst electrum firefox gnucash greetd greetd-tuigreet-bin grim flameshot xdg-desktop-portal xdg-desktop-portal-wlr imagemagick git-credential-keepassxc keepassxc qt5-wayland qt5ct kitty lxqt-openssh-askpass obsidian pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber spotify syncthing pavucontrol vlc xorg-server xorg-xwayland xmousepasteblock-git haguichi ufw smartmontools yubikey-manager"
-PACKAGES_WORKSTATION="docker docker-compose aseprite-bin handbrake audacity gimp blender bitwig-studio yabridge inkscape steam obs-studio qt6-wayland samba cifs-utils intel-compute-runtime mesa intel-media-driver vulkan-intel level-zero-headers level-zero-loader vulkan-mesa-layers intel-gpu-tools looking-glass mesa-utils obs-plugin-looking-glass onevpl-intel-gpu perf polymc-qt5-bin virt-manager wine-mono kexec-tools"
+PACKAGES_TERMINAL="hyperfine httpie bandwhich downgrade fd bottom bat bind duf eza git git-lfs github-cli gum fzf xdg-user-dirs imagemagick unzip zip zsh wget lazygit pacman-contrib openssh man-db macchina-bin neovim vifm vifm-colors-git reflector ripgrep smbclient speedtest-cli sudo which curlie procs rustup sd tokei zoxide yt-dlp jq"
+PACKAGES_GUI="handlr chromium slurp rofi-lbonn-wayland rofi-calc clipman discord electrum firefox gnucash greetd greetd-tuigreet-bin grim flameshot plasma-desktop kde-system-meta imagemagick git-credential-keepassxc keepassxc qt5-wayland qt5ct kitty lxqt-openssh-askpass obsidian pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber spotify syncthing pavucontrol vlc haguichi ufw smartmontools yubikey-manager"
+PACKAGES_WORKSTATION="docker docker-compose handbrake audacity gimp blender yabridge inkscape steam obs-studio samba cifs-utils intel-compute-runtime mesa intel-media-driver vulkan-intel level-zero-headers level-zero-loader vulkan-mesa-layers intel-gpu-tools looking-glass mesa-utils obs-plugin-looking-glass onevpl-intel-gpu perf polymc-qt5-bin virt-manager wine-mono kexec-tools"
 PACKAGES_LAPTOP="acpi bluez brightnessctl tlp"
 
 PACKAGES="${PACKAGES_TERMINAL}"
@@ -86,9 +86,7 @@ systemctl --user daemon-reload
 systemctl --user enable --now restic-backup-tool.timer
 systemctl enable --user pipewire.service
 systemctl enable --user pipewire-pulse.service
-systemctl enable --user flameshot.service
 systemctl enable --user ssh-agent.service
-systemctl enable --user udiskie.service
 
 ### CHEZMOI REMINDERS ###
 sp "Generating post-install reminder file"
