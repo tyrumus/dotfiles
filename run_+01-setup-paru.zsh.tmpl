@@ -23,6 +23,9 @@ ssp() {
     echo -e "\033[0m"
 }
 
+ssp "UPDATING PACKAGE DATABASES"
+sudo pacman -Sy
+
 ssp "INSTALLING NECESSARY UTILITIES"
 sudo pacman -S base-devel git rustup
 
