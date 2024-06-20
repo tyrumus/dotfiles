@@ -2,26 +2,7 @@
 #!/usr/bin/zsh
 # vim: ft=zsh
 
-BLOCK_FILE="$HOME/.cache/chezmoi-paru"
-
-# check if this script has already been ran.
-if [ -f "${BLOCK_FILE}" ]; then
-    exit 0
-else
-    if [ "$EUID" != 0 ]; then
-        mkdir -p "$(dirname $(realpath -m ${BLOCK_FILE}))"
-        touch "${BLOCK_FILE}"
-    fi
-fi
-
-ssp() {
-    echo -en "\033[1m"
-    echo -en "\033[32m"
-    echo -n "==> "
-    echo -en "\033[39m"
-    echo -en "CHEZMOI: ${1}"
-    echo -e "\033[0m"
-}
+{{ template "print.zsh" }}
 
 ssp "UPDATING PACKAGE DATABASES"
 sudo pacman -Sy
@@ -40,4 +21,13 @@ cd /tmp/paru
 makepkg -si --noconfirm
 
 ssp "PARU INSTALL COMPLETE"
-{{- end -}}
+
+
+
+ssp "Installing system packages"
+
+# TODO: actually do this stuff
+
+ssp "Install complete."
+
+{{- end }}

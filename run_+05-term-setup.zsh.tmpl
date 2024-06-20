@@ -1,0 +1,37 @@
+{{- if (eq .installtype "term") -}}
+#!/usr/bin/zsh
+# vim: ft=zsh
+
+BLOCK_FILE="$HOME/.cache/chezmoi-term"
+
+# check if this script has already been ran.
+if [ -f "${BLOCK_FILE}" ]; then
+    exit 0
+else
+    if [ "$EUID" != 0 ]; then
+        mkdir -p "$(dirname $(realpath -m ${BLOCK_FILE}))"
+        touch "${BLOCK_FILE}"
+    fi
+fi
+
+### SPECIAL PRINT FUNCTIONS ###
+ssp() {
+    echo -en "\033[1m"
+    echo -en "\033[32m"
+    echo -n "==> "
+    echo -en "\033[39m"
+    echo -en "CHEZMOI: ${1}"
+    echo -e "\033[0m"
+}
+
+sp() {
+    echo -en "\033[1m"
+    echo -en "\033[34m"
+    echo -n "  -> "
+    echo -en "\033[39m"
+    echo -en "$1"
+    echo -e "\033[0m"
+}
+
+
+{{- end -}}

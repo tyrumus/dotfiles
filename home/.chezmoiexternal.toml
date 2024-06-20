@@ -1,0 +1,66 @@
+{{- if (eq .installtype "term") -}}
+{{- $cache := dict "chezmoi" .chezmoi -}}
+
+{{- template "read-versions-and-revisions-cache" $cache -}}
+
+# grug grow weary of old package version in Ubuntu repo all time
+
+[".local/bin/rg"]
+type = "archive-file"
+url = "https://github.com/BurntSushi/ripgrep/releases/download/{{ template "get-github-latest-version" list "BurntSushi/ripgrep" $cache }}/ripgrep-{{ template "get-github-latest-version" list "BurntSushi/ripgrep" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+stripComponents = 1
+executable = true
+path = "rg"
+
+[".local/bin/eza"]
+type = "archive-file"
+url = "https://github.com/eza-community/eza/releases/download/v{{ template "get-github-latest-version" list "eza-community/eza" $cache }}/eza_x86_64-unknown-linux-musl.tar.gz"
+executable = true
+path = "./eza"
+
+[".local/bin/bat"]
+type = "archive-file"
+url = "https://github.com/sharkdp/bat/releases/download/v{{ template "get-github-latest-version" list "sharkdp/bat" $cache }}/bat-v{{ template "get-github-latest-version" list "sharkdp/bat" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+stripComponents = 1
+executable = true
+path = "bat"
+
+[".local/bin/fd"]
+type = "archive-file"
+url = "https://github.com/sharkdp/fd/releases/download/v{{ template "get-github-latest-version" list "sharkdp/fd" $cache }}/fd-v{{ template "get-github-latest-version" list "sharkdp/fd" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+stripComponents = 1
+executable = true
+path = "fd"
+
+[".local/bin/fzf"]
+type = "archive-file"
+url = "https://github.com/junegunn/fzf/releases/download/{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}/fzf-{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}-linux_amd64.tar.gz"
+executable = true
+path = "fzf"
+
+[".local/bin/sd"]
+type = "archive-file"
+url = "https://github.com/chmln/sd/releases/download/v{{ template "get-github-latest-version" list "chmln/sd" $cache }}/sd-v{{ template "get-github-latest-version" list "chmln/sd" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+stripComponents = 1
+executable = true
+path = "sd"
+
+[".local/bin/zoxide"]
+type = "archive-file"
+url = "https://github.com/ajeetdsouza/zoxide/releases/download/v{{ template "get-github-latest-version" list "ajeetdsouza/zoxide" $cache }}/zoxide-{{ template "get-github-latest-version" list "ajeetdsouza/zoxide" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+executable = true
+path = "zoxide"
+
+[".local/bin/lazygit"]
+type = "archive-file"
+url = "https://github.com/jesseduffield/lazygit/releases/download/v{{ template "get-github-latest-version" list "jesseduffield/lazygit" $cache }}/lazygit_{{ template "get-github-latest-version" list "jesseduffield/lazygit" $cache }}_Linux_x86_64.tar.gz"
+executable = true
+path = "lazygit"
+
+[".local/share/chezmoi-cache/nvim"]
+type = "archive"
+url = "https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz"
+stripComponents = 1
+
+{{- template "save-versions-and-revisions-cache" $cache -}}
+{{- end -}}

@@ -3,7 +3,7 @@
 include colors-kitty.conf
 
 font_family JetBrains Mono
-{{- if eq .chassistype "laptop" }}
+{{- if .laptop }}
 font_size 16.0
 wheel_scroll_multiplier 10.0
 {{- else }}

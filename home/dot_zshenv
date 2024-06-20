@@ -1,6 +1,6 @@
 # vim: ft=zsh
 # local bin
-export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/n/bin"
 export npm_config_prefix=$HOME/.local
 
 # Neovim is my beautiful child
@@ -10,3 +10,4 @@ export EDITOR=/usr/bin/nvim
 # Misc stuffs
 export WINEFSYNC=1
 export BAT_THEME="gruvbox-dark"
+. "$HOME/.cargo/env"

@@ -1,4 +1,4 @@
-{{- if not (stat (joinPath .chezmoi.homeDir ".cache/chezmoi-root")) -}}
+{{- if (eq .installtype "full") -}}
 #!/usr/bin/zsh
 # vim: ft=zsh
 
@@ -44,7 +44,7 @@ sp() {
 
 ssp "WRITING SYSTEM SCRIPTS"
 
-{{- if eq .chassistype "desktop" }}
+{{- if not .laptop }}
 sp "Writing win-reboot-now script"
 
 cat >>/usr/local/bin/win-reboot-now <<EOL
@@ -82,7 +82,7 @@ chmod +x /usr/local/bin/reboot-kexec
 
 ssp "WRITING SYSTEM CONFIG FILES"
 
-{{- if eq .chassistype "desktop" }}
+{{- if not .laptop }}
 sp "Writing win-reboot-now sudoer file"
 
 cat >>/etc/sudoers.d/20-win-reboot <<EOL
@@ -125,26 +125,11 @@ TCPKeepAlive yes
 Compression delayed
 EOL
 
-# greetd
-sp "Writing greetd config"
-rm /etc/greetd/config.toml
-cat >>/etc/greetd/config.toml <<EOL
-[terminal]
-vt = 1
-[default_session]
-{{- if eq .chassistype "desktop" }}
-command = "tuigreet --remember --remember-session --power-reboot '/usr/local/bin/win-reboot-now'"
-{{- else }}
-command = "tuigreet --remember --remember-session"
-{{- end }}
-user = "greeter"
-EOL
-
 # systemd
 sp "Writing systemd configs"
 mkdir -p /etc/systemd/system.conf.d
 
-{{- if eq .chassistype "desktop" }}
+{{- if not .laptop }}
 cat >>/etc/systemd/network/50-wired.link <<EOL
 [Match]
 MACAddress=aa:aa:aa:aa:aa:aa
@@ -163,7 +148,7 @@ echo
 EOL
 {{- end }}
 
-{{- if eq .chassistype "laptop" }}
+{{- if .laptop }}
 cat >>/etc/systemd/system.conf.d/10-chezmoi-framework.conf <<EOL
 [Manager]
 RebootWatchdogSec=0
@@ -190,7 +175,7 @@ IdleAction=suspend
 IdleActionSec=300
 EOL
 
-{{- if eq .chassistype "desktop" }}
+{{- if not .laptop }}
 sp "Writing custom service units"
 
 sp "Writing unmodeset service for kexec"
@@ -232,7 +217,7 @@ EOL
 {{- end }}
 
 # automount things
-{{- if eq .chassistype "desktop" }}
+{{- if not .laptop }}
 cat >>/etc/systemd/system/mnt-backup.mount <<EOL
 [Unit]
 Description=Mount /mnt/backup on demand
@@ -377,15 +362,11 @@ sp "Enabling systemd services"
 systemctl enable sshd.service
 systemctl enable --now reflector.timer
 
-{{ if not (or (eq .chassistype "wsl") (eq .chassistype "kitty")) }}
-sp "Enabling non-WSL services"
-systemctl enable greetd.service
 systemctl enable syncthing@{{- .chezmoi.username -}}.service
 systemctl enable logmein-hamachi.service
-{{- end }}
 
 # desktop services
-{{- if eq .chassistype "desktop" }}
+{{- if not .laptop }}
 sp "Enabling desktop systemd services"
 systemctl enable mnt-backup.automount
 systemctl enable mnt-oldbackup.automount
@@ -403,7 +384,7 @@ sp "No kernel found to set for kexec-load service. Will need to be enabled manua
 {{- end }}
 
 # laptop services
-{{- if eq .chassistype "laptop" }}
+{{- if .laptop }}
 sp "Enabling laptop systemd services"
 systemctl enable bluetooth.service
 systemctl enable tlp.service

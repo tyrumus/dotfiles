@@ -13,7 +13,7 @@ SAVEHIST=5000
 unsetopt beep
 bindkey -e
 zstyle ':completion:*' completer _complete _ignored
-zstyle :compinstall filename '/home/{{- .chezmoi.username -}}/.zshrc'
+zstyle :compinstall filename '{{- .chezmoi.data.homeDir -}}/.zshrc'
 
 autoload -Uz compinit
 compinit
@@ -39,11 +39,11 @@ bindkey "\e[3~" delete-char
 bindkey "\e[F" end-of-line
 
 # Completions
-source /usr/share/fzf/completion.zsh
+source <(fzf --zsh)
 zstyle ':completion:*:*:*:default' menu yes select search
 
 # Aliases
-alias ls="exa --icons"
+alias ls="eza --icons"
 alias ll="ls --long --header"
 alias la="ls -la"
 alias chezgit="lazygit -p ~/.local/share/chezmoi"
@@ -51,21 +51,13 @@ alias cedit="chezmoi edit"
 alias lg="lazygit"
 alias disablehistory="function zshaddhistory(){ return 1 }"
 alias enablehistory="unset -f zshaddhistory"
-
-{{- if not (eq .chassistype "kitty") }}
-### Arch Linux support
 alias cat="bat"
+
+{{- if (eq .installtype "full") }}
+### Arch Linux support
 alias df="duf"
 alias top="btm"
 alias ps="procs"
-{{- end }}
-
-{{- if not (eq .chezmoi.hostname "leviticus") }}
-alias wakelevi="ssh pi \"/home/pi/wake.sh leviticus\""
-alias sleeplevi="ssh -t leviticus /usr/bin/sudo /usr/bin/systemctl suspend"
-{{- end }}
-
-{{- if not (eq .chassistype "wsl") }}
 ### kitty support
 alias clip="kitty +kitten clipboard"
 alias c="pwd | clip"
@@ -75,7 +67,6 @@ alias icat="kitty +kitten icat"
 {{- end }}
 
 # Plugins
-source /usr/share/fzf/key-bindings.zsh
 eval "$(zoxide init zsh --cmd j)"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 

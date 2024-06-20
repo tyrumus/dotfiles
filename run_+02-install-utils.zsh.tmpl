@@ -1,10 +1,10 @@
-{{- if not (stat (joinPath .chezmoi.homeDir ".cache/chezmoi-install")) -}}
+{{- if (eq .installtype "full") -}}
 #!/usr/bin/zsh
 # vim: ft=zsh
 
 BLOCK_FILE="$HOME/.cache/chezmoi-install"
 
-# check if this script has already been ran. Unnecessary with chezmoi template, but better safe than sorry
+# check if this script has already been ran.
 if [ -f "${BLOCK_FILE}" ]; then
     exit 0
 else
@@ -42,17 +42,17 @@ ssp "INSTALLING ALL PACKAGES"
 
 PACKAGES_SYS="ntfs-3g pam-u2f"
 PACKAGES_TERMINAL="hyperfine httpie bandwhich downgrade fd bottom bat bind duf eza git git-lfs github-cli gum fzf xdg-user-dirs imagemagick unzip zip zsh wget lazygit pacman-contrib openssh man-db macchina-bin neovim vifm vifm-colors-git reflector ripgrep smbclient speedtest-cli sudo which curlie procs rustup sd tokei zoxide yt-dlp jq"
-PACKAGES_GUI="handlr chromium clipman discord electrum firefox gnucash greetd greetd-tuigreet-bin flameshot plasma-desktop kde-system-meta git-credential-keepassxc keepassxc kitty ttf-jetbrains-mono ttf-nerd-fonts-symbols obsidian pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber spotify syncthing pavucontrol vlc ufw smartmontools yubikey-manager"
+PACKAGES_GUI="handlr chromium clipman discord electrum firefox gnucash plasma-desktop kde-system-meta git-credential-keepassxc keepassxc kitty ttf-jetbrains-mono ttf-nerd-fonts-symbols obsidian pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber spotify syncthing pavucontrol vlc ufw smartmontools yubikey-manager samba cifs-utils"
 # PACKAGES_WORKSTATION="docker docker-compose handbrake audacity gimp blender yabridge inkscape steam obs-studio samba cifs-utils intel-compute-runtime mesa intel-media-driver vulkan-intel level-zero-headers level-zero-loader vulkan-mesa-layers intel-gpu-tools looking-glass mesa-utils obs-plugin-looking-glass onevpl-intel-gpu perf polymc-qt5-bin virt-manager wine-mono kexec-tools"
-PACKAGES_WORKSTATION="handbrake audacity gimp blender yabridge inkscape steam obs-studio samba cifs-utils looking-glass mesa-utils obs-plugin-looking-glass virt-manager wine-mono kexec-tools"
+PACKAGES_WORKSTATION="handbrake audacity gimp blender yabridge inkscape steam obs-studio looking-glass mesa-utils obs-plugin-looking-glass virt-manager wine-mono kexec-tools"
 PACKAGES_LAPTOP="acpi bluez brightnessctl tlp"
 
 PACKAGES="${PACKAGES_TERMINAL}"
 
-{{- if eq .chassistype "laptop" }}
+{{- if .laptop }}
 sp "Including laptop packages"
 PACKAGES="${PACKAGES} ${PACKAGES_SYS} ${PACKAGES_GUI} ${PACKAGES_LAPTOP}"
-{{- else if eq .chassistype "desktop" }}
+{{- else }}
 sp "Including workstation packages"
 PACKAGES="${PACKAGES} ${PACKAGES_SYS} ${PACKAGES_GUI} ${PACKAGES_WORKSTATION}"
 {{- end }}
@@ -79,7 +79,6 @@ nvim --headless "+Lazy! sync" +qa
 sp "Installing Git LFS"
 git lfs install
 
-{{- if or (eq .chassistype "laptop") (eq .chassistype "desktop") }}
 ### INIT SERVICES ###
 
 sp "Enabling user systemd services"
@@ -102,10 +101,5 @@ echo "\$ git-credential-keepassxc configure"
 echo "Delete \$\{0\} to stop these reminders."
 EOL
 
-{{- else }}
-# prevent root setup script from running when this is a terminal-only install
-touch "${HOME}/.cache/chezmoi-root"
-ssp "TERMINAL-ONLY INSTALL COMPLETE. You'll need to install what you want manually... :)"
-{{- end }}
 ssp "INSTALL UTILS SCRIPT COMPLETE"
 {{- end }}
