@@ -1,28 +1,12 @@
-README.md
-LICENSE.md
-nvim/plugin/packer_
-install/
-img/
-ff-chrome/
 {{- if (eq .installtype "term") }}
 .ssh/authorized_keys
-.config/dunst
-.config/eww
 .config/looking-glass
-.config/rofi
-.config/sway
 .config/systemd
-.config/waybar
 .local
 .face
 .Xresources
 .gnupg
 .config/macchina
 .config/paru
-.config/ranger
-.config/restic-backup
-.config/vifm
-.fonts
 .config/kitty
-.config/fontconfig
 {{- end }}
