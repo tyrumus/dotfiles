@@ -1,7 +1,6 @@
 # vim: ft=zsh
 # local bin
-export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/n/bin"
-export npm_config_prefix=$HOME/.local
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/n/bin:$HOME/.local/share/chezmoi-cache/nvim/bin"
 
 # Neovim is my beautiful child
 export VISUAL=/usr/bin/nvim

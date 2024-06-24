@@ -5,7 +5,7 @@
 {{- $installType := (promptChoice "What kind of install do you want?" $installChoices) }}
 {{- if (eq $installType "term") }}
 {{-     writeToStdout "\nYou've chosen a chassis type that expects numerous dependencies to be installed, available in the path:\n" }}
-{{-     writeToStdout "curl, git, ssh, zsh\n" }}
+{{-     writeToStdout "build-essential, curl, git, ssh, zsh\n" }}
 {{- else if (eq $installType "full") }}
 {{-     if not (eq .chezmoi.osRelease.id "arch") }}
 {{-         writeToStdout (cat "chezmoi has detected that this is not an Arch Linux system, disabling install scripts...\n") }}
