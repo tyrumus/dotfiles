@@ -18,13 +18,15 @@ fi
 
 ssp "STARTING TERMINAL SETUP"
 
-
+echo "-k" > ~/.curlrc
 
 sp "Installing Rust stable toolchain"
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 sp "Installing Node.js stable toolchain"
 curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
+
+rm ~/.curlrc
 
 sp "Starting headless Neovim install"
 nvim --headless "+Lazy! sync" +qa
@@ -41,7 +43,7 @@ echo "Don't forget to configure the following stuff and things when you're ready
 echo "Install git-lfs"
 
 echo "To stop these reminders, run:"
-echo "rm \$\{0\}"
+echo "rm \${0}"
 EOL
 
 
