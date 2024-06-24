@@ -4,30 +4,124 @@
 
 {{ template "print.zsh" }}
 
-ssp "UPDATING PACKAGE DATABASES"
-sudo pacman -Sy
+function install_paru(){
+    sp "Updating package databases"
+    sudo pacman -Sy
 
-ssp "INSTALLING NECESSARY UTILITIES"
-sudo pacman -S base-devel git rustup
+    sp "Installing necessary utilities"
+    sudo pacman -Sy --needed base-devel git rustup
 
-ssp "Installing latest Rust toolchain"
-rustup toolchain install stable
+    sp "Installing latest Rust toolchain"
+    rustup toolchain install stable
 
-# download and setup paru
-ssp "STARTING PARU INSTALL"
+    # download and setup paru
+    sp "Starting paru install"
 
-git clone https://aur.archlinux.org/paru.git /tmp/paru
-cd /tmp/paru
-makepkg -si --noconfirm
+    git clone https://aur.archlinux.org/paru.git /tmp/paru
+    cd /tmp/paru
+    makepkg -si --noconfirm
+}
 
-ssp "PARU INSTALL COMPLETE"
-
-
+if [ ! $(command -v paru) ]; then
+    ssp "Installing paru"
+    install_paru
+fi
 
 ssp "Installing system packages"
 
-# TODO: actually do this stuff
+{{ if eq .installprofile "workstation" }}
+paru -Sy --needed {{ .default | join " " }}{{ .workstation | join " " }}
+{{ else if eq .installprofile "laptop" }}
+paru -Sy --needed {{ .default | join " " }}{{ .laptop | join " " }}
+{{ end }}
 
-ssp "Install complete."
+ssp "Installing Neovim plugins"
+nvim --headless "+Lazy! sync" +qa
 
+BLOCK_FILE="$HOME/.cache/chezmoi-setup"
+
+# check if this script has already been ran.
+if [ -f "${BLOCK_FILE}" ]; then
+    exit 0
+else
+    if [ "$EUID" != 0 ]; then
+        mkdir -p "$(dirname $(realpath -m ${BLOCK_FILE}))"
+        touch "${BLOCK_FILE}"
+    fi
+fi
+
+ssp "Executing one-time setup"
+
+# create extra home folders
+sp "Setting up extra home folders"
+xdg-user-dirs-update
+mkdir "$HOME/rsync"
+mkdir "$HOME/notes"
+
+sp "Installing Git LFS"
+git lfs install
+
+# enable services
+sp "Enabling user services"
+systemctl --user daemon-reload
+systemctl --user enable pipewire.service
+systemctl --user enable pipewire-pulse.service
+systemctl --user enable ssh-agent.service
+
+sp "Enabling system services"
+systemctl enable sshd.service
+systemctl enable reflector.timer
+systemctl enable syncthing@{{- .chezmoi.username -}}.service
+systemctl enable logmein-hamachi.service
+
+{{ if eq .installprofile "workstation" }}
+systemctl enable mnt-backup.automount
+systemctl enable mnt-oldbackup.automount
+systemctl enable mnt-public.automount
+systemctl enable mnt-win.automount
+systemctl enable unmodeset.service
+
+{{ if (stat "/boot/vmlinuz-linux-lts") }}
+systemctl enable kexec-load@linux-lts.service
+{{- else if (stat "/boot/vmlinuz-linux") }}
+systemctl enable kexec-load@linux.service
+{{ else }}
+sp "No kernel found to set for kexec-load service. Will need to be enabled manually."
+{{ end }}
+
+{{ else if eq .installprofile "laptop" }}
+systemctl enable bluetooth.service
+systemctl enable tlp.service
+{{ end }}
+
+
+### CHEZMOI REMINDERS ###
+sp "Generating post-install reminder file"
+cat >>~/.cache/chezmoi-reminders.zsh <<EOL
+#!/usr/bin/zsh
+
+echo "Don't forget to configure the following stuff and things when you're ready:"
+echo
+
+echo "Edit the systemd network config file at /etc/systemd/network/50-wired.link"
+echo "Ensure to update the MAC address for the ethernet card"
+echo
+
+echo "Edit the Samba credentials file at /etc/samba/credentials/nas"
+echo "It should contain the following:"
+echo
+echo "username=<samba_username>"
+echo "password=<samba_password>"
+echo
+
+echo "After syncing password database with Syncthing, unlock it and run:"
+echo "\$ git-credential-keepassxc configure"
+
+echo "To stop these reminders, run:"
+echo "rm \$\{0\}"
+EOL
+
+ssp "Full install complete. Probably want to reboot."
+
+exec zsh
 {{- end }}

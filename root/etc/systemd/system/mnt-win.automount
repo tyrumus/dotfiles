@@ -1,0 +1,8 @@
+[Unit]
+Description=Automount /mnt/win
+
+[Automount]
+Where=/mnt/win
+
+[Install]
+WantedBy=multi-user.target

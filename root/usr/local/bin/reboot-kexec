@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# run this script only as root
+if [ "$EUID" != 0 ]; then
+    sudo "$0" "$@"
+    exit $?
+fi
+
+kexec -l /boot/vmlinuz-linux --initrd=/boot/initramfs-linux.img --reuse-cmdline
+systemctl kexec

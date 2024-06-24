@@ -1,0 +1,13 @@
+[Unit]
+Description=Unload i915 modesetting modules from kernel
+Documentation=man:modprobe(8)
+DefaultDependencies=no
+After=umount.target
+Before=kexec.target
+
+[Service]
+Type=oneshot
+ExecStart=modprobe -r i915
+
+[Install]
+WantedBy=kexec.target
