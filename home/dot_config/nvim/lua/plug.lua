@@ -12,7 +12,16 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- TODO: figure out a smarter place to put this
+function navic_do_attach(client, bufnr)
+    if client.server_capabilities["documentSymbolProvider"] then
+        require("nvim-navic").attach(client, bufnr)
+    end
+end
+
+-- Don't need lewis6991/impatient.nvim anymore
 vim.loader.enable()
+
 local plugins = {
     {
         "eddyekofo94/gruvbox-flat.nvim",
@@ -47,6 +56,7 @@ local plugins = {
         "neovim/nvim-lspconfig",
         config = function()
             require("lspconfig").lua_ls.setup({
+                on_attach = navic_do_attach,
                 update_in_insert = true,
                 settings = {
                     Lua = {
@@ -67,11 +77,20 @@ local plugins = {
                     }
                 }
             })
-            require("lspconfig").pyright.setup({})
-            require("lspconfig").svelte.setup({})
-            require("lspconfig").tailwindcss.setup({})
-            require("lspconfig").yamlls.setup({})
+            require("lspconfig").pyright.setup({
+                on_attach = navic_do_attach,
+            })
+            require("lspconfig").svelte.setup({
+                on_attach = navic_do_attach,
+            })
+            require("lspconfig").tailwindcss.setup({
+                on_attach = navic_do_attach,
+            })
+            require("lspconfig").yamlls.setup({
+                on_attach = navic_do_attach,
+            })
             require("lspconfig").rust_analyzer.setup({
+                on_attach = navic_do_attach,
                 settings = {
                     ["rust-analyzer"] = {
                         imports = {
@@ -91,13 +110,16 @@ local plugins = {
                     }
                 }
             })
-            require("lspconfig").bashls.setup({})
+            require("lspconfig").bashls.setup({
+                on_attach = navic_do_attach,
+            })
         end,
         lazy = true,
         event = { "BufRead" },
         dependencies = {
             "mason.nvim",
-            "mason-lspconfig.nvim"
+            "mason-lspconfig.nvim",
+            "SmiteshP/nvim-navic"
         }
     },
     {
@@ -343,6 +365,48 @@ local plugins = {
         "earthly/earthly.vim",
         lazy = true,
         ft = "Earthfile"
+    },
+    {
+        "rcarriga/nvim-notify",
+        lazy = true,
+        event = { "BufRead" },
+        config = function()
+            vim.notify = require("notify").setup({
+                render = "compact"
+            })
+        end
+    },
+    {
+        "utilyre/barbecue.nvim",
+        lazy = true,
+        opts = {
+            attach_navic = false
+        },
+        event = { "LspAttach" },
+        dependencies = {
+            "SmiteshP/nvim-navic"
+        },
+    },
+    {
+        "NvChad/nvim-colorizer.lua",
+        lazy = true,
+        event = { "BufRead" },
+        config = true
+    },
+    {
+        "ray-x/lsp_signature.nvim",
+        lazy = true,
+        event = { "VeryLazy" },
+        config = true
+    },
+    {
+        "voldikss/vim-floaterm",
+        lazy = true,
+        cmd = {
+            "FloatermNew",
+            "FloatermToggle",
+            "FloatermNext"
+        },
     },
     {
         "nathom/filetype.nvim",

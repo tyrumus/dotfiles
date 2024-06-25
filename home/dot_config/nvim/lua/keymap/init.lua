@@ -2,7 +2,7 @@ local vimmap = vim.api.nvim_set_keymap
 
 local function map(bind, cmd, mode)
     local mode = mode or "n"
-    vimmap("n", bind, cmd, {noremap = true})
+    vimmap(mode, bind, cmd, {noremap = true})
 end
 
 -- keep my sanity
