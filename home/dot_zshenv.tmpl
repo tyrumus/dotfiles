@@ -9,4 +9,6 @@ export EDITOR=/usr/bin/nvim
 # Misc stuffs
 export WINEFSYNC=1
 export BAT_THEME="gruvbox-dark"
+{{ if (eq .installtype "term") }}
 . "$HOME/.cargo/env"
+{{ end }}
