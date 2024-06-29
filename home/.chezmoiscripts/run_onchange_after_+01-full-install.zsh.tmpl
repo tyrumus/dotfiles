@@ -27,6 +27,12 @@ if [ ! $(command -v paru) ]; then
     install_paru
 fi
 
+ssp "Installing reflector"
+paru -Sy --needed reflector
+ssp "Finding mirrors"
+# cat {{ .chezmoi.config.sourceDir }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
+sudo systemctl start reflector
+
 ssp "Installing system packages"
 
 {{ if eq .installprofile "workstation" }}
@@ -66,9 +72,11 @@ sp "Enabling user services"
 systemctl --user daemon-reload
 systemctl --user enable pipewire.service
 systemctl --user enable pipewire-pulse.service
+systemctl --user enable wireplumber.service
 systemctl --user enable ssh-agent.service
 
 sp "Enabling system services"
+systemctl enable sddm.service
 systemctl enable sshd.service
 systemctl enable reflector.timer
 systemctl enable syncthing@{{- .chezmoi.username -}}.service
@@ -116,6 +124,9 @@ echo
 
 echo "After syncing password database with Syncthing, unlock it and run:"
 echo "\$ git-credential-keepassxc configure"
+echo
+
+echo "Setup Spotify with spotify-launcher."
 
 echo "To stop these reminders, run:"
 echo "rm \${0}"
