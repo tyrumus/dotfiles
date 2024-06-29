@@ -93,29 +93,29 @@ systemctl --user enable wireplumber.service
 systemctl --user enable ssh-agent.service
 
 sp "Enabling system services"
-systemctl enable sddm.service
-systemctl enable sshd.service
-systemctl enable reflector.timer
-systemctl enable syncthing@{{- .chezmoi.username -}}.service
-systemctl enable logmein-hamachi.service
+sudo systemctl enable sddm.service
+sudo systemctl enable sshd.service
+sudo systemctl enable reflector.timer
+sudo systemctl enable syncthing@{{- .chezmoi.username -}}.service
+sudo systemctl enable logmein-hamachi.service
 
 {{ if eq .installprofile "workstation" }}
-systemctl enable srv-backup.automount
-systemctl enable srv-oldbackup.automount
-systemctl enable srv-public.automount
-systemctl enable unmodeset.service
+sudo systemctl enable srv-backup.automount
+sudo systemctl enable srv-oldbackup.automount
+sudo systemctl enable srv-public.automount
+sudo systemctl enable unmodeset.service
 
 {{ if (stat "/boot/vmlinuz-linux-lts") }}
-systemctl enable kexec-load@linux-lts.service
+sudo systemctl enable kexec-load@linux-lts.service
 {{- else if (stat "/boot/vmlinuz-linux") }}
-systemctl enable kexec-load@linux.service
+sudo systemctl enable kexec-load@linux.service
 {{ else }}
 sp "No kernel found to set for kexec-load service. Will need to be enabled manually."
 {{ end }}
 
 {{ else if eq .installprofile "laptop" }}
-systemctl enable bluetooth.service
-systemctl enable tlp.service
+sudo systemctl enable bluetooth.service
+sudo systemctl enable tlp.service
 {{ end }}
 
 
