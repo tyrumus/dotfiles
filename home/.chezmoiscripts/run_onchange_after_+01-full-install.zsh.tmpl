@@ -4,6 +4,15 @@
 
 {{ template "print.zsh" }}
 
+function keepalive_sudo(){
+    while true; do
+        sudo -v
+        # keep sleep under 60 seconds, since that's the shortest sudo's timeout can be set for,
+        # aside from always requiring the password. But I don't do that. :)
+        sleep 50
+    done
+}
+
 function install_paru(){
     sp "Updating package databases"
     sudo pacman -Sy
@@ -22,16 +31,24 @@ function install_paru(){
     makepkg -si --noconfirm
 }
 
+# prevent shell from not closing due to keepalive_sudo
+trap 'kill $(jobs -pr)' SIGINT SIGTERM EXIT
+
+ssp "One-time sudo prompt"
+keepalive_sudo &
+
 if [ ! $(command -v paru) ]; then
     ssp "Installing paru"
     install_paru
 fi
 
-ssp "Installing reflector"
-paru -Sy --needed reflector
-ssp "Finding mirrors"
-# cat {{ .chezmoi.config.sourceDir }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
-sudo systemctl start reflector
+if [ ! $(command -v reflector) ]; then
+    ssp "Installing reflector"
+    paru -Sy --needed reflector
+    sp "Finding mirrors"
+    # cat {{ .chezmoi.config.sourceDir }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
+    sudo systemctl start reflector
+fi
 
 ssp "Installing system packages"
 
@@ -83,10 +100,9 @@ systemctl enable syncthing@{{- .chezmoi.username -}}.service
 systemctl enable logmein-hamachi.service
 
 {{ if eq .installprofile "workstation" }}
-systemctl enable mnt-backup.automount
-systemctl enable mnt-oldbackup.automount
-systemctl enable mnt-public.automount
-systemctl enable mnt-win.automount
+systemctl enable srv-backup.automount
+systemctl enable srv-oldbackup.automount
+systemctl enable srv-public.automount
 systemctl enable unmodeset.service
 
 {{ if (stat "/boot/vmlinuz-linux-lts") }}
