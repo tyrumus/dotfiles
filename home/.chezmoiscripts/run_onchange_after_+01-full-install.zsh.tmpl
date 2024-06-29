@@ -46,7 +46,7 @@ if [ ! $(command -v reflector) ]; then
     ssp "Installing reflector"
     paru -Sy --needed reflector
     sp "Finding mirrors"
-    # cat {{ .chezmoi.config.sourceDir }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
+    # cat {{ .chezmoi.config.workingTree }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
     sudo systemctl start reflector
 fi
 
