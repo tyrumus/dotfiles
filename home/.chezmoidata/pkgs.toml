@@ -1,5 +1,15 @@
 # 'default' profile always gets included on all install profiles
 default = [
+    # provider selections for dependencies
+    "pipewire-jack",
+    "qt6-multimedia-ffmpeg",
+    "cronie",
+    "noto-fonts-emoji",
+    "clipman",
+    "noto-fonts",
+    "vulkan-intel",
+    "lib32-vulkan-intel",
+
     # terminal & system utils
     "bandwhich",
     "bat",
@@ -63,7 +73,6 @@ default = [
     "handlr-regex",
     "kde-graphics-meta",
     "kde-system-meta",
-    "kde-utilities-meta",
     "keepassxc",
     "kitty",
     "obsidian",
@@ -86,6 +95,11 @@ default = [
     "yubikey-manager"
 ]
 workstation = [
+    # provider selections for dependencies
+    "noto-fonts",
+    "vulkan-intel",
+    "lib32-vulkan-intel",
+
     "audacity",
     "blender",
     "gimp",

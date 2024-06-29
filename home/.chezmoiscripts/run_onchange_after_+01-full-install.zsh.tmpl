@@ -18,7 +18,7 @@ function install_paru(){
     sudo pacman -Sy
 
     sp "Installing necessary utilities"
-    sudo pacman -Sy --needed base-devel git rustup
+    sudo pacman -Sy --noconfirm --needed base-devel git rustup
 
     sp "Installing latest Rust toolchain"
     rustup toolchain install stable
@@ -44,7 +44,7 @@ fi
 
 if [ ! $(command -v reflector) ]; then
     ssp "Installing reflector"
-    paru -Sy --needed reflector
+    paru -Sy --needed --noconfirm reflector
     sp "Finding mirrors"
     # cat {{ .chezmoi.config.workingTree }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
     sudo systemctl start reflector
@@ -53,9 +53,9 @@ fi
 ssp "Installing system packages"
 
 {{ if eq .installprofile "workstation" }}
-paru -Sy --needed {{ .default | join " " }}{{ .workstation | join " " }}
+paru -Sy --needed {{ .default | join " " }} {{ .workstation | join " " }}
 {{ else if eq .installprofile "laptop" }}
-paru -Sy --needed {{ .default | join " " }}{{ .laptop | join " " }}
+paru -Sy --needed {{ .default | join " " }} {{ .laptop | join " " }}
 {{ end }}
 
 ssp "Installing Neovim plugins"
