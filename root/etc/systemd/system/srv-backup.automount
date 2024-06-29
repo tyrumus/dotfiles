@@ -1,9 +1,10 @@
 [Unit]
-Description=Automount /mnt/oldbackup
+Description=Automount /srv/backup
 After=network.target network-online.target remote-fs-pre.target nss-lookup.target
 
 [Automount]
-Where=/mnt/oldbackup
+Where=/srv/backup
+TimeoutIdleSec=300
 
 [Install]
 WantedBy=multi-user.target
