@@ -1,8 +1,0 @@
-[Match]
-MACAddress=aa:aa:aa:aa:aa:aa
-
-[Link]
-NamePolicy=kernel database onboard slot path
-AutoNegotiation=no
-Duplex=full
-BitsPerSecond=1000M
