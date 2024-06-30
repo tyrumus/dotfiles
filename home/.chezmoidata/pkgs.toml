@@ -104,7 +104,6 @@ workstation = [
     "gimp",
     "handbrake",
     "inkscape",
-    "intel-compute-runtime",
     "kexec-tools",
     "looking-glass",
     "mesa-utils",
