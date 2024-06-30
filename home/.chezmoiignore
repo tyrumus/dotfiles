@@ -2,6 +2,8 @@
 .ssh/authorized_keys
 .config/looking-glass
 .config/systemd
+.config/rootmoi
+.config/spotify-launcher.conf
 .local
 .face
 .Xresources
