@@ -17,4 +17,4 @@ fi
 
 mkdir -p '{{ $configDir }}' '{{ $cacheDir }}'
 
-sudo exec "${executable}" "$@" --config='{{ $configFile }}' --persistent-state='{{ $persistentStateFile }}' --cache='{{ $cacheDir }}'
+exec sudo "${executable}" "$@" --config='{{ $configFile }}' --persistent-state='{{ $persistentStateFile }}' --cache='{{ $cacheDir }}'

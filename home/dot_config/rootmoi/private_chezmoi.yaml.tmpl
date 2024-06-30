@@ -11,12 +11,12 @@ verbose: true
 pager: ""
 
 diff:
-    exclude:
-        - scripts
+  exclude:
+    - scripts
 status:
-    exclude:
-        - always
+  exclude:
+    - always
 
 data:
-    non_root_user: "{{ .chezmoi.username }}"
-    {{- $chezmoiData | toYaml | nindent 2 }}
+  non_root_user: "{{ .chezmoi.username }}"
+  {{- $chezmoiData | toYaml | nindent 2 }}
