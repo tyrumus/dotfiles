@@ -4,50 +4,7 @@ If you came from [this Reddit post,](https://www.reddit.com/r/unixporn/comments/
 
 This repo is managed by [chezmoi](https://www.chezmoi.io/)
 
-## Setup
-
-Install chezmoi with your distro's package manager, then run the following and answer the prompts:
-```
-chezmoi init https://github.com/tyrumus/dotfiles
-```
-
-You probably only want the `term` install mode, unless you were hoping to set up an entirely new Arch Linux install.
-
-Install Mode | Required Storage
---- | ---
-`term` | tiny
-`full` workstation | 20 GiB
-`full` laptop | ???
-
-### `term`
-
-Install chezmoi to `~/.local/bin`
-```
-sh -c "$(curl -fsLS get.chezmoi.io/lb)" && export PATH="$PATH:~/.local/bin"
-```
-
-Apply the dotfiles
-```
-chezmoi init https://github.com/tyrumus/dotfiles --apply
-```
-
-### `full`
-
-Install dependencies on Arch Linux
-```
-# pacman -S chezmoi git zsh curl
-```
-
-Apply the dotfiles
-```
-chezmoi init https://github.com/tyrumus/dotfiles --apply
-```
-
-Logout of your session, and log back in. Enjoy!
-
 ## System Information
-
-Some details about the current setup, and links to their respective install/config information (Arch Wiki preferred).
 
 Component | Software
 --- | ---
@@ -58,6 +15,47 @@ Terminal Emulator | [Kitty](https://wiki.archlinux.org/title/Kitty)
 Text Editor | [Neovim](https://wiki.archlinux.org/title/Neovim)
 Color scheme | [gruvbox](https://github.com/morhetz/gruvbox)
 Music Player | [Spotify](https://wiki.archlinux.org/title/Spotify)
+
+## Setup
+
+Install Mode | Required Storage
+--- | ---
+`term` | 1.8 GiB
+`full` workstation | 14.7 GiB
+`full` laptop | 10 GiB
+
+### Install Mode: `term`
+
+This mode only installs utilities and Neovim in `~/.local/bin`, without using the system package manager.
+It is intended to be extremely portable.
+
+Install chezmoi to `~/.local/bin`
+```
+sh -c "$(curl -fsLS get.chezmoi.io/lb)" && export PATH="$PATH:~/.local/bin"
+```
+
+Install the dotfiles and follow the prompts.
+```
+chezmoi init https://github.com/tyrumus/dotfiles
+chezmoi apply
+```
+
+### Install Mode: `full`
+
+This mode installs all utilities and GUI programs that I use on a full, regular Arch Linux installation.
+See **Run unattended Arch Linux install** for OS install details, as the rest of this section assumes a minimal Arch Linux install.
+
+Install dependencies
+```
+# pacman -S chezmoi git zsh curl
+```
+
+Apply the dotfiles
+```
+chezmoi init https://github.com/tyrumus/dotfiles --apply
+```
+
+Logout of your session, and log back in. Enjoy!
 
 ## Run unattended Arch Linux install
 
