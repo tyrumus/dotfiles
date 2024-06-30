@@ -13,7 +13,7 @@ function keepalive_sudo(){
 }
 
 function stop_sudo(){
-    ssp "stopping sudo"
+    ssp "Stopping sudo"
     kill -9 "$SUDO_PID"
     trap - SIGINT SIGTERM
     sudo -k
@@ -38,6 +38,9 @@ function install_paru(){
 }
 
 keepalive_sudo
+
+ssp "Applying root filesystem changes"
+rootmoi apply
 
 if [ ! $(command -v paru) ]; then
     ssp "Installing paru"
