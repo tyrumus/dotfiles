@@ -1,0 +1,12 @@
+{{- if (eq .installtype "term") }}
+.ssh/authorized_keys
+.config/looking-glass
+.config/systemd
+.local
+.face
+.Xresources
+.gnupg
+.config/macchina
+.config/paru
+.config/kitty
+{{- end }}

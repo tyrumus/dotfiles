@@ -1,0 +1,15 @@
+# vim: ft=gitconfig
+[user]
+    email = {{ .gitemail }}
+    name = Tyron Rieckmann
+[init]
+    defaultBranch = master
+[filter "lfs"]
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+{{ if (eq .installtype "full") }}
+[credential]
+    helper = keepassxc --git-groups
+{{- end }}

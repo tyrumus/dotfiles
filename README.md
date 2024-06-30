@@ -2,7 +2,48 @@
 
 If you came from [this Reddit post,](https://www.reddit.com/r/unixporn/comments/6drt6c/awesomewm_noobs_paradise/) you're probably looking for [this repo instead.](https://github.com/tyrumus/dotfiles-old)
 
-This new repo is managed by [chezmoi](https://www.chezmoi.io/)
+This repo is managed by [chezmoi](https://www.chezmoi.io/)
+
+## Setup
+
+Install chezmoi with your distro's package manager, then run the following and answer the prompts:
+```
+chezmoi init https://github.com/tyrumus/dotfiles
+```
+
+You probably only want the `term` install mode, unless you were hoping to set up an entirely new Arch Linux install.
+
+Install Mode | Required Storage
+--- | ---
+`term` | tiny
+`full` workstation | 20 GiB
+`full` laptop | ???
+
+### `term`
+
+Install chezmoi to `~/.local/bin`
+```
+sh -c "$(curl -fsLS get.chezmoi.io/lb)" && export PATH="$PATH:~/.local/bin"
+```
+
+Apply the dotfiles
+```
+chezmoi init https://github.com/tyrumus/dotfiles --apply
+```
+
+### `full`
+
+Install dependencies on Arch Linux
+```
+# pacman -S chezmoi git zsh curl
+```
+
+Apply the dotfiles
+```
+chezmoi init https://github.com/tyrumus/dotfiles --apply
+```
+
+Logout of your session, and log back in. Enjoy!
 
 ## System Information
 
@@ -12,47 +53,11 @@ Component | Software
 --- | ---
 Distro | [Arch Linux](https://archlinux.org/)
 Shell | [Zsh](https://wiki.archlinux.org/title/Zsh)
-Display Manager | [greetd](https://wiki.archlinux.org/title/Greetd) with greeter [greetd-tuigreet](https://wiki.archlinux.org/title/Greetd#tuigreet)
-Wayland Compositor | [Sway](https://wiki.archlinux.org/title/Sway)
-Lockscreen | [swaylock-effects](https://github.com/jirutka/swaylock-effects)
-App Launcher | [rofi-lbonn-wayland](https://aur.archlinux.org/packages/rofi-lbonn-wayland)
-Panel | [waybar](https://github.com/Alexays/Waybar)
-Widgets | [eww](https://github.com/elkowar/eww)
-Notification Daemon | [dunst](https://wiki.archlinux.org/title/Dunst)
+DE | [KDE](https://wiki.archlinux.org/title/KDE)
 Terminal Emulator | [Kitty](https://wiki.archlinux.org/title/Kitty)
 Text Editor | [Neovim](https://wiki.archlinux.org/title/Neovim)
-File Manager | [ranger](https://wiki.archlinux.org/title/Ranger)
 Color scheme | [gruvbox](https://github.com/morhetz/gruvbox)
 Music Player | [Spotify](https://wiki.archlinux.org/title/Spotify)
-Screenshot tool | [grimshot](https://github.com/swaywm/sway/blob/master/contrib/grimshot) / [grim](https://sr.ht/~emersion/grim/)
-
-If you want to know more, see what's installed by default in the [install-utils script.](run_+02-install-utils.zsh.tmpl)
-
-## Screenshot
-
-![Epic screenshot of my setup](img/dotfiles-rice-aug2022.png)
-
-## Setup
-Install chezmoi with your distro's package manager, then run the following:
-```
-chezmoi init https://github.com/tyrumus/dotfiles.git
-```
-
-My `run` scripts are intended to deploy [an entirely new Arch Linux install.](https://github.com/tyrumus/dotfiles#run-unattended-arch-linux-install) **This will install tons of packages and enable systemd services.**
-
-If you don't want my automated scripts to mess up your Linux install, run the following command:
-```
-chezmoi cd
-sh install/disable-install.sh
-exit
-```
-
-Finally, apply the dotfiles:
-```
-chezmoi apply
-```
-
-Logout of your session, and log back in. Enjoy!
 
 ## Run unattended Arch Linux install
 
@@ -76,4 +81,4 @@ curl -L https://tyrumus.dev/ai | zsh
 
 ## TODO
 
-- Make `install/arch-install.zsh` automatically set up partitioning
+- Rewrite OS install script using archinstall Python library instead. This will handle partitioning as well.

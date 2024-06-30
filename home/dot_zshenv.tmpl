@@ -1,0 +1,14 @@
+# vim: ft=zsh
+# local bin
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/n/bin:$HOME/.local/share/chezmoi-cache/nvim/bin"
+
+# Neovim is my beautiful child
+export VISUAL=/usr/bin/nvim
+export EDITOR=/usr/bin/nvim
+
+# Misc stuffs
+export WINEFSYNC=1
+export BAT_THEME="gruvbox-dark"
+{{ if (eq .installtype "term") }}
+. "$HOME/.cargo/env"
+{{ end }}

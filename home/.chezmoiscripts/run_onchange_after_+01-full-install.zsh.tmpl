@@ -1,0 +1,166 @@
+{{- if (eq .installtype "full") -}}
+#!/usr/bin/zsh
+# vim: ft=zsh
+
+{{ template "print.zsh" }}
+
+function keepalive_sudo(){
+    ssp "One-time sudo prompt"
+    sudo -v
+    ( while true; do sudo -v; sleep 50; done; ) &
+    SUDO_PID="$!"
+    trap stop_sudo SIGINT SIGTERM
+}
+
+function stop_sudo(){
+    ssp "Stopping sudo"
+    kill -9 "$SUDO_PID"
+    trap - SIGINT SIGTERM
+    sudo -k
+}
+
+function install_paru(){
+    sp "Updating package databases"
+    sudo pacman -Sy
+
+    sp "Installing necessary utilities"
+    sudo pacman -Sy --noconfirm --needed base-devel git rustup
+
+    sp "Installing latest Rust toolchain"
+    rustup toolchain install stable
+
+    # download and setup paru
+    sp "Starting paru install"
+
+    git clone https://aur.archlinux.org/paru.git /tmp/paru
+    cd /tmp/paru
+    makepkg -si --noconfirm
+}
+
+keepalive_sudo
+
+ssp "Applying root filesystem changes"
+rootmoi apply
+
+if [ ! $(command -v paru) ]; then
+    ssp "Installing paru"
+    install_paru
+fi
+
+if [ ! $(command -v reflector) ]; then
+    ssp "Installing reflector"
+    paru -Sy --needed --noconfirm reflector
+    sp "Finding mirrors"
+    # cat {{ .chezmoi.config.workingTree }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
+    sudo systemctl start reflector
+fi
+
+ssp "Installing system packages"
+
+{{ if eq .installprofile "workstation" }}
+paru -Sy --needed {{ .default | join " " }} {{ .workstation | join " " }}
+{{ else if eq .installprofile "laptop" }}
+paru -Sy --needed {{ .default | join " " }} {{ .laptop | join " " }}
+{{ end }}
+
+ssp "Installing Neovim plugins"
+nvim --headless "+Lazy! sync" +qa
+
+BLOCK_FILE="$HOME/.cache/chezmoi-setup"
+
+# check if this script has already been ran.
+if [ -f "${BLOCK_FILE}" ]; then
+    stop_sudo
+    exit 0
+else
+    if [ "$EUID" != 0 ]; then
+        mkdir -p "$(dirname $(realpath -m ${BLOCK_FILE}))"
+        touch "${BLOCK_FILE}"
+    fi
+fi
+
+ssp "Executing one-time setup"
+
+# create extra home folders
+sp "Setting up extra home folders"
+xdg-user-dirs-update
+mkdir "$HOME/rsync"
+mkdir "$HOME/notes"
+
+sp "Installing Git LFS"
+git lfs install
+
+# enable services
+sp "Enabling user services"
+systemctl --user daemon-reload
+systemctl --user enable pipewire.service
+systemctl --user enable pipewire-pulse.service
+systemctl --user enable wireplumber.service
+systemctl --user enable ssh-agent.service
+
+sp "Enabling system services"
+sudo systemctl enable sddm.service
+sudo systemctl enable sshd.service
+sudo systemctl enable reflector.timer
+sudo systemctl enable syncthing@{{- .chezmoi.username -}}.service
+sudo systemctl enable logmein-hamachi.service
+
+{{ if eq .installprofile "workstation" }}
+sudo systemctl enable srv-backup.automount
+sudo systemctl enable srv-oldbackup.automount
+sudo systemctl enable srv-public.automount
+sudo systemctl enable unmodeset.service
+
+{{ if (stat "/boot/vmlinuz-linux-lts") }}
+sudo systemctl enable kexec-load@linux-lts.service
+{{- else if (stat "/boot/vmlinuz-linux") }}
+sudo systemctl enable kexec-load@linux.service
+{{ else }}
+sp "No kernel found to set for kexec-load service. Will need to be enabled manually."
+{{ end }}
+
+{{ else if eq .installprofile "laptop" }}
+sudo systemctl enable bluetooth.service
+sudo systemctl enable tlp.service
+{{ end }}
+
+
+### CHEZMOI REMINDERS ###
+sp "Generating post-install reminder file"
+cat >>~/.cache/chezmoi-reminders.zsh <<EOL
+#!/usr/bin/zsh
+
+echo "Don't forget to configure the following stuff and things when you're ready:"
+echo
+
+echo "Edit the systemd network config file at /etc/systemd/network/50-wired.link"
+echo "Ensure to update the MAC address for the ethernet card"
+echo
+
+echo "Edit the Samba credentials file at /etc/samba/credentials/nas"
+echo "It should contain the following:"
+echo
+echo "username=<samba_username>"
+echo "password=<samba_password>"
+echo
+
+echo "After syncing password database with Syncthing, unlock it and run:"
+echo "\$ git-credential-keepassxc configure"
+echo
+
+echo "Setup Spotify with spotify-launcher."
+echo
+
+echo "Change the URL for remote origin to SSH"
+echo
+
+echo "To stop these reminders, run:"
+echo "rm \${0}"
+EOL
+
+stop_sudo
+
+ssp "Full install complete. Probably want to reboot."
+
+exec zsh
+{{- end }}

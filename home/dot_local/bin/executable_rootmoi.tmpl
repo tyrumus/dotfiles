@@ -1,0 +1,20 @@
+#!/usr/bin/zsh
+
+# Lots of screwy things taken from felipecrs/dotfiles
+# some of this may not work as intended
+
+{{ $configDir := joinPath .chezmoi.homeDir ".config/rootmoi" }}
+{{ $configFile := joinPath $configDir "chezmoi.yaml" }}
+{{ $persistentStateFile := joinPath $configDir "chezmoistate.boltdb" }}
+{{ $cacheDir := joinPath .chezmoi.homeDir ".cache/rootmoi" }}
+
+# TODO: unsure if I need this
+if [[ -f '{{ .chezmoi.executable }}' ]]; then
+    executable='{{ .chezmoi.executable }}'
+else
+    executable=$(command -v chezmoi)
+fi
+
+mkdir -p '{{ $configDir }}' '{{ $cacheDir }}'
+
+exec sudo "${executable}" "$@" --config='{{ $configFile }}' --persistent-state='{{ $persistentStateFile }}' --cache='{{ $cacheDir }}'

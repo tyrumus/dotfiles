@@ -1,0 +1,14 @@
+[Unit]
+Description=Mount /srv/backup on demand
+After=network.target network-online.target remote-fs-pre.target nss-lookup.target
+
+[Mount]
+What=//nas.baywood.cc/backup
+Where=/srv/backup
+Options=_netdev,credentials=/etc/samba/credentials/nas,iocharset=utf8,rw,noauto,uid=1000,gid=1001
+Type=cifs
+TimeoutSec=30
+ForceUnmount=true
+
+[Install]
+WantedBy=multi-user.target
