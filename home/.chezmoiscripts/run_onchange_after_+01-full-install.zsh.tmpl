@@ -5,12 +5,18 @@
 {{ template "print.zsh" }}
 
 function keepalive_sudo(){
-    while true; do
-        sudo -v
-        # keep sleep under 60 seconds, since that's the shortest sudo's timeout can be set for,
-        # aside from always requiring the password. But I don't do that. :)
-        sleep 50
-    done
+    ssp "One-time sudo prompt"
+    sudo -v
+    ( while true; do sudo -v; sleep 50; done; ) &
+    SUDO_PID="$!"
+    trap stop_sudo SIGINT SIGTERM
+}
+
+function stop_sudo(){
+    ssp "stopping sudo"
+    kill -9 "$SUDO_PID"
+    trap - SIGINT SIGTERM
+    sudo -k
 }
 
 function install_paru(){
@@ -31,11 +37,7 @@ function install_paru(){
     makepkg -si --noconfirm
 }
 
-# prevent shell from not closing due to keepalive_sudo
-trap 'kill $(jobs -pr)' SIGINT SIGTERM EXIT
-
-ssp "One-time sudo prompt"
-keepalive_sudo &
+keepalive_sudo
 
 if [ ! $(command -v paru) ]; then
     ssp "Installing paru"
@@ -65,6 +67,7 @@ BLOCK_FILE="$HOME/.cache/chezmoi-setup"
 
 # check if this script has already been ran.
 if [ -f "${BLOCK_FILE}" ]; then
+    stop_sudo
     exit 0
 else
     if [ "$EUID" != 0 ]; then
@@ -147,6 +150,8 @@ echo "Setup Spotify with spotify-launcher."
 echo "To stop these reminders, run:"
 echo "rm \${0}"
 EOL
+
+stop_sudo
 
 ssp "Full install complete. Probably want to reboot."
 
