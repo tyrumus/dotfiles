@@ -4,6 +4,47 @@ If you came from [this Reddit post,](https://www.reddit.com/r/unixporn/comments/
 
 This repo is managed by [chezmoi](https://www.chezmoi.io/)
 
+## Setup
+
+Install chezmoi with your distro's package manager, then run the following and answer the prompts:
+```
+chezmoi init https://github.com/tyrumus/dotfiles
+```
+
+You probably only want the `term` install mode, unless you were hoping to set up an entirely new Arch Linux install.
+
+Install Mode | Required Storage
+--- | ---
+`term` | tiny
+`full` workstation | 20 GiB
+`full` laptop | ???
+
+### `term`
+
+Install chezmoi to `~/.local/bin`
+```
+sh -c "$(curl -fsLS get.chezmoi.io/lb)" && export PATH="$PATH:~/.local/bin"
+```
+
+Apply the dotfiles
+```
+chezmoi init https://github.com/tyrumus/dotfiles --apply
+```
+
+### `full`
+
+Install dependencies on Arch Linux
+```
+# pacman -S chezmoi git zsh curl
+```
+
+Apply the dotfiles
+```
+chezmoi init https://github.com/tyrumus/dotfiles --apply
+```
+
+Logout of your session, and log back in. Enjoy!
+
 ## System Information
 
 Some details about the current setup, and links to their respective install/config information (Arch Wiki preferred).
@@ -17,23 +58,6 @@ Terminal Emulator | [Kitty](https://wiki.archlinux.org/title/Kitty)
 Text Editor | [Neovim](https://wiki.archlinux.org/title/Neovim)
 Color scheme | [gruvbox](https://github.com/morhetz/gruvbox)
 Music Player | [Spotify](https://wiki.archlinux.org/title/Spotify)
-
-## Setup
-Install chezmoi with your distro's package manager, then run the following and answer the prompts:
-```
-chezmoi init https://github.com/tyrumus/dotfiles.git
-```
-
-You probably only want the `term` install mode, unless you were hoping to set up an entirely new Arch Linux install.
-
-Be sure to install the dependencies indicated by the init script with your system package manager.
-
-Finally, apply the dotfiles:
-```
-chezmoi apply
-```
-
-Logout of your session, and log back in. Enjoy!
 
 ## Run unattended Arch Linux install
 
@@ -57,5 +81,4 @@ curl -L https://tyrumus.dev/ai | zsh
 
 ## TODO
 
-- Finish root folder management work
-- Rewrite OS install script using archinstall Python library instead
+- Rewrite OS install script using archinstall Python library instead. This will handle partitioning as well.
