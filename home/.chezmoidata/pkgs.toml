@@ -101,7 +101,6 @@ workstation = [
     "lib32-vulkan-intel",
 
     "audacity",
-    "blender",
     "gimp",
     "handbrake",
     "inkscape",
