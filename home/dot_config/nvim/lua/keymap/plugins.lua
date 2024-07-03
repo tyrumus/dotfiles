@@ -21,3 +21,6 @@ map("<leader>t", "<cmd>TodoTrouble<CR>")
 
 -- Lazy.nvim Sync
 map("<leader>l", "<cmd>Lazy sync<CR>")
+
+-- trouble
+map("<leader>xQ", "<cmd>Trouble qflist toggle<CR>")

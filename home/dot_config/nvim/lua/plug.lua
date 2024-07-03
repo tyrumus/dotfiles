@@ -17,6 +17,8 @@ function navic_do_attach(client, bufnr)
     if client.server_capabilities["documentSymbolProvider"] then
         require("nvim-navic").attach(client, bufnr)
     end
+
+    vim.keymap.set("n", "<space>a", vim.lsp.buf.code_action)
 end
 
 -- Don't need lewis6991/impatient.nvim anymore
@@ -111,6 +113,9 @@ local plugins = {
                 }
             })
             require("lspconfig").bashls.setup({
+                on_attach = navic_do_attach,
+            })
+            require("lspconfig").clangd.setup({
                 on_attach = navic_do_attach,
             })
         end,
@@ -274,6 +279,34 @@ local plugins = {
         }
     },
     {
+        "folke/trouble.nvim",
+        config = true,
+        cmd = "Trouble"
+    },
+    {
+        "nvim-telescope/telescope-ui-select.nvim",
+        config = true,
+    },
+    {
+        "nvim-telescope/telescope.nvim",
+        branch = "0.1.x",
+        cmd = "Telescope",
+        config = function()
+            require("telescope").setup({
+                extensions = {
+                    ["ui-select"] = {
+                        require("telescope.themes").get_dropdown(),
+                    },
+                },
+            })
+            require("telescope").load_extension("ui-select")
+        end,
+        dependencies = {
+            "nvim-telescope/telescope-ui-select.nvim",
+            "nvim-lua/plenary.nvim"
+        }
+    },
+    {
         "sindrets/diffview.nvim",
         config = true,
         lazy = true,
@@ -371,9 +404,7 @@ local plugins = {
         lazy = true,
         event = { "BufRead" },
         config = function()
-            vim.notify = require("notify").setup({
-                render = "compact"
-            })
+            vim.notify = require("notify")
         end
     },
     {
