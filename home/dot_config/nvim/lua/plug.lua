@@ -142,8 +142,38 @@ local plugins = {
         end,
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = { "bash", "toml", "yaml", "html", "scss", "css", "javascript", "typescript", "json", "c", "cpp", "lua",
-                    "rust", "python", "svelte" },
+                ensure_installed = {
+                    "asm",
+                    "bash",
+                    "bitbake",
+                    "c",
+                    "cpp",
+                    "css",
+                    "dockerfile",
+                    "html",
+                    "java",
+                    "javascript",
+                    "json",
+                    "kconfig",
+                    "lua",
+                    "make",
+                    "markdown",
+                    "meson",
+                    "ninja",
+                    "nix",
+                    "python",
+                    "rust",
+                    "scss",
+                    "sql",
+                    "svelte",
+                    "tcl",
+                    "toml",
+                    "typescript",
+                    "verilog",
+                    "vhdl",
+                    "xml",
+                    "yaml",
+                },
                 highlight = {
                     enable = true
                 },
@@ -152,7 +182,11 @@ local plugins = {
                 },
                 autotag = {
                     enable = true
-                }
+                },
+                sync_install = false,
+                auto_install = false,
+                modules = {},
+                ignore_install = {},
             })
         end,
         event = { "BufRead" }
