@@ -67,5 +67,6 @@ If on Wi-Fi, make sure to use the `iwd` package rather than some other configura
 
 Once that's done, run the install script and follow the prompts:
 ```
-curl -L https://tyrumus.dev/ai | zsh
+curl -L -o install.zsh https://tyrumus.dev/ai
+zsh install.zsh
 ```
