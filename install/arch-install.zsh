@@ -154,10 +154,10 @@ sp "Partitioning the disk"
 echo 'label: gpt' | sfdisk "$DRIVE"
 echo -e 'size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n size=-, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709' | sfdisk "$DRIVE"
 
-if [ -f "${DRIVE}1" ]; then
+if [ -b "${DRIVE}1" ]; then
     DRIVE_ESP="${DRIVE}1"
     DRIVE_ROOT="${DRIVE}2"
-elif [ -f "${DRIVE}p1" ]; then
+elif [ -b "${DRIVE}p1" ]; then
     DRIVE_ESP="${DRIVE}p1"
     DRIVE_ROOT="${DRIVE}p2"
 else
@@ -166,8 +166,8 @@ else
 fi
 
 sp "Configuring disk encryption"
-echo -e "YES\n${DISK_PASSWD}\n${DISK_PASSWD}" | cryptsetup luksFormat "${DRIVE_ROOT}"
-echo "${DISK_PASSWD}" | cryptsetup open "${DRIVE_ROOT}" root
+echo -e "${DISK_PASSWD}" | cryptsetup luksFormat "${DRIVE_ROOT}"
+echo -e "${DISK_PASSWD}" | cryptsetup open "${DRIVE_ROOT}" root
 load --title "Creating ext4 filesystem" -- mkfs.ext4 /dev/mapper/root
 
 sp "Creating EFI partition"
@@ -208,7 +208,7 @@ echo "[multilib]" >> /etc/pacman.conf
 echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
-echo "HOOKS=(systemd autodetect modconf kms keyboard sd-vconsole block plymouth sd-encrypt filesystem fsck)" >> /etc/mkinitcpio.conf
+echo "HOOKS=(systemd autodetect modconf kms keyboard sd-vconsole block plymouth sd-encrypt filesystems fsck)" >> /etc/mkinitcpio.conf
 echo "KEYMAP=us" > /etc/vconsole.conf
 echo "${KERNEL_PARAMS}" > /etc/kernel/cmdline
 echo 'default_uki="/efi/EFI/Linux/arch-linux.efi"' >> /etc/mkinitcpio.d/linux.preset
