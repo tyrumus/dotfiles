@@ -126,6 +126,16 @@ if [[ "${SELECTED_PACKAGES}" == *"linux-lts"* ]]; then
     KERNEL_NAME=linux-lts
 fi
 
+USR_SHELL="/bin/bash"
+if [[ "${SELECTED_PACKAGES}" == *"zsh"* ]]; then
+    USR_SHELL="/usr/bin/zsh"
+fi
+
+MKINITCPIO_HOOKS="systemd autodetect modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck"
+if [[ "${SELECTED_PACKAGES}" == *"plymouth"* ]]; then
+    MKINITCPIO_HOOKS="systemd autodetect modconf kms keyboard sd-vconsole block plymouth sd-encrypt filesystems fsck"
+fi
+
 # let user set additional kernel parameters
 ssp "Enter additional kernel parameters"
 KERNEL_PARAMS=$(gum input --value "quiet splash")
@@ -143,6 +153,7 @@ else
 fi
 sp "Packages             -> ${PRETTY_SELECTED_PACKAGES}"
 sp "All kernel params:   -> ${KERNEL_PARAMS}"
+sp "Default shell        -> ${USR_SHELL}"
 gum confirm "Proceed with install?" --selected.background=45 --selected.foreground=0
 
 ssp "Starting unattended install..."
@@ -199,7 +210,7 @@ echo "127.0.0.1 localhost" >> /etc/hosts
 echo "::1 localhost" >> /etc/hosts
 echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
 groupadd sudo
-useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
+useradd -m -s ${USR_SHELL} -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
 systemctl enable systemd-boot-update.service
 sed -i "s/#Color.*/Color/" /etc/pacman.conf
@@ -208,12 +219,12 @@ echo "[multilib]" >> /etc/pacman.conf
 echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
-echo "HOOKS=(systemd autodetect modconf kms keyboard sd-vconsole block plymouth sd-encrypt filesystems fsck)" >> /etc/mkinitcpio.conf
+echo "HOOKS=(${MKINITCPIO_HOOKS})" >> /etc/mkinitcpio.conf
 echo "KEYMAP=us" > /etc/vconsole.conf
 echo "${KERNEL_PARAMS}" > /etc/kernel/cmdline
-echo 'default_uki="/efi/EFI/Linux/arch-linux.efi"' >> /etc/mkinitcpio.d/linux.preset
-echo 'fallback_uki="/efi/EFI/Linux/arch-linux-fallback.efi"' >> /etc/mkinitcpio.d/linux.preset
-echo 'fallback_options="-S autodetect --no-cmdline"' >> /etc/mkinitcpio.d/linux.preset
+echo 'default_uki="/efi/EFI/Linux/arch-${KERNEL_NAME}.efi"' >> /etc/mkinitcpio.d/${KERNEL_NAME}.preset
+echo 'fallback_uki="/efi/EFI/Linux/arch-${KERNEL_NAME}-fallback.efi"' >> /etc/mkinitcpio.d/${KERNEL_NAME}.preset
+echo 'fallback_options="-S autodetect --no-cmdline"' >> /etc/mkinitcpio.d/${KERNEL_NAME}.preset
 mkdir -p /efi/EFI/Linux
 bootctl install
 mkinitcpio -P
@@ -236,13 +247,11 @@ fi
 ssp "Adding finishing touches"
 if [ ! -z "${CHEZMOI_URL}" ]; then
     sp "Adding Chezmoi init"
-cat >>/mnt/home/${USRNAME}/.zshrc <<EOL
-rm \$0
-chezmoi init ${CHEZMOI_URL} --apply
-EOL
+    echo "rm \$0" >> /mnt/home/${USRNAME}/.zshrc
+    echo "chezmoi init ${CHEZMOI_URL} --apply" >> /mnt/home/${USRNAME}/.zshrc
 fi
 
-load --title "Syncing drives" -- sync
+sync
 sp "Drives synced"
 
 sp "Unmounting all the things"
