@@ -69,6 +69,19 @@ while [ ! "${USER_PASSWD}" = "${USER_PASSWD_CONF}" ]; do
 done
 clear
 
+# prompt for disk password
+ssp "Enter password for disk encryption"
+DISK_PASSWD=""
+DISK_PASSWD_CONF="a"
+DISK_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
+DISK_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
+while [ ! "${DISK_PASSWD}" = "${DISK_PASSWD_CONF}" ]; do
+    sp "Passwords don't match!"
+    DISK_PASSWD=$(gum input --password --placeholder "Enter password" --cursor.foreground 45)
+    DISK_PASSWD_CONF=$(gum input --password --placeholder "Confirm password" --cursor.foreground 45)
+done
+clear
+
 # prompt for hostname
 ssp "Enter hostname"
 HOSTNAME=$(gum input --placeholder "Hostname")
@@ -79,36 +92,10 @@ ssp "Enter timezone"
 TIMEZONE=$(gum input --value "Europe/Zurich")
 clear
 
-function display_drives() {
-    sp "Boot drive           -> $1"
-    sp "EFI system partition -> $2"
-    sp "Swap space partition -> $3"
-    sp "Root partition       -> $4"
-}
-
 # prompt for drive info
-display_drives
-ssp "Select device for boot drive. Cannot be a partition, and must be the device that has the EFI partition on it"
-DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
+ssp "Select storage device to install OS to. NOTE: This device will be wiped."
+DATA=$(gum choose $(lsblk --nodeps --output name --list | grep -v NAME))
 DRIVE="/dev/${DATA}"
-clear
-
-display_drives ${DRIVE}
-ssp "Select device or partition for EFI system partition. Must be the same storage device as selected for boot drive."
-DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
-DRIVE_ESP="/dev/${DATA}"
-clear
-
-display_drives ${DRIVE} ${DRIVE_ESP}
-ssp "Select device or partition for swap space"
-DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
-DRIVE_SWAP="/dev/${DATA}"
-clear
-
-display_drives ${DRIVE} ${DRIVE_ESP} ${DRIVE_SWAP}
-ssp "Select device or partition for root filesystem"
-DATA=$(gum choose $(lsblk --output name --list | grep -v NAME))
-DRIVE_ROOT="/dev/${DATA}"
 clear
 
 # prompt for chezmoi URL
@@ -118,13 +105,7 @@ CHEZMOI_URL=$(gum input --value "https://github.com/tyrumus/dotfiles")
 clear
 set -e
 
-# prompt for chassis type
-ssp "Select chassis type"
-CHASSIS_TYPE=$(gum choose {desktop,laptop,convertible,server,tablet,handset,watch,embedded,vm,container})
-hostnamectl chassis "${CHASSIS_TYPE}"
-clear
-
-POTENTIAL_PACKAGES="base base-devel efibootmgr linux linux-firmware chezmoi dhcpcd git sudo wget zsh"
+POTENTIAL_PACKAGES="base base-devel linux linux-firmware chezmoi dhcpcd git sudo systemd-ukify openresolv sbctl neovim plymouth wget zsh"
 LAPTOP_PACKAGES="iwd"
 ALL_PACKAGES="${POTENTIAL_PACKAGES} ${LAPTOP_PACKAGES} linux-lts nvidia nvidia-lts"
 
@@ -146,23 +127,22 @@ if [[ "${SELECTED_PACKAGES}" == *"linux-lts"* ]]; then
 fi
 
 # let user set additional kernel parameters
-ssp "Enter additional kernel parameters, other than 'rw' and 'initrd', which are necessary for boot."
-KERNEL_PARAMS=$(gum input --value "quiet")
+ssp "Enter additional kernel parameters"
+KERNEL_PARAMS=$(gum input --value "quiet splash")
 clear
 
 ssp --underline "Installation preferences"
 sp "sudoer account       -> ${USRNAME}"
 sp "Hostname             -> ${HOSTNAME}"
 sp "Timezone             -> ${TIMEZONE}"
-display_drives ${DRIVE} ${DRIVE_ESP} ${DRIVE_SWAP} ${DRIVE_ROOT}
+sp "OS Drive             -> ${DRIVE}"
 if [ ! -z "${CHEZMOI_URL}" ]; then
     sp "Chezmoi URL          -> ${CHEZMOI_URL}"
 else
     sp "Chezmoi URL          -> Not deploying"
 fi
-sp "Chassis type:        -> ${CHASSIS_TYPE}"
 sp "Packages             -> ${PRETTY_SELECTED_PACKAGES}"
-sp "All kernel params:   -> root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw ${KERNEL_PARAMS} initrd=/initramfs-${KERNEL_NAME}.img"
+sp "All kernel params:   -> ${KERNEL_PARAMS}"
 gum confirm "Proceed with install?" --selected.background=45 --selected.foreground=0
 
 ssp "Starting unattended install..."
@@ -170,28 +150,45 @@ ssp "Starting unattended install..."
 sp "Enabling NTP"
 timedatectl set-ntp true
 
-sp "Creating filesystems"
-load --title "Creating ext4 filesystem" -- mkfs.ext4 ${DRIVE_ROOT}
-load --title "Creating swap space" -- mkswap ${DRIVE_SWAP}
+sp "Partitioning the disk"
+echo 'label: gpt' | sfdisk "$DRIVE"
+echo -e 'size=512MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B\n size=-, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709' | sfdisk "$DRIVE"
+
+if [ -f "${DRIVE}1" ]; then
+    DRIVE_ESP="${DRIVE}1"
+    DRIVE_ROOT="${DRIVE}2"
+elif [ -f "${DRIVE}p1" ]; then
+    DRIVE_ESP="${DRIVE}p1"
+    DRIVE_ROOT="${DRIVE}p2"
+else
+    echo "Failed to parse partitions. Sorry for the mess..."
+    exit 1
+fi
+
+sp "Configuring disk encryption"
+echo -e "YES\n${DISK_PASSWD}\n${DISK_PASSWD}" | cryptsetup luksFormat "${DRIVE_ROOT}"
+echo "${DISK_PASSWD}" | cryptsetup open "${DRIVE_ROOT}" root
+load --title "Creating ext4 filesystem" -- mkfs.ext4 /dev/mapper/root
+
+sp "Creating EFI partition"
 load --title "Creating FAT32 filesystem" -- mkfs.fat -F 32 ${DRIVE_ESP}
 
 sp "Mounting filesystems"
-mount ${DRIVE_ROOT} /mnt
-mkdir -p /mnt/boot
-mount ${DRIVE_ESP} /mnt/boot
-swapon ${DRIVE_SWAP}
+mount /dev/mapper/root /mnt
+mount --mkdir ${DRIVE_ESP} /mnt/efi
+
+sp "Configuring swap"
+mkswap -U clear --size 4G --file /mnt/swapfile
+swapon /mnt/swapfile
 
 ssp "Installing all packages"
 pacstrap -K /mnt ${=SELECTED_PACKAGES}
 
-ssp "Generating fstab"
-genfstab -U /mnt >> /mnt/etc/fstab
-
 # perform chrooted operations
-### NOTE: may need to add '-e 3' to the efibootmgr command if the motherboard deletes the boot entry on reboot
 
 ssp "Performing chrooted operations"
 cat << EOF | arch-chroot /mnt
+echo "/swapfile none swap defaults 0 0" >> /etc/fstab
 ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
@@ -204,14 +201,22 @@ echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
 groupadd sudo
 useradd -m -s /usr/bin/zsh -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
+systemctl enable systemd-boot-update.service
 sed -i "s/#Color.*/Color/" /etc/pacman.conf
 sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
 echo "[multilib]" >> /etc/pacman.conf
 echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 echo "%sudo ALL=(ALL) ALL" >> /etc/sudoers.d/10-${USRNAME}-chezmoi
+echo "HOOKS=(systemd autodetect modconf kms keyboard sd-vconsole block plymouth sd-encrypt filesystem fsck)" >> /etc/mkinitcpio.conf
+echo "KEYMAP=us" > /etc/vconsole.conf
+echo "${KERNEL_PARAMS}" > /etc/kernel/cmdline
+echo 'default_uki="/efi/EFI/Linux/arch-linux.efi"' >> /etc/mkinitcpio.d/linux.preset
+echo 'fallback_uki="/efi/EFI/Linux/arch-linux-fallback.efi"' >> /etc/mkinitcpio.d/linux.preset
+echo 'fallback_options="-S autodetect --no-cmdline"' >> /etc/mkinitcpio.d/linux.preset
+mkdir -p /efi/EFI/Linux
+bootctl install
 mkinitcpio -P
-efibootmgr -c -g -d ${DRIVE} -p 1 -L "Arch Linux" -l /vmlinuz-${KERNEL_NAME} -u "root=PARTUUID=$(blkid -o value -s PARTUUID ${DRIVE_ROOT}) rw quiet initrd=/initramfs-${KERNEL_NAME}.img"
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
 EOF
@@ -241,7 +246,8 @@ load --title "Syncing drives" -- sync
 sp "Drives synced"
 
 sp "Unmounting all the things"
+swapoff /mnt/swapfile
 umount -R /mnt
-swapoff ${DRIVE_SWAP}
+cryptsetup close root
 ssp "Installation complete."
 exit 0

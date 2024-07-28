@@ -76,7 +76,3 @@ Once that's done, run the install script:
 ```
 curl -L https://tyrumus.dev/ai | zsh
 ```
-
-## TODO
-
-- Rewrite OS install script using archinstall Python library instead. This will handle partitioning as well.
