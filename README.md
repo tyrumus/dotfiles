@@ -59,20 +59,13 @@ Logout of your session, and log back in. Enjoy!
 
 ## Run unattended Arch Linux install
 
-[Follow the Arch Linux install guide](https://wiki.archlinux.org/title/Installation_guide) to do the following:
-1) Partition the target drive. No need to create filesystems, as the script will handle that.
-2) Connect to the Internet
+[Follow the Arch Linux install guide](https://wiki.archlinux.org/title/Installation_guide) to boot an Arch Linux ISO and connect to the internet.
 
-Here's the GPT layout the install script expects:
-Partition Type | Recommended size
---- | ---
-ESP | 512M
-Linux swap | same size as RAM
-Linux x86-64 root (/) | remainder of drive
+If on Wi-Fi, make sure to use the `iwd` package rather than some other configuration utility, as this install script will copy the config.
 
 ### Running the Install Script
 
-Once that's done, run the install script:
+Once that's done, run the install script and follow the prompts:
 ```
 curl -L https://tyrumus.dev/ai | zsh
 ```
