@@ -19,6 +19,9 @@ function navic_do_attach(client, bufnr)
     end
 
     vim.keymap.set("n", "<space>a", vim.lsp.buf.code_action)
+    vim.keymap.set("n", "<space>d", vim.lsp.buf.definition)
+    vim.keymap.set("n", "<space>D", vim.lsp.buf.declaration)
+    vim.keymap.set("n", "<space>i", vim.lsp.buf.implementation)
 end
 
 -- Don't need lewis6991/impatient.nvim anymore
