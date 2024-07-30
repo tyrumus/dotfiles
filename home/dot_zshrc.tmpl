@@ -45,7 +45,7 @@ zstyle ':completion:*:*:*:default' menu yes select search
 # Aliases
 alias ls="eza --icons"
 alias ll="ls --long --header"
-alias la="ls -la"
+alias la="ls --long --header --all"
 alias chezgit="lazygit -p ~/.local/share/chezmoi"
 alias cedit="chezmoi edit"
 alias lg="lazygit"
@@ -92,4 +92,12 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 
 ### End of Zinit's installer chunk
+zinit wait lucid blockf for \
+    zsh-users/zsh-autosuggestions
+
+# zsh-autosuggestions config
+bindkey '^[[Z' autosuggest-accept # shift-tab
+bindkey '^ '   autosuggest-execute # ctrl-space
+
+export N_PREFIX="$HOME/.local/share/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 zinit ice depth=1; zinit light romkatv/powerlevel10k
