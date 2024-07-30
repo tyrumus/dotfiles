@@ -34,7 +34,7 @@ path = "fd"
 
 [".local/bin/fzf"]
 type = "archive-file"
-url = "https://github.com/junegunn/fzf/releases/download/{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}/fzf-{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}-linux_amd64.tar.gz"
+url = "https://github.com/junegunn/fzf/releases/download/v{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}/fzf-{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}-linux_amd64.tar.gz"
 executable = true
 path = "fzf"
 
