@@ -60,6 +60,12 @@ local plugins = {
         event = { "BufRead" }
     },
     {
+        "dstein64/nvim-scrollview",
+        lazy = true,
+        config = true,
+        event = { "BufRead" }
+    },
+    {
         "lewis6991/hover.nvim",
         lazy = true,
         opts = {
