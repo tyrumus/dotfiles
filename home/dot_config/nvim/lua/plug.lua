@@ -54,6 +54,14 @@ local plugins = {
         opts = { default = true }
     },
     {
+        "lsig/messenger.nvim",
+        lazy = true,
+        opts = {
+            border = "rounded"
+        },
+        event = { "BufRead" }
+    },
+    {
         "lewis6991/spaceless.nvim",
         lazy = true,
         config = true,
