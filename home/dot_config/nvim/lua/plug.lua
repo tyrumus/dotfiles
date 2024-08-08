@@ -54,6 +54,31 @@ local plugins = {
         opts = { default = true }
     },
     {
+        "lewis6991/spaceless.nvim",
+        lazy = true,
+        config = true,
+        event = { "BufRead" }
+    },
+    {
+        "lewis6991/hover.nvim",
+        lazy = true,
+        opts = {
+            init = function()
+                require("hover.providers.lsp")
+                require("hover.providers.diagnostic")
+                require("hover.providers.man")
+                require("hover.providers.jira")
+                require("hover.providers.dictionary")
+            end,
+            preview_opts = {
+                border = "single"
+            },
+            preview_window = false,
+            title = true
+        },
+        event = { "BufRead" }
+    },
+    {
         "williamboman/mason.nvim",
         build = ":MasonUpdate",
         opts = {

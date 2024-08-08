@@ -25,3 +25,8 @@ map("<leader>l", "<cmd>Lazy sync<CR>")
 
 -- trouble
 map("<leader>xQ", "<cmd>Trouble qflist toggle<CR>")
+
+-- hover.nvim
+vim.keymap.set("n", "K", require("hover").hover, {desc = "hover.nvim"})
+vim.keymap.set("n", "gK", function() require("hover").hover_switch("next") end, {desc = "hover.nvim (next source)"})
+vim.keymap.set("n", "GK", function() require("hover").hover_switch("previous") end, {desc = "hover.nvim (previous source)"})
