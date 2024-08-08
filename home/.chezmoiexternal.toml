@@ -62,5 +62,12 @@ type = "archive"
 url = "https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz"
 stripComponents = 1
 
+[".local/bin/jira"]
+type = "archive-file"
+url = "https://github.com/ankitpokhrel/jira-cli/releases/download/v{{ template "get-github-latest-version" list "ankitpokhrel/jira-cli" $cache }}/jira_{{ template "get-github-latest-version" list "ankitpokhrel/jira-cli" $cache }}_linux_x86_64.tar.gz"
+stripComponents = 1
+executable = true
+path = "bin/jira"
+
 {{- template "save-versions-and-revisions-cache" $cache -}}
 {{- end -}}

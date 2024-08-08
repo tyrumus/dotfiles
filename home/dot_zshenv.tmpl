@@ -6,6 +6,8 @@ export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/n/bin:$HOME/.local/share/
 export VISUAL=/usr/bin/nvim
 export EDITOR=/usr/bin/nvim
 
+export JIRA_AUTH_TYPE="bearer"
+
 # Misc stuffs
 export MAKEFLAGS="-j$(nproc)"
 export WINEFSYNC=1
@@ -13,3 +15,4 @@ export BAT_THEME="gruvbox-dark"
 {{ if (eq .installtype "term") }}
 . "$HOME/.cargo/env"
 {{ end }}
+[[ -f "$HOME/.local/env/shared-vars.zsh" ]] && source "$HOME/.local/env/shared-vars.zsh"
