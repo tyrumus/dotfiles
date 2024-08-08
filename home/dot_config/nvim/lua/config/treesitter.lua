@@ -1,0 +1,58 @@
+local function ts_build()
+    require("nvim-treesitter.install").update({ with_sync = true })
+end
+
+local function ts_setup()
+    require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+            "asm",
+            "bash",
+            "bitbake",
+            "c",
+            "cpp",
+            "css",
+            "dockerfile",
+            "html",
+            "java",
+            "javascript",
+            "json",
+            "kconfig",
+            "lua",
+            "make",
+            "markdown",
+            "meson",
+            "ninja",
+            "nix",
+            "python",
+            "rust",
+            "scss",
+            "sql",
+            "svelte",
+            "tcl",
+            "toml",
+            "typescript",
+            "verilog",
+            "vhdl",
+            "xml",
+            "yaml",
+        },
+        highlight = {
+            enable = true
+        },
+        indent = {
+            enable = true
+        },
+        autotag = {
+            enable = true
+        },
+        sync_install = false,
+        auto_install = false,
+        modules = {},
+        ignore_install = {},
+    })
+end
+
+return {
+    build = ts_build,
+    config = ts_setup
+}
