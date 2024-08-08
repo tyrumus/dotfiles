@@ -31,5 +31,8 @@ vim.keymap.set("n", "K", require("hover").hover, {desc = "hover.nvim"})
 vim.keymap.set("n", "gK", function() require("hover").hover_switch("next") end, {desc = "hover.nvim (next source)"})
 vim.keymap.set("n", "GK", function() require("hover").hover_switch("previous") end, {desc = "hover.nvim (previous source)"})
 
+-- aerial.nvim
+map("<leader>a", "<cmd>AerialToggle<CR>")
+
 -- messenger.nvim
 map("<leader>gm", "<cmd>MessengerShow<CR>")
