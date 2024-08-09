@@ -1,12 +1,6 @@
 -- Util plugins
 
 return {
-    { -- remove trailing whitespace while editing
-        "lewis6991/spaceless.nvim",
-        lazy = true,
-        config = true,
-        event = { "BufRead" }
-    },
     { -- auto close/rename HTML tags
         "windwp/nvim-ts-autotag",
         lazy = true,
