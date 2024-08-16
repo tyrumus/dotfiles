@@ -25,6 +25,7 @@ default = [
     "git-lfs",
     "github-cli",
     "gum",
+    "hexyl",
     "httpie",
     "hyperfine",
     "imagemagick",
