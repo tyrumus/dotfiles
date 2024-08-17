@@ -1,0 +1,28 @@
+#!/usr/bin/zsh
+
+if [ ! -z '$1' ]; then
+    echo "Enabling powersave mode on all cores"
+    echo powersave | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+    echo "Setting pipewire to prio -11"
+    PIPEWIRE_PID=$(pgrep pipewire | head -1)
+    renice -n -11 -p $PIPEWIRE_PID
+    exit 0
+fi
+
+PREEMPT_CHECK=$(cat /proc/cmdline | grep "preempt=full")
+if [ -z $PREEMPT_CHECK ]; then
+    echo "WARNING: preempt=full is not set"
+fi
+
+RT_CHECK=$(groups $USER | grep "realtime")
+if [ -z $RT_CHECK ]; then
+    echo "WARNING: $USER is not part of realtime group"
+fi
+
+echo "Enabling performance mode on all cores"
+echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+echo "Setting pipewire to prio -19"
+PIPEWIRE_PID=$(pgrep pipewire | head -1)
+renice -n -19 -p $PIPEWIRE_PID

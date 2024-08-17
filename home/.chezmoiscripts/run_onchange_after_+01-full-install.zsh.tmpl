@@ -90,6 +90,9 @@ mkdir "$HOME/notes"
 sp "Installing Git LFS"
 git lfs install
 
+sp "Setting up realtime audio stuff"
+sudo usermod -aG realtime $USER
+
 # enable services
 sp "Enabling user services"
 systemctl --user daemon-reload
@@ -152,6 +155,9 @@ echo "Setup Spotify with spotify-launcher."
 echo
 
 echo "Change the URL for remote origin to SSH"
+echo
+
+echo "Remember to append preempt=full to kernel parameters"
 echo
 
 echo "To stop these reminders, run:"
