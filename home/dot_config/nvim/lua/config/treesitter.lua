@@ -42,9 +42,6 @@ local function ts_setup()
         indent = {
             enable = true
         },
-        autotag = {
-            enable = true
-        },
         sync_install = false,
         auto_install = false,
         modules = {},
