@@ -40,6 +40,7 @@ bindkey "\e[F" end-of-line
 
 # Completions
 source <(fzf --zsh)
+eval "$(resticprofile generate --zsh-completion)"
 zstyle ':completion:*:*:*:default' menu yes select search
 
 # Aliases

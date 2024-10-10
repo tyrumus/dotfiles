@@ -41,6 +41,7 @@ default = [
     "pam-u2f",
     "procs",
     "reflector",
+    "resticprofile-bin",
     "ripgrep",
     "rustup",
     "samba",
