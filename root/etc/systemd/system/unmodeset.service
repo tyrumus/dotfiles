@@ -8,6 +8,8 @@ Before=kexec.target
 [Service]
 Type=oneshot
 ExecStart=modprobe -r i915
+ExecStart=modprobe -r xe
+ExecStart=modprobe -r nouveau
 
 [Install]
 WantedBy=kexec.target
