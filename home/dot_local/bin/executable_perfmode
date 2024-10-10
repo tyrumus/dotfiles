@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 
-if [ ! -z '$1' ]; then
+if [ ! -z "$1" ]; then
     echo "Enabling powersave mode on all cores"
     echo powersave | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
