@@ -118,6 +118,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 
 # zsh-auto-notify config
 export AUTO_NOTIFY_BODY="%elapsed seconds; exit %exit_code"
+AUTO_NOTIFY_IGNORE+=("lg" "lazygit" "kssh" "btm" "procs" "ps" "chezmoi cd")
 
 export N_PREFIX="$HOME/.local/share/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 zinit ice depth=1; zinit light romkatv/powerlevel10k
