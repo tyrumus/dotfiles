@@ -33,6 +33,8 @@ local function ts_setup()
             "typescript",
             "verilog",
             "vhdl",
+            "vim",
+            "vimdoc",
             "xml",
             "yaml",
         },
