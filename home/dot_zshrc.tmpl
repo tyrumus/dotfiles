@@ -43,7 +43,9 @@ bindkey "\e[F" end-of-line
 
 # Completions
 source <(fzf --zsh)
+{{- if (eq .installtype "full") }}
 eval "$(resticprofile generate --zsh-completion)"
+{{- end }}
 zstyle ':completion:*:*:*:default' menu yes select search
 
 # Aliases
