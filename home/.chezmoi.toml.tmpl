@@ -17,6 +17,7 @@
 {{-     $installProfile = (promptChoice "What kind of install profile do you want?" $profileChoices) }}
 {{- end }}
 
+{{- $name := (promptString "Enter git name:") }}
 {{- $email := (promptString "Enter git email address:") }}
 
 [data]
@@ -26,3 +27,4 @@
     installtype = {{ $installType | quote }}
     installprofile = {{ $installProfile | quote }}
     gitemail = {{ $email | quote }}
+    gitname = {{ $name | quote }}
