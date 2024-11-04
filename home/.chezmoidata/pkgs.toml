@@ -31,7 +31,7 @@ default = [
     "imagemagick",
     "jq",
     "lazygit",
-    "macchina-bin",
+    "macchina",
     "man-db",
     "neovim",
     "ntfs-3g",
