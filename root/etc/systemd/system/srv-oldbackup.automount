@@ -1,6 +1,5 @@
 [Unit]
 Description=Automount /srv/oldbackup
-After=network.target network-online.target remote-fs-pre.target nss-lookup.target
 
 [Automount]
 Where=/srv/oldbackup
