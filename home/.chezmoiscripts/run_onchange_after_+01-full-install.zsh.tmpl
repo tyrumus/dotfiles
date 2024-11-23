@@ -136,9 +136,11 @@ cat >>~/.cache/chezmoi-reminders.zsh <<EOL
 echo "Don't forget to configure the following stuff and things when you're ready:"
 echo
 
+{{ if eq .installprofile "workstation" }}
 echo "Edit the systemd network config file at /etc/systemd/network/50-wired.link"
 echo "Ensure to update the MAC address for the ethernet card"
 echo
+{{ end }}
 
 echo "Edit the Samba credentials file at /etc/samba/credentials/nas"
 echo "It should contain the following:"
