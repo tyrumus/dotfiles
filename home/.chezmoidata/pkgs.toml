@@ -64,6 +64,7 @@ default = [
 
     # GUI apps & utils
     "apple_cursor",
+    "ark",
     "chromium",
     "clipman",
     "cifs-utils",
@@ -104,6 +105,7 @@ workstation = [
     "lib32-vulkan-intel",
 
     "audacity",
+    "blender",
     "davinci-resolve",
     "discover",
     "flatpak",
