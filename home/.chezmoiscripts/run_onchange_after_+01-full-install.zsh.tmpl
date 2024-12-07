@@ -24,7 +24,7 @@ function install_paru(){
     sudo pacman -Sy
 
     sp "Installing necessary utilities"
-    sudo pacman -Sy --noconfirm --needed base-devel git rustup
+    sudo pacman -Sy --noconfirm --needed base-devel git pigz rustup
 
     sp "Installing latest Rust toolchain"
     rustup toolchain install stable
