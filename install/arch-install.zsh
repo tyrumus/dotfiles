@@ -213,6 +213,7 @@ groupadd sudo
 useradd -m -s ${USR_SHELL} -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
 systemctl enable systemd-boot-update.service
+sed -i "s/\[options\]/\[options\]\\nInclude \= \/etc\/pacman.conf.d\/\*.conf/" /etc/pacman.conf
 sed -i "s/#Color.*/Color/" /etc/pacman.conf
 sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
 echo "[multilib]" >> /etc/pacman.conf
