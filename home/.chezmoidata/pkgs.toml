@@ -117,7 +117,7 @@ workstation = [
     "nfs-utils",
     "obs-plugin-looking-glass",
     "obs-studio",
-    "steam",
+    "steam-devices-git",
     "virt-manager",
     "wine-mono",
     "winetricks",
