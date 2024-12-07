@@ -105,6 +105,9 @@ workstation = [
 
     "audacity",
     "davinci-resolve",
+    "discover",
+    "flatpak",
+    "flatpak-kcm",
     "gimp",
     "handbrake",
     "inkscape",

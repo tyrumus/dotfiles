@@ -63,6 +63,11 @@ paru -Sy --needed {{ .default | join " " }} {{ .workstation | join " " }}
 paru -Sy --needed {{ .default | join " " }} {{ .laptop | join " " }}
 {{ end }}
 
+{{ if eq .installprofile "workstation" }}
+ssp "Installing flatpak packages"
+flatpak install --noninteractive -y flathub {{ .flatpak.workstation | join " " }}
+{{ end }}
+
 ssp "Installing Neovim plugins"
 nvim --headless "+Lazy! sync" +qa
 
