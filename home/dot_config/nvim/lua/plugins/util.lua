@@ -62,4 +62,10 @@ return {
         main = "project_nvim",
         opts = require("config.project").opts,
     },
+    { -- automatically set indentation settings for a file
+        "NMAC427/guess-indent.nvim",
+        lazy = true,
+        event = { "BufRead" },
+        config = true
+    },
 }
