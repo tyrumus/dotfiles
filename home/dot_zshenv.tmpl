@@ -1,10 +1,16 @@
 # vim: ft=zsh
 # local bin
-export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/n/bin:$HOME/.local/share/chezmoi-cache/nvim/bin"
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/n/bin"
 
 # Neovim is my beautiful child
+{{ if (eq .installtype "term") }}
+export PATH="$PATH:$HOME/.local/share/chezmoi-cache/nvim/bin"
+export VISUAL=$HOME/.local/share/chezmoi-cache/nvim/bin/nvim
+export EDITOR=$HOME/.local/share/chezmoi-cache/nvim/bin/nvim
+{{ else }}
 export VISUAL=/usr/bin/nvim
 export EDITOR=/usr/bin/nvim
+{{ end }}
 
 export JIRA_AUTH_TYPE="bearer"
 
