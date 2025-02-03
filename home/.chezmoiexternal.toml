@@ -76,5 +76,19 @@ stripComponents = 1
 executable = true
 path = "hexyl"
 
+[".local/bin/vivid"]
+type = "archive-file"
+url = "https://github.com/sharkdp/vivid/releases/download/v{{ template "get-github-latest-version" list "sharkdp/vivid" $cache }}/vivid-v{{ template "get-github-latest-version" list "sharkdp/vivid" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+stripComponents = 1
+executable = true
+path = "vivid"
+
+[".local/bin/dust"]
+type = "archive-file"
+url = "https://github.com/bootandy/dust/releases/download/v{{ template "get-github-latest-version" list "bootandy/dust" $cache }}/dust-v{{ template "get-github-latest-version" list "bootandy/dust" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+stripComponents = 1
+executable = true
+path = "dust"
+
 {{- template "save-versions-and-revisions-cache" $cache -}}
 {{- end -}}

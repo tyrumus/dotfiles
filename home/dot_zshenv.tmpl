@@ -18,6 +18,7 @@ export JIRA_AUTH_TYPE="bearer"
 export MAKEFLAGS="-j$(nproc)"
 export WINEFSYNC=1
 export BAT_THEME="gruvbox-dark"
+export LS_COLORS="$(vivid generate gruvbox-dark-hard)"
 {{ if (eq .installtype "term") }}
 . "$HOME/.cargo/env"
 {{ end }}
