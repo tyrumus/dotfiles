@@ -5,6 +5,6 @@ gui:
     showCommandLog: false
     theme:
       selectedLineBgColor:
-        - default
+        - '#3c3836'
 git:
   overrideGpg: true
