@@ -105,7 +105,6 @@ workstation = [
     "vulkan-intel",
     "lib32-vulkan-intel",
 
-    "audacity",
     "blender",
     "davinci-resolve",
     "discover",
@@ -121,6 +120,7 @@ workstation = [
     "obs-plugin-looking-glass",
     "obs-studio",
     "steam-devices-git",
+    "tenacity",
     "virt-manager",
     "wine-mono",
     "winetricks",
