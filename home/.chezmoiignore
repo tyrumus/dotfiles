@@ -2,6 +2,7 @@
 .ssh/authorized_keys
 .config/looking-glass
 .config/systemd
+.config/resticprofile
 .config/rootmoi
 .config/spotify-launcher.conf
 .local

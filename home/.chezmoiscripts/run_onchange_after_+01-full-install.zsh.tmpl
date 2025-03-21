@@ -132,6 +132,19 @@ sudo systemctl enable bluetooth.service
 sudo systemctl enable tlp.service
 {{ end }}
 
+# probably insecure, but whatever
+{{ if not (stat "/usr/local/bin/resticprofile") }}
+curl -o /tmp/resticprofile-installer.sh -L "https://raw.githubusercontent.com/creativeprojects/resticprofile/master/install.sh"
+chmod +x /tmp/resticprofile-installer.sh
+sudo /tmp/resticprofile-installer.sh -b /usr/local/bin
+{{ end }}
+
+{{ if not (stat "/usr/local/bin/restic") }}
+curl -o /tmp/restic.bz2 -L "https://github.com/restic/restic/releases/download/v0.17.3/restic_0.17.3_linux_amd64.bz2"
+bzip2 -d /tmp/restic.bz2
+sudo mv /tmp/restic /usr/local/bin/restic
+sudo chmod +x /usr/local/bin/restic
+{{ end }}
 
 ### CHEZMOI REMINDERS ###
 sp "Generating post-install reminder file"
@@ -165,6 +178,9 @@ echo "Change the URL for remote origin to SSH"
 echo
 
 echo "Remember to append preempt=full to kernel parameters"
+echo
+
+echo "Setup resticprofile credentials"
 echo
 
 echo "To stop these reminders, run:"
