@@ -28,6 +28,7 @@ return {
         lazy = true,
         event = { "BufRead" },
         opts = require("config.gitsigns").opts,
+        keys = require("config.gitsigns").keys,
         dependencies = {
             "folke/trouble.nvim"
         }
