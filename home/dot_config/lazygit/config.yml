@@ -8,3 +8,5 @@ gui:
         - '#3c3836'
 git:
   overrideGpg: true
+os:
+  editPreset: 'nvim'

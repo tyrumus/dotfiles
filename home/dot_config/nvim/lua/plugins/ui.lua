@@ -80,9 +80,10 @@ return {
     },
     { -- tabpage interface for cycling thru git diffs
         "sindrets/diffview.nvim",
-        config = true,
+        config = require("config.diffview").config,
         lazy = true,
         cmd = "DiffviewOpen",
+        keys = require("config.diffview").keys,
         dependencies = {
             "nvim-lua/plenary.nvim",
             "kyazdani42/nvim-web-devicons"

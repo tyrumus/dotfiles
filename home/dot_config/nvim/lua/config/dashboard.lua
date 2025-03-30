@@ -66,6 +66,7 @@ local buttons = {
     val = {
         button("e", "  New file", "<cmd>ene <CR>"),
         button("f", "  Find file", "<cmd>lua require('fzf-lua').files()<CR>"),
+        button("d", "󰕚  Open Diffview", "<cmd>DiffviewOpen<CR>"),
         button("r", "  Update plugins", "<cmd>Lazy sync<CR>"),
         button("l", "󰳿  Update language servers", "<cmd>Mason<CR>"),
         button("s", "  Settings", ":cd $HOME/.config/nvim | lua require('fzf-lua').files()<CR>"),
