@@ -8,5 +8,6 @@ gui:
         - '#3c3836'
 git:
   overrideGpg: true
+  autoForwardBranches: none
 os:
   editPreset: 'nvim'
