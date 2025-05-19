@@ -14,6 +14,7 @@ default = [
     "bandwhich",
     "bat",
     "bind",
+    "biodiff",
     "bottom",
     "curlie",
     "downgrade",

@@ -90,5 +90,11 @@ stripComponents = 1
 executable = true
 path = "dust"
 
+[".local/bin/biodiff"]
+type = "archive-file"
+url = "https://github.com/8051Enthusiast/biodiff/releases/download/v{{ template "get-github-latest-version" list "8051Enthusiast/biodiff" $cache }}/biodiff-linux-{{ template "get-github-latest-version" list "8051Enthusiast/biodiff" $cache }}.zip"
+executable = true
+path = "biodiff"
+
 {{- template "save-versions-and-revisions-cache" $cache -}}
 {{- end -}}
