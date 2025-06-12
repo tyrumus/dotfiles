@@ -77,6 +77,15 @@ local function lsp_setup()
             }
         }
     })
+
+    require("lspconfig").pyright.setup({
+        on_attach = navic_do_attach,
+        settings = {
+            python = {
+                reportWildcardImportFromLibrary = "strict",
+            }
+        }
+    })
 end
 
 return {
