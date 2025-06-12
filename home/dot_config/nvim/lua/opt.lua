@@ -57,3 +57,26 @@ vim.opt.showmatch = true
 vim.opt.cursorline = true
 vim.cmd([[:hi clear CursorLine]])
 vim.cmd([[:hi CursorLine gui=underline cterm=underline]])
+
+--[[
+use absolute paths for Windows clipboard stuff because we want interop.appendWindowsPath=false in /etc/wsl.conf
+since that fixes Zsh lag
+]]--
+local wslconfpath = "/etc/wsl.conf"
+
+if (vim.uv or vim.loop).fs_stat(wslconfpath) then
+    vim.cmd([[
+    let g:clipboard = {
+                \   'name': 'WslClipboard',
+                \   'copy': {
+                \      '+': '/mnt/c/WINDOWS/system32/clip.exe',
+                \      '*': '/mnt/c/WINDOWS/system32/clip.exe',
+                \    },
+                \   'paste': {
+                \      '+': '/mnt/c/windows/system32/windowspowershell/v1.0/powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+                \      '*': '/mnt/c/windows/system32/windowspowershell/v1.0/powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+                \   },
+                \   'cache_enabled': 0,
+                \ }
+]])
+end
