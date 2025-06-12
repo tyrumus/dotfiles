@@ -17,3 +17,6 @@ etc/systemd/system/mnt-public.automount
 etc/systemd/system/mnt-win.mount
 etc/systemd/system/mnt-win.automount
 {{- end }}
+{{- if not stat "/mnt/c/Windows") }}
+etc/wsl.conf
+{{- end }}
