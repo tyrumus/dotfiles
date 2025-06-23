@@ -1,6 +1,6 @@
 -- LSPs using generic default config
 local default_lsps = {
-    "pyright",
+    "ruff",
     "svelte",
     "tailwindcss",
     "yamlls",
@@ -74,15 +74,6 @@ local function lsp_setup()
                 procMacro = {
                     enable = true
                 },
-            }
-        }
-    })
-
-    require("lspconfig").pyright.setup({
-        on_attach = navic_do_attach,
-        settings = {
-            python = {
-                reportWildcardImportFromLibrary = "strict",
             }
         }
     })
