@@ -46,6 +46,8 @@ source <(fzf --zsh)
 {{- if (eq .installtype "full") }}
 eval "$(resticprofile generate --zsh-completion)"
 {{- end }}
+eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
 zstyle ':completion:*:*:*:default' menu yes select search
 
 # Aliases

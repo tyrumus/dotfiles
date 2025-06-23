@@ -26,6 +26,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 sp "Installing Node.js stable toolchain"
 curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
 
+sp "Installing uv and uvx for Python"
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 rm ~/.curlrc
 
 sp "Starting headless Neovim install"
