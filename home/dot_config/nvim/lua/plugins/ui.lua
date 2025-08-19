@@ -20,7 +20,6 @@ return {
     { -- scrollbar
         "dstein64/nvim-scrollview",
         lazy = true,
-        config = true,
         opts = require("config.scrollview").opts,
         event = { "BufRead" }
     },
@@ -56,7 +55,7 @@ return {
     { -- pretty list for diagnostics, quickfixes, etc
         "folke/trouble.nvim",
         lazy = true,
-        config = true,
+        opts = {},
         keys = {
             { "<leader>xQ", "<cmd>Trouble qflist toggle<CR>" }
         },
@@ -65,7 +64,7 @@ return {
     { -- generic UI selector for telescope.nvim
         "nvim-telescope/telescope-ui-select.nvim",
         lazy = true,
-        config = true
+        opts = {}
     },
     { -- fuzzy finder over lists
         "nvim-telescope/telescope.nvim",
@@ -106,7 +105,7 @@ return {
         "NvChad/nvim-colorizer.lua",
         lazy = true,
         event = { "BufRead" },
-        config = true
+        opts = {}
     },
     { -- top winbar to show LSP context
         "utilyre/barbecue.nvim",

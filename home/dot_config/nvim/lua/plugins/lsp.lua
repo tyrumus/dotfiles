@@ -9,7 +9,7 @@ return {
         event = { "BufRead" }
     },
     { -- LSP package manager
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         build = ":MasonUpdate",
         opts = require("config.mason").opts
     },
@@ -19,17 +19,17 @@ return {
         config = require("config.lspconfig").config,
         event = { "BufRead" },
         dependencies = {
-            "mason.nvim",
-            "mason-lspconfig.nvim",
+            "mason-org/mason.nvim",
+            "mason-org/mason-lspconfig.nvim",
             "SmiteshP/nvim-navic"
         }
     },
     { -- bridges mason.nvim with nvim-lspconfig
-        "williamboman/mason-lspconfig.nvim",
-        lazy = true,
-        config = true,
+        "mason-org/mason-lspconfig.nvim",
+        opts = {},
         dependencies = {
-            "mason.nvim"
+            "mason-org/mason.nvim",
+            "neovim/nvim-lspconfig"
         }
     },
     { -- epic syntax highlighting

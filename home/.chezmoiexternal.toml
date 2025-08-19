@@ -52,7 +52,7 @@ path = "lazygit"
 
 [".local/share/chezmoi-cache/nvim"]
 type = "archive"
-url = "https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz"
+url = "https://github.com/neovim/neovim/releases/download/v0.11.3/nvim-linux-x86_64.tar.gz"
 stripComponents = 1
 
 [".local/bin/jira"]

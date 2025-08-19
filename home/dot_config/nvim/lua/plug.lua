@@ -28,4 +28,16 @@ vim.opt.rtp:prepend(lazypath)
 vim.loader.enable()
 
 -- combine all of the plugin specs
-require("lazy").setup("plugins")
+require("lazy").setup({
+    spec = {
+        {
+            import = "plugins"
+        }
+    },
+    rocks = {
+        enabled = false,
+    },
+    checker = {
+        enabled = false
+    }
+})
