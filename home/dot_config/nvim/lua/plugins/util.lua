@@ -68,4 +68,8 @@ return {
         event = { "BufRead" },
         config = true
     },
+    {
+        "MagicDuck/grug-far.nvim",
+        opts = {},
+    },
 }
