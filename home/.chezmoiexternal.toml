@@ -38,13 +38,6 @@ url = "https://github.com/junegunn/fzf/releases/download/v{{ template "get-githu
 executable = true
 path = "fzf"
 
-[".local/bin/sd"]
-type = "archive-file"
-url = "https://github.com/chmln/sd/releases/download/v{{ template "get-github-latest-version" list "chmln/sd" $cache }}/sd-v{{ template "get-github-latest-version" list "chmln/sd" $cache }}-x86_64-unknown-linux-musl.tar.gz"
-stripComponents = 1
-executable = true
-path = "sd"
-
 [".local/bin/zoxide"]
 type = "archive-file"
 url = "https://github.com/ajeetdsouza/zoxide/releases/download/v{{ template "get-github-latest-version" list "ajeetdsouza/zoxide" $cache }}/zoxide-{{ template "get-github-latest-version" list "ajeetdsouza/zoxide" $cache }}-x86_64-unknown-linux-musl.tar.gz"
