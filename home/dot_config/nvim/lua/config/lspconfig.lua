@@ -1,11 +1,13 @@
 -- LSPs using generic default config
 local default_lsps = {
+    "bashls",
+    "clangd",
+    "lua_ls",
     "ruff",
+    "rust_analyzer",
     "svelte",
     "tailwindcss",
     "yamlls",
-    "bashls",
-    "clangd"
 }
 
 local function navic_do_attach(client, bufnr)
@@ -80,5 +82,6 @@ local function lsp_setup()
 end
 
 return {
-    config = lsp_setup
+    config = lsp_setup,
+    default_servers = default_lsps
 }

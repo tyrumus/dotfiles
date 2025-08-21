@@ -1,4 +1,5 @@
 -- LSP plugins
+local default_servers = require("config.lspconfig").default_servers
 
 return {
     { -- code outline window
@@ -26,7 +27,9 @@ return {
     },
     { -- bridges mason.nvim with nvim-lspconfig
         "mason-org/mason-lspconfig.nvim",
-        opts = {},
+        opts = {
+            ensure_installed = default_servers,
+        },
         dependencies = {
             "mason-org/mason.nvim",
             "neovim/nvim-lspconfig"
