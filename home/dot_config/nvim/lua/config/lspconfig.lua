@@ -70,9 +70,6 @@ local function lsp_setup()
                         enable = true,
                     },
                 },
-                checkOnSave = {
-                    command = "clippy",
-                },
                 procMacro = {
                     enable = true
                 },
