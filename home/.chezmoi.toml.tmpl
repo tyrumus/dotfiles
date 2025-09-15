@@ -5,8 +5,13 @@
 {{- $installType := (promptChoice "What kind of install do you want?" $installChoices) }}
 {{- if (eq $installType "term") }}
 {{-     writeToStdout "\nYou've chosen a chassis type that expects numerous dependencies to be installed, available in the path:\n" }}
-{{-     writeToStdout "build-essential, curl, git, ssh, zsh\n" }}
-{{-     writeToStdout "It is also expected that Zsh is the default shell for your user account" }}
+{{-     if (eq .chezmoi.os "linux") }}
+{{-         writeToStdout "build-essential, curl, git, ssh, zsh\n" }}
+{{-         writeToStdout "It is also expected that Zsh is the default shell for your user account" }}
+{{-     else if (eq .chezmoi.os "darwin") }}
+{{-         writeToStdout "curl, git, ssh, zsh, homebrew\n" }}
+{{-     end }}
+{{-     writeToStdout "\nMake sure these are installed prior to running 'chezmoi apply'\n" }}
 {{- else if (eq $installType "full") }}
 {{-     if not (eq .chezmoi.osRelease.id "arch") }}
 {{-         writeToStdout (cat "chezmoi has detected that this is not an Arch Linux system, disabling install scripts...\n") }}

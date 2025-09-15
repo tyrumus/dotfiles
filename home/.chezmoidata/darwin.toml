@@ -1,0 +1,27 @@
+darwin_brews = [
+    "bat",
+    "biodiff",
+    "duf",
+    "dust",
+    "eza",
+    "fd",
+    "fzf",
+    "git",
+    "git-lfs",
+    "hexyl",
+    "jq",
+    "lazygit",
+    "neovim",
+    "ripgrep",
+    "rustup",
+    "uv",
+    "vivid",
+    "yt-dlp",
+    "zoxide"
+]
+darwin_casks = [
+    "firefox",
+    "keepassxc",
+    "kitty",
+    "spotify"
+]

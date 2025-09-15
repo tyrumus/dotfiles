@@ -8,7 +8,7 @@ This repo is managed by [chezmoi](https://www.chezmoi.io/)
 
 Component | Software
 --- | ---
-Distro | [Arch Linux](https://archlinux.org/)
+Distro | [Arch Linux](https://archlinux.org/), Ubuntu 22.04, and macOS
 Shell | [Zsh](https://wiki.archlinux.org/title/Zsh)
 DE | [KDE](https://wiki.archlinux.org/title/KDE)
 Terminal Emulator | [Kitty](https://wiki.archlinux.org/title/Kitty)
@@ -26,12 +26,27 @@ Install Mode | Required Storage
 
 ### Install Mode: `term`
 
+#### Linux
 This mode only installs utilities and Neovim in `~/.local/bin`, without using the system package manager.
 It is intended to be extremely portable.
 
 Install chezmoi to `~/.local/bin`
 ```
 sh -c "$(curl -fsLS get.chezmoi.io/lb)" && export PATH="$PATH:~/.local/bin"
+```
+
+Install the dotfiles and follow the prompts.
+```
+chezmoi init https://github.com/tyrumus/dotfiles
+chezmoi apply
+```
+
+#### Mac
+This mode only installs utilities and Neovim via [Homebrew](https://brew.sh/).
+
+Install chezmoi
+```
+brew install chezmoi
 ```
 
 Install the dotfiles and follow the prompts.

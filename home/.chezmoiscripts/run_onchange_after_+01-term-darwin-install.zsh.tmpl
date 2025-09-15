@@ -1,8 +1,18 @@
 {{- if (eq .installtype "term") -}}
+{{- if (eq .chezmoi.os "darwin") -}}
 #!/usr/bin/zsh
 # vim: ft=zsh
 
 BLOCK_FILE="$HOME/.cache/chezmoi-setup"
+
+{{ template "print.zsh" }}
+
+ssp "STARTING MACOS TERMINAL SETUP"
+
+# TODO: convert chezmoi JSON data to Homebrew bundle format
+# brew bundle check --file=/dev/stdin || brew bundle install --file=/dev/stdin
+
+ssp "MACOS TERMINAL INSTALL COMPLETE"
 
 # check if this script has already been ran.
 if [ -f "${BLOCK_FILE}" ]; then
@@ -14,27 +24,14 @@ else
     fi
 fi
 
-{{ template "print.zsh" }}
+ssp "STARTING ONE-TIME SETUP"
 
-ssp "STARTING TERMINAL SETUP"
-
-echo "-k" > ~/.curlrc
-
-sp "Installing Rust stable toolchain"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-sp "Installing Node.js stable toolchain"
-curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
-
-sp "Installing uv and uvx for Python"
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-rm ~/.curlrc
-
+# one-time setup things
 sp "Starting headless Neovim install"
 nvim --headless "+Lazy! sync" +qa
 
-
+sp "Initializing git-lfs"
+git lfs install
 
 ### CHEZMOI REMINDERS ###
 sp "Generating post-install reminder file"
@@ -43,9 +40,6 @@ cat >>~/.cache/chezmoi-reminders.zsh <<EOL
 
 echo "Don't forget to configure the following stuff and things when you're ready:"
 
-echo "Install git-lfs"
-echo
-
 echo "Change the URL for remote origin to SSH"
 echo
 
@@ -53,9 +47,8 @@ echo "To stop these reminders, run:"
 echo "rm \${0}"
 EOL
 
-
-
-ssp "TERMINAL SETUP COMPLETE"
+ssp "MACOS TERMINAL SETUP COMPLETE"
 
 exec zsh
+{{- end }}
 {{- end }}

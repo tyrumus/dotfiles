@@ -11,5 +11,7 @@
 .gnupg
 .config/macchina
 .config/paru
+{{- if (eq .chezmoi.os "linux") }}
 .config/kitty
+{{- end }}
 {{- end }}
