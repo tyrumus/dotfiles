@@ -21,19 +21,14 @@ local function navic_do_attach(client, bufnr)
     vim.keymap.set("n", "<space>i", vim.lsp.buf.implementation)
 end
 
-local function default_setup(lsp_name)
-    require("lspconfig")[lsp_name].setup({
+local function lsp_setup()
+    -- global settings
+    vim.lsp.config("*", {
         on_attach = navic_do_attach,
     })
-end
 
-local function lsp_setup()
-    for _,v in pairs(default_lsps) do
-        default_setup(v)
-    end
-
-    require("lspconfig").lua_ls.setup({
-        on_attach = navic_do_attach,
+    -- LSP-specific settings
+    vim.lsp.config("lua_ls", {
         update_in_insert = true,
         settings = {
             Lua = {
@@ -55,8 +50,7 @@ local function lsp_setup()
         }
     })
 
-    require("lspconfig").rust_analyzer.setup({
-        on_attach = navic_do_attach,
+    vim.lsp.config("rust_analyzer", {
         settings = {
             ["rust-analyzer"] = {
                 imports = {
