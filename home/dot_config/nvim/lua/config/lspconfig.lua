@@ -3,6 +3,7 @@ local default_lsps = {
     "bashls",
     "clangd",
     "lua_ls",
+    "pyrefly",
     "ruff",
     "rust_analyzer",
     "svelte",
