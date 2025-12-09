@@ -9,6 +9,10 @@
     process = git-lfs filter-process
     required = true
     clean = git-lfs clean -- %f
+{{ if (eq .installtype "term") }}
+[alias]
+    p4 = !~/.local/bin/git-p4.py
+{{- end }}
 {{ if (eq .installtype "full") }}
 [credential]
     helper = keepassxc --git-groups
