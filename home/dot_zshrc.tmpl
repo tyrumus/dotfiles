@@ -35,8 +35,13 @@ scroll-and-clear-screen() {
     printf "\n%.0s" {1..$LINES}
     zle clear-screen
 }
+reset-term() {
+    reset
+}
 zle -N scroll-and-clear-screen
+zle -N reset-term
 bindkey "^l" scroll-and-clear-screen
+bindkey "^u" reset-term
 bindkey "\e[H" beginning-of-line
 bindkey "\e[3~" delete-char
 bindkey "\e[F" end-of-line
