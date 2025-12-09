@@ -20,6 +20,7 @@ local function ts_setup()
             "lua",
             "make",
             "markdown",
+            "markdown_inline",
             "meson",
             "ninja",
             "nix",
