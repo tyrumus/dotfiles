@@ -72,4 +72,11 @@ return {
         "MagicDuck/grug-far.nvim",
         opts = {},
     },
+    {
+        "nvim-mini/mini.align",
+        version = "*",
+        opts = {},
+        lazy = true,
+        event = { "BufRead" }
+    },
 }
