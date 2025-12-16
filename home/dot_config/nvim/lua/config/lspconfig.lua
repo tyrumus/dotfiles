@@ -2,7 +2,7 @@
 local default_lsps = {
     "bashls",
     "clangd",
-    "lua_ls",
+    "emmylua_ls",
     "pyrefly",
     "ruff",
     "rust_analyzer",
@@ -26,29 +26,6 @@ local function lsp_setup()
     -- global settings
     vim.lsp.config("*", {
         on_attach = navic_do_attach,
-    })
-
-    -- LSP-specific settings
-    vim.lsp.config("lua_ls", {
-        update_in_insert = true,
-        settings = {
-            Lua = {
-                runtime = {
-                    version = "LuaJIT"
-                },
-                diagnostics = {
-                    globals = { "vim" },
-                    unusedLocalExclude = { "_*" },
-                },
-                workspace = {
-                    library = vim.api.nvim_get_runtime_file("", true),
-                    checkThirdParty = false,
-                },
-                telemetry = {
-                    enable = false
-                }
-            }
-        }
     })
 
     vim.lsp.config("rust_analyzer", {
