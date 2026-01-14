@@ -37,7 +37,7 @@ return {
     },
     { -- epic syntax highlighting
         "nvim-treesitter/nvim-treesitter",
-        lazy = true,
+        lazy = false,
         build = require("config.treesitter").build,
         config = require("config.treesitter").config,
         event = { "BufRead" }
