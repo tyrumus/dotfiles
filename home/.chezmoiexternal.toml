@@ -1,99 +1,96 @@
 {{- if (eq .installtype "term") -}}
 {{- $cache := dict "chezmoi" .chezmoi -}}
 
-{{- template "read-versions-and-revisions-cache" $cache -}}
-
 # grug grow weary of old package version in Ubuntu repo all time
 
 [".local/bin/rg"]
 type = "archive-file"
-url = "https://github.com/BurntSushi/ripgrep/releases/download/{{ template "get-github-latest-version" list "BurntSushi/ripgrep" $cache }}/ripgrep-{{ template "get-github-latest-version" list "BurntSushi/ripgrep" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "BurntSushi/ripgrep" "ripgrep-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
 stripComponents = 1
 executable = true
 path = "rg"
 
 [".local/bin/eza"]
 type = "archive-file"
-url = "https://github.com/eza-community/eza/releases/download/v{{ template "get-github-latest-version" list "eza-community/eza" $cache }}/eza_x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "eza-community/eza" "eza_x86_64-unknown-linux-musl.tar.gz" | quote }}
 executable = true
 path = "./eza"
 
 [".local/bin/bat"]
 type = "archive-file"
-url = "https://github.com/sharkdp/bat/releases/download/v{{ template "get-github-latest-version" list "sharkdp/bat" $cache }}/bat-v{{ template "get-github-latest-version" list "sharkdp/bat" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "sharkdp/bat" "bat-v*-x86_64-unknown-linux-musl.tar.gz" | quote }}
 stripComponents = 1
 executable = true
 path = "bat"
 
 [".local/bin/fd"]
 type = "archive-file"
-url = "https://github.com/sharkdp/fd/releases/download/v{{ template "get-github-latest-version" list "sharkdp/fd" $cache }}/fd-v{{ template "get-github-latest-version" list "sharkdp/fd" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "sharkdp/fd" "fd-v*-x86_64-unknown-linux-musl.tar.gz" | quote }}
 stripComponents = 1
 executable = true
 path = "fd"
 
 [".local/bin/fzf"]
 type = "archive-file"
-url = "https://github.com/junegunn/fzf/releases/download/v{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}/fzf-{{ template "get-github-latest-version" list "junegunn/fzf" $cache }}-linux_amd64.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "junegunn/fzf" "fzf-*-linux_amd64.tar.gz" | quote }}
 executable = true
 path = "fzf"
 
 [".local/bin/zoxide"]
 type = "archive-file"
-url = "https://github.com/ajeetdsouza/zoxide/releases/download/v{{ template "get-github-latest-version" list "ajeetdsouza/zoxide" $cache }}/zoxide-{{ template "get-github-latest-version" list "ajeetdsouza/zoxide" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "ajeetdsouza/zoxide" "zoxide-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
 executable = true
 path = "zoxide"
 
 [".local/bin/lazygit"]
 type = "archive-file"
-url = "https://github.com/jesseduffield/lazygit/releases/download/v{{ template "get-github-latest-version" list "jesseduffield/lazygit" $cache }}/lazygit_{{ template "get-github-latest-version" list "jesseduffield/lazygit" $cache }}_Linux_x86_64.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "jesseduffield/lazygit" "lazygit_*_linux_x86_64.tar.gz" | quote }}
 executable = true
 path = "lazygit"
 
 [".local/share/chezmoi-cache/nvim"]
 type = "archive"
-url = "https://github.com/neovim/neovim/releases/download/v0.11.3/nvim-linux-x86_64.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "neovim/neovim" "nvim-linux-x86_64.tar.gz" | quote }}
 stripComponents = 1
 
 [".local/bin/jira"]
 type = "archive-file"
-url = "https://github.com/ankitpokhrel/jira-cli/releases/download/v{{ template "get-github-latest-version" list "ankitpokhrel/jira-cli" $cache }}/jira_{{ template "get-github-latest-version" list "ankitpokhrel/jira-cli" $cache }}_linux_x86_64.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "ankitpokhrel/jira-cli" "jira_*_linux_x86_64.tar.gz" | quote }}
 stripComponents = 1
 executable = true
 path = "bin/jira"
 
 [".local/bin/hexyl"]
 type = "archive-file"
-url = "https://github.com/sharkdp/hexyl/releases/download/v{{ template "get-github-latest-version" list "sharkdp/hexyl" $cache }}/hexyl-v{{ template "get-github-latest-version" list "sharkdp/hexyl" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "sharkdp/hexyl" "hexyl-v*-x86_64-unknown-linux-musl.tar.gz" | quote }}
 stripComponents = 1
 executable = true
 path = "hexyl"
 
 [".local/bin/vivid"]
 type = "archive-file"
-url = "https://github.com/sharkdp/vivid/releases/download/v{{ template "get-github-latest-version" list "sharkdp/vivid" $cache }}/vivid-v{{ template "get-github-latest-version" list "sharkdp/vivid" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "sharkdp/vivid" "vivid-v*-x86_64-unknown-linux-musl.tar.gz" | quote }}
 stripComponents = 1
 executable = true
 path = "vivid"
 
 [".local/bin/dust"]
 type = "archive-file"
-url = "https://github.com/bootandy/dust/releases/download/v{{ template "get-github-latest-version" list "bootandy/dust" $cache }}/dust-v{{ template "get-github-latest-version" list "bootandy/dust" $cache }}-x86_64-unknown-linux-musl.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "bootandy/dust" "dust-v*-x86_64-unknown-linux-musl.tar.gz" | quote }}
 stripComponents = 1
 executable = true
 path = "dust"
 
 [".local/bin/biodiff"]
 type = "archive-file"
-url = "https://github.com/8051Enthusiast/biodiff/releases/download/v{{ template "get-github-latest-version" list "8051Enthusiast/biodiff" $cache }}/biodiff-linux-{{ template "get-github-latest-version" list "8051Enthusiast/biodiff" $cache }}.zip"
+url = {{ gitHubLatestReleaseAssetURL "8051Enthusiast/biodiff" "biodiff-linux-*.zip" | quote }}
 executable = true
 path = "biodiff"
 
 [".local/bin/dtop"]
 type = "archive-file"
-url = "https://github.com/amir20/dtop/releases/download/v{{ template "get-github-latest-version" list "amir20/dtop" $cache }}/dtop-x86_64-unknown-linux-gnu.tar.gz"
+url = {{ gitHubLatestReleaseAssetURL "amir20/dtop" "dtop-x86_64-unknown-linux-gnu.tar.gz" | quote }}
 executable = true
 path = "dtop-x86_64-unknown-linux-gnu/dtop"
 
-{{- template "save-versions-and-revisions-cache" $cache -}}
 {{- end -}}
