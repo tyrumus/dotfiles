@@ -30,6 +30,23 @@ local function lsp_setup()
         on_attach = navic_do_attach,
     })
 
+    vim.lsp.config("emmylua_ls", {
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { "vim" },
+                },
+                workspace = {
+                    library = vim.api.nvim_get_runtime_file("", true),
+                    checkThirdParty = false,
+                },
+                telemetry = {
+                    enable = false,
+                },
+            }
+        }
+    })
+
     vim.lsp.config("rust_analyzer", {
         settings = {
             ["rust-analyzer"] = {
