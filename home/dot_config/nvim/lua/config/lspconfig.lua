@@ -16,6 +16,8 @@ local function navic_do_attach(client, bufnr)
         require("nvim-navic").attach(client, bufnr)
     end
 
+    vim.lsp.inlay_hint.enable(true)
+
     vim.keymap.set("n", "<space>a", vim.lsp.buf.code_action)
     vim.keymap.set("n", "<space>d", vim.lsp.buf.definition)
     vim.keymap.set("n", "<space>D", vim.lsp.buf.declaration)
