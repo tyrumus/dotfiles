@@ -3,7 +3,7 @@ local function ts_build()
 end
 
 local function ts_setup()
-    require("nvim-treesitter.configs").setup({
+    require("nvim-treesitter").setup({
         ensure_installed = {
             "asm",
             "bash",
