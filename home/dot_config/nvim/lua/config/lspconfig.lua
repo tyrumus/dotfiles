@@ -3,11 +3,11 @@ local default_lsps = {
     "bashls",
     "clangd",
     "emmylua_ls",
-    "pyrefly",
     "ruff",
     "rust_analyzer",
     "svelte",
     "tailwindcss",
+    "ty",
     "yamlls",
 }
 
