@@ -250,9 +250,12 @@ fi
 # add self-destructing chezmoi install script
 ssp "Adding finishing touches"
 if [ ! -z "${CHEZMOI_URL}" ]; then
+    ZSHRC="/mnt/home/${USRNAME}/.zshrc"
     sp "Adding Chezmoi init"
-    echo "rm \$0" >> /mnt/home/${USRNAME}/.zshrc
-    echo "chezmoi init ${CHEZMOI_URL} --apply" >> /mnt/home/${USRNAME}/.zshrc
+    echo "rm ~/.zshrc" >> "${ZSHRC}"
+    echo "chezmoi init ${CHEZMOI_URL} --apply" >> "${ZSHRC}"
+    # fixup perms
+    chown ${USRNAME}:${USRNAME} "${ZSHRC}"
 fi
 
 sync
