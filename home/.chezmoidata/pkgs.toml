@@ -41,7 +41,6 @@ default = [
     "openssh",
     "pacman-contrib",
     "pam-u2f",
-    "procs",
     "python-uv",
     "reflector",
     "ripgrep",
