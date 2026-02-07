@@ -19,9 +19,3 @@
     installprofile = {{ $installProfile | quote }}
     gitemail = {{ $email | quote }}
     gitname = {{ $name | quote }}
-
-{{- if (eq $installType "term") }}
-{{-     writeToStdout "\nYou've chosen a chassis type that expects numerous dependencies to be installed, available in the path:\n" }}
-{{-     writeToStdout "build-essential, curl, git, ssh, zsh\n" }}
-{{-     writeToStdout "It is also expected that Zsh is the default shell for your user account" }}
-{{- end }}
