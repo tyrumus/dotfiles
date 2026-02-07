@@ -109,7 +109,7 @@ workstation = [
     "lib32-vulkan-intel",
 
     "blender",
-    "davinci-resolve",
+    # "davinci-resolve",
     "discover",
     "flatpak",
     "flatpak-kcm",
