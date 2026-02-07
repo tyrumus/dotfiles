@@ -1,14 +1,31 @@
 [pkgs]
+# installprofile = terminal, workstation, laptop
 # 'default' profile always gets included on all install profiles
 default = [
-    # terminal & system utils
-    "bandwhich",
+    # opinionated basic system utils
+    "downgrade",
+    "man-db",
+    "neovim",
+    "ntfs-3g",
+    "openresolv",
+    "openssh",
+    "pacman-contrib",
+    "reflector",
+    "sudo",
+    "ufw",
+    "unrar",
+    "unzip",
+    "wget",
+    "zip",
+    "zsh",
+]
+# installprofile = terminal, workstation, laptop
+terminal = [
     "bat",
     "bind",
     "biodiff",
     "bottom",
-    "curlie",
-    "downgrade",
+    "caligula",
     "dtop-bin",
     "duf",
     "dust",
@@ -22,40 +39,33 @@ default = [
     "hexyl",
     "httpie",
     "hyperfine",
-    "imagemagick",
     "jq",
     "lazygit",
-    "macchina",
-    "man-db",
-    "neovim",
-    "ntfs-3g",
-    "openresolv",
-    "openssh",
-    "pacman-contrib",
-    "pam-u2f",
     "python-uv",
-    "reflector",
     "ripgrep",
     "rustup",
-    "samba",
     "sd",
+    "speedtest-cli",
+    "tokei",
+    "vivid",
+    "zoxide",
+]
+# installprofile = workstation, laptop
+# extra stuff I don't necessarily use at work
+terminalextra = [
+    "bandwhich",
+    "curlie",
+    "imagemagick",
+    "macchina",
+    "pam-u2f",
+    "samba",
     "smartmontools",
     "smbclient",
-    "speedtest-cli",
-    "sudo",
-    "tokei",
-    "ufw",
-    "unrar",
-    "unzip",
-    "vivid",
-    "wget",
     "wireguard-tools",
     "xdg-user-dirs",
     "yt-dlp",
-    "zip",
-    "zoxide",
-    "zsh",
 ]
+# installprofile = workstation, laptop
 gui = [
     # provider selections for dependencies
     "pipewire-jack",
@@ -105,6 +115,7 @@ gui = [
     "wireplumber",
     "yubikey-manager"
 ]
+# installprofile = workstation
 workstation = [
     # provider selections for dependencies
     "noto-fonts",
@@ -132,6 +143,7 @@ workstation = [
     # "yabridge",
     # "yabridgectl"
 ]
+# installprofile = laptop
 laptop = [
     "acpi",
     "bluez",

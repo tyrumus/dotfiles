@@ -6,13 +6,13 @@
 function keepalive_sudo(){
     ssp "One-time sudo prompt"
     sudo -v
-    ( while true; do sudo -v; sleep 50; done; ) &
+    ( while true; do sudo -v; sleep 30; done; ) &
     SUDO_PID="$!"
     trap stop_sudo SIGINT SIGTERM
 }
 
 function stop_sudo(){
-    ssp "Stopping sudo"
+    ssp "Stopping sudo PID ${SUDO_PID}"
     kill -9 "$SUDO_PID"
     trap - SIGINT SIGTERM
     sudo -k
@@ -57,11 +57,11 @@ fi
 ssp "Installing system packages"
 
 {{ if eq .installprofile "workstation" }}
-paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.workstation | join " " }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }} {{ .pkgs.terminalextra | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.workstation | join " " }}
 {{ else if eq .installprofile "laptop" }}
-paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.laptop | join " " }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }} {{ .pkgs.terminalextra | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.laptop | join " " }}
 {{ else if eq .installprofile "terminal" }}
-paru -Sy --needed {{ .pkgs.default | join " " }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }}
 {{ end }}
 
 {{ if eq .installprofile "workstation" }}
@@ -90,34 +90,42 @@ fi
 
 ssp "Executing one-time setup"
 
+{{ if not (eq .installprofile "terminal") }}
 # create extra home folders
 sp "Setting up extra home folders"
 xdg-user-dirs-update
 mkdir "$HOME/rsync"
 mkdir "$HOME/notes"
 
-sp "Installing Git LFS"
-git lfs install
-
 sp "Setting up realtime audio stuff"
 sudo usermod -aG realtime $USER
+{{ end }}
+
+sp "Installing Git LFS"
+git lfs install
 
 # enable services
 sp "Enabling user services"
 systemctl --user daemon-reload
+{{ if not (eq .installprofile "terminal") }}
 systemctl --user enable pipewire.service
 systemctl --user enable pipewire-pulse.service
 systemctl --user enable wireplumber.service
+{{ end }}
 systemctl --user enable ssh-agent.service
 
 sp "Enabling system services"
-sudo systemctl enable sddm.service
+sudo systemctl daemon-reload
 sudo systemctl enable sshd.service
 sudo systemctl enable reflector.timer
+{{ if not (eq .installprofile "terminal") }}
+sudo systemctl enable sddm.service
 sudo systemctl enable syncthing@{{- .chezmoi.username -}}.service
 sudo systemctl enable logmein-hamachi.service
+{{ end }}
 
 {{ if eq .installprofile "workstation" }}
+# kexec and samba-related stuff
 sudo systemctl enable srv-backup.automount
 sudo systemctl enable srv-oldbackup.automount
 sudo systemctl enable srv-public.automount
@@ -130,8 +138,10 @@ sudo systemctl enable kexec-load@linux.service
 {{ else }}
 sp "No kernel found to set for kexec-load service. Will need to be enabled manually."
 {{ end }}
+{{ end }}
 
-{{ else if eq .installprofile "laptop" }}
+{{ if eq .installprofile "laptop" }}
+# laptop-specific stuff
 sudo systemctl enable bluetooth.service
 sudo systemctl enable tlp.service
 {{ end }}
@@ -153,6 +163,7 @@ sudo systemctl enable tlp.service
 
 sp "Installing Node.js stable toolchain"
 # remove N_PREFIX line from zshrc so this install script doesn't error out
+# it'll get added back by the below script
 sed -i "/export N_PREFIX/d" ~/.zshrc
 curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
 
