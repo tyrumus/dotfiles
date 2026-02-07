@@ -213,6 +213,8 @@ groupadd sudo
 useradd -m -s ${USR_SHELL} -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
 systemctl enable systemd-boot-update.service
+mkdir -p /etc/pacman.conf.d
+touch /etc/pacman.conf.d/dummy.conf
 sed -i "s/\[options\]/\[options\]\\nInclude \= \/etc\/pacman.conf.d\/\*.conf/" /etc/pacman.conf
 sed -i "s/#Color.*/Color/" /etc/pacman.conf
 sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
@@ -231,6 +233,7 @@ bootctl install
 mkinitcpio -P
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
+pacman -Syu --noconfirm
 EOF
 ssp "Finished chrooted operations"
 
