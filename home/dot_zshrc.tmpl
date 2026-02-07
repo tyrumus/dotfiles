@@ -48,9 +48,8 @@ bindkey "\e[F" end-of-line
 
 # Completions
 source <(fzf --zsh)
-{{- if (eq .installtype "full") }}
-eval "$(resticprofile generate --zsh-completion)"
-{{- end }}
+# TODO: re-enable restic backups
+# eval "$(resticprofile generate --zsh-completion)"
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 zstyle ':completion:*:*:*:default' menu yes select search
@@ -64,11 +63,11 @@ alias cedit="chezmoi edit"
 alias lg="lazygit"
 alias cat="bat"
 
-{{- if (eq .installtype "full") }}
 ### Arch Linux support
 alias df="duf"
 alias top="btm"
 alias rmorphan="paru -Rns $(paru -Qtdq)"
+{{- if not (eq .installprofile "terminal") }}
 ### kitty support
 alias clip="kitty +kitten clipboard"
 alias c="pwd | clip"
@@ -124,5 +123,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 
+# BUG: fix this bootstrap
 export N_PREFIX="$HOME/.local/share/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 zinit ice depth=1; zinit light romkatv/powerlevel10k

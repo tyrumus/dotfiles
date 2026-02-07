@@ -1,0 +1,4 @@
+[cargo]
+default = [
+    "tree-sitter-cli"
+]

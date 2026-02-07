@@ -1,4 +1,3 @@
-{{- if (eq .installtype "full") -}}
 #!/usr/bin/zsh
 # vim: ft=zsh
 
@@ -58,15 +57,20 @@ fi
 ssp "Installing system packages"
 
 {{ if eq .installprofile "workstation" }}
-paru -Sy --needed {{ .default | join " " }} {{ .workstation | join " " }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.workstation | join " " }}
 {{ else if eq .installprofile "laptop" }}
-paru -Sy --needed {{ .default | join " " }} {{ .laptop | join " " }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.laptop | join " " }}
+{{ else if eq .installprofile "terminal" }}
+paru -Sy --needed {{ .pkgs.default | join " " }}
 {{ end }}
 
 {{ if eq .installprofile "workstation" }}
 ssp "Installing flatpak packages"
 flatpak install --noninteractive -y flathub {{ .flatpak.workstation | join " " }}
 {{ end }}
+
+ssp "Installing cargo packages"
+cargo install --locked {{ .cargo.default | join " " }}
 
 ssp "Installing Neovim plugins"
 nvim --headless "+Lazy! sync" +qa
@@ -133,18 +137,22 @@ sudo systemctl enable tlp.service
 {{ end }}
 
 # probably insecure, but whatever
+# TODO: re-enable restic backups
 {{ if not (stat "/usr/local/bin/resticprofile") }}
-curl -o /tmp/resticprofile-installer.sh -L "https://raw.githubusercontent.com/creativeprojects/resticprofile/master/install.sh"
-chmod +x /tmp/resticprofile-installer.sh
-sudo /tmp/resticprofile-installer.sh -b /usr/local/bin
+# curl -o /tmp/resticprofile-installer.sh -L "https://raw.githubusercontent.com/creativeprojects/resticprofile/master/install.sh"
+# chmod +x /tmp/resticprofile-installer.sh
+# sudo /tmp/resticprofile-installer.sh -b /usr/local/bin
 {{ end }}
 
 {{ if not (stat "/usr/local/bin/restic") }}
-curl -o /tmp/restic.bz2 -L "https://github.com/restic/restic/releases/download/v0.17.3/restic_0.17.3_linux_amd64.bz2"
-bzip2 -d /tmp/restic.bz2
-sudo mv /tmp/restic /usr/local/bin/restic
-sudo chmod +x /usr/local/bin/restic
+# curl -o /tmp/restic.bz2 -L "https://github.com/restic/restic/releases/download/v0.17.3/restic_0.17.3_linux_amd64.bz2"
+# bzip2 -d /tmp/restic.bz2
+# sudo mv /tmp/restic /usr/local/bin/restic
+# sudo chmod +x /usr/local/bin/restic
 {{ end }}
+
+sp "Installing Node.js stable toolchain"
+curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
 
 ### CHEZMOI REMINDERS ###
 sp "Generating post-install reminder file"
@@ -160,6 +168,7 @@ echo "Ensure to update the MAC address for the ethernet card"
 echo
 {{ end }}
 
+{{ if not (eq .installprofile "terminal") }}
 echo "Edit the Samba credentials file at /etc/samba/credentials/nas"
 echo "It should contain the following:"
 echo
@@ -174,13 +183,14 @@ echo
 echo "Setup Spotify with spotify-launcher."
 echo
 
-echo "Change the URL for remote origin to SSH"
-echo
-
 echo "Remember to append preempt=full to kernel parameters"
 echo
 
-echo "Setup resticprofile credentials"
+# echo "Setup resticprofile credentials"
+# echo
+{{ end }}
+
+echo "Change the URL for remote origin to SSH"
 echo
 
 echo "To stop these reminders, run:"
@@ -192,4 +202,3 @@ stop_sudo
 ssp "Full install complete. Probably want to reboot."
 
 exec zsh
-{{- end }}

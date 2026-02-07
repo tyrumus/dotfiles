@@ -3,14 +3,8 @@
 export PATH="$HOME/.local/bin:$PATH:$HOME/.local/share/n/bin"
 
 # Neovim is my beautiful child
-{{ if (eq .installtype "term") }}
-export PATH="$PATH:$HOME/.local/share/chezmoi-cache/nvim/bin"
-export VISUAL=$HOME/.local/share/chezmoi-cache/nvim/bin/nvim
-export EDITOR=$HOME/.local/share/chezmoi-cache/nvim/bin/nvim
-{{ else }}
 export VISUAL=/usr/bin/nvim
 export EDITOR=/usr/bin/nvim
-{{ end }}
 
 export JIRA_AUTH_TYPE="bearer"
 
@@ -19,7 +13,4 @@ export MAKEFLAGS="-j$(nproc)"
 export WINEFSYNC=1
 export BAT_THEME="gruvbox-dark"
 export LS_COLORS="$(vivid generate gruvbox-dark-hard)"
-{{ if (eq .installtype "term") }}
-. "$HOME/.cargo/env"
-{{ end }}
 [[ -f "$HOME/.local/env/shared-vars.zsh" ]] && source "$HOME/.local/env/shared-vars.zsh"

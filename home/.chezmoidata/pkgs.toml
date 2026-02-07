@@ -1,3 +1,4 @@
+[pkgs]
 # 'default' profile always gets included on all install profiles
 default = [
     # provider selections for dependencies
@@ -18,6 +19,7 @@ default = [
     "bottom",
     "curlie",
     "downgrade",
+    "dtop-bin",
     "duf",
     "dust",
     "eza",
@@ -63,7 +65,8 @@ default = [
     "zip",
     "zoxide",
     "zsh",
-
+]
+gui = [
     # GUI apps & utils
     "apple_cursor",
     "ark",
@@ -73,6 +76,7 @@ default = [
     "discord",
     "electrum",
     "firefox",
+    "gimp",
     "git-credential-keepassxc",
     "gnucash",
     "handlr-regex",
@@ -112,7 +116,6 @@ workstation = [
     "discover",
     "flatpak",
     "flatpak-kcm",
-    "gimp",
     "handbrake",
     "inkscape",
     "kexec-tools",
@@ -122,12 +125,12 @@ workstation = [
     "obs-plugin-looking-glass",
     "obs-studio",
     "ocenaudio-bin",
-    "steam-devices-git",
+    # "steam-devices-git",
     "virt-manager",
-    "wine-mono",
-    "winetricks",
-    "yabridge",
-    "yabridgectl"
+    # "wine-mono",
+    # "winetricks",
+    # "yabridge",
+    # "yabridgectl"
 ]
 laptop = [
     "acpi",
