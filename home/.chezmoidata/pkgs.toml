@@ -1,16 +1,6 @@
 [pkgs]
 # 'default' profile always gets included on all install profiles
 default = [
-    # provider selections for dependencies
-    "pipewire-jack",
-    "qt6-multimedia-ffmpeg",
-    "cronie",
-    "noto-fonts-emoji",
-    "clipman",
-    "noto-fonts",
-    "vulkan-intel",
-    "lib32-vulkan-intel",
-
     # terminal & system utils
     "bandwhich",
     "bat",
@@ -67,6 +57,16 @@ default = [
     "zsh",
 ]
 gui = [
+    # provider selections for dependencies
+    "pipewire-jack",
+    "qt6-multimedia-ffmpeg",
+    "cronie",
+    "noto-fonts-emoji",
+    "clipman",
+    "noto-fonts",
+    "vulkan-intel",
+    "lib32-vulkan-intel",
+
     # GUI apps & utils
     "apple_cursor",
     "ark",
