@@ -1,6 +1,6 @@
 {{- if eq .installprofile "workstation" }}
 etc/systemd/system.conf.d/10-chezmoi-framework.conf
-{{- else if eq .installprofile "laptop" }}
+{{- else }}
 usr/local/bin/win-reboot-now
 usr/local/bin/reboot-kexec
 etc/sudoers.d/20-win-reboot
