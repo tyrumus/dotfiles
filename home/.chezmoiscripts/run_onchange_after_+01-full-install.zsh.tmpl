@@ -152,6 +152,8 @@ sudo systemctl enable tlp.service
 {{ end }}
 
 sp "Installing Node.js stable toolchain"
+# remove N_PREFIX line from zshrc so this install script doesn't error out
+sed -i "/export N_PREFIX/d" ~/.zshrc
 curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
 
 ### CHEZMOI REMINDERS ###
