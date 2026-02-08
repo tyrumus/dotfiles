@@ -47,6 +47,7 @@ terminal = [
     "sd",
     "speedtest-cli",
     "tokei",
+    "tree-sitter-cli",
     "vivid",
     "zoxide",
 ]
