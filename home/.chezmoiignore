@@ -3,7 +3,8 @@
 .config/looking-glass
 .config/resticprofile
 .config/spotify-launcher.conf
-.local
+.local/bin/lockscreen
+.local/bin/perfmode
 .face
 .Xresources
 .gnupg
