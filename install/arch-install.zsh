@@ -234,6 +234,8 @@ mkinitcpio -P
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
 pacman -Syu --noconfirm
+echo > /home/${USRNAME}/.zshrc
+chown ${USRNAME}:${USRNAME} /home/${USRNAME}/.zshrc
 EOF
 ssp "Finished chrooted operations"
 
@@ -254,8 +256,6 @@ if [ ! -z "${CHEZMOI_URL}" ]; then
     sp "Adding Chezmoi init"
     echo "rm ~/.zshrc" >> "${ZSHRC}"
     echo "chezmoi init ${CHEZMOI_URL} --apply" >> "${ZSHRC}"
-    # fixup perms
-    chown ${USRNAME}:${USRNAME} "${ZSHRC}"
 fi
 
 sync
