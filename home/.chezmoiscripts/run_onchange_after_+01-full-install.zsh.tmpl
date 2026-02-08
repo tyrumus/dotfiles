@@ -3,6 +3,13 @@
 
 {{ template "print.zsh" }}
 
+function waitkey(){
+    if [ -f "/tmp/waitkey" ]; then
+        echo "WAITING FOR ENTER KEYPRESS"
+        read fard
+    fi
+}
+
 function keepalive_sudo(){
     ssp "One-time sudo prompt"
     sudo -v
@@ -20,16 +27,20 @@ function stop_sudo(){
 
 function install_paru(){
     sp "Updating package databases"
+    waitkey
     sudo pacman -Sy
 
     sp "Installing necessary utilities"
+    waitkey
     sudo pacman -Sy --noconfirm --needed base-devel git pigz rustup
 
     sp "Installing latest Rust toolchain"
+    waitkey
     rustup toolchain install stable
 
     # download and setup paru
     sp "Starting paru install"
+    waitkey
 
     git clone https://aur.archlinux.org/paru.git /tmp/paru
     cd /tmp/paru
@@ -39,22 +50,27 @@ function install_paru(){
 keepalive_sudo
 
 ssp "Applying root filesystem changes"
+waitkey
 rootmoi apply
 
 if [ ! $(command -v paru) ]; then
     ssp "Installing paru"
+    waitkey
     install_paru
 fi
 
 if [ ! $(command -v reflector) ]; then
     ssp "Installing reflector"
+    waitkey
     paru -Sy --needed --noconfirm reflector
     sp "Finding mirrors"
     # cat {{ .chezmoi.config.workingTree }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
+    waitkey
     sudo systemctl start reflector
 fi
 
 ssp "Installing system packages"
+waitkey
 
 {{ if eq .installprofile "workstation" }}
 paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }} {{ .pkgs.terminalextra | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.workstation | join " " }}
@@ -63,16 +79,20 @@ paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }}
 {{ else if eq .installprofile "terminal" }}
 paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }}
 {{ end }}
+waitkey
 
 {{ if eq .installprofile "workstation" }}
 ssp "Installing flatpak packages"
+waitkey
 flatpak install --noninteractive -y flathub {{ .flatpak.workstation | join " " }}
 {{ end }}
 
 ssp "Installing cargo packages"
+waitkey
 cargo install --locked {{ .cargo.default | join " " }}
 
 ssp "Installing Neovim plugins"
+waitkey
 nvim --headless "+Lazy! sync" +qa
 
 BLOCK_FILE="$HOME/.cache/chezmoi-setup"
@@ -93,19 +113,23 @@ ssp "Executing one-time setup"
 {{ if not (eq .installprofile "terminal") }}
 # create extra home folders
 sp "Setting up extra home folders"
+waitkey
 xdg-user-dirs-update
 mkdir "$HOME/rsync"
 mkdir "$HOME/notes"
 
 sp "Setting up realtime audio stuff"
+waitkey
 sudo usermod -aG realtime $USER
 {{ end }}
 
 sp "Installing Git LFS"
+waitkey
 git lfs install
 
 # enable services
 sp "Enabling user services"
+waitkey
 systemctl --user daemon-reload
 {{ if not (eq .installprofile "terminal") }}
 systemctl --user enable pipewire.service
@@ -115,6 +139,7 @@ systemctl --user enable wireplumber.service
 systemctl --user enable ssh-agent.service
 
 sp "Enabling system services"
+waitkey
 sudo systemctl daemon-reload
 sudo systemctl enable sshd.service
 sudo systemctl enable reflector.timer
@@ -139,12 +164,14 @@ sudo systemctl enable kexec-load@linux.service
 sp "No kernel found to set for kexec-load service. Will need to be enabled manually."
 {{ end }}
 {{ end }}
+waitkey
 
 {{ if eq .installprofile "laptop" }}
 # laptop-specific stuff
 sudo systemctl enable bluetooth.service
 sudo systemctl enable tlp.service
 {{ end }}
+waitkey
 
 # probably insecure, but whatever
 # TODO: re-enable restic backups
@@ -162,6 +189,7 @@ sudo systemctl enable tlp.service
 {{ end }}
 
 sp "Installing Node.js stable toolchain"
+waitkey
 # remove N_PREFIX line from zshrc so this install script doesn't error out
 # it'll get added back by the below script
 sed -i "/export N_PREFIX/d" ~/.zshrc
@@ -210,8 +238,7 @@ echo "To stop these reminders, run:"
 echo "rm \${0}"
 EOL
 
+waitkey
 stop_sudo
 
 ssp "Full install complete. Probably want to reboot."
-
-exec zsh
