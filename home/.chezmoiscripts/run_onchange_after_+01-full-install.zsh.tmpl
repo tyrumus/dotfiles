@@ -91,10 +91,6 @@ ssp "Installing cargo packages"
 waitkey
 cargo install --locked {{ .cargo.default | join " " }}
 
-ssp "Installing Neovim plugins"
-waitkey
-nvim --headless "+Lazy! sync" +qa
-
 BLOCK_FILE="$HOME/.cache/chezmoi-setup"
 
 # check if this script has already been ran.
@@ -194,6 +190,10 @@ waitkey
 # it'll get added back by the below script
 sed -i "/export N_PREFIX/d" ~/.zshrc
 curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
+
+ssp "Installing Neovim plugins"
+waitkey
+nvim --headless "+Lazy! sync" +qa
 
 ### CHEZMOI REMINDERS ###
 sp "Generating post-install reminder file"
