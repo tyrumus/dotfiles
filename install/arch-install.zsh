@@ -209,7 +209,7 @@ echo "${HOSTNAME}" > /etc/hostname
 echo "127.0.0.1 localhost" >> /etc/hosts
 echo "::1 localhost" >> /etc/hosts
 echo "127.0.1.1 localhost.localdomain ${HOSTNAME}" >> /etc/hosts
-groupadd sudo
+groupadd -g 27 sudo
 useradd -m -s ${USR_SHELL} -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
 systemctl enable systemd-boot-update.service
