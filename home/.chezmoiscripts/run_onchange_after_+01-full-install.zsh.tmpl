@@ -119,7 +119,11 @@ mkdir "$HOME/notes"
 
 sp "Setting up realtime audio stuff"
 waitkey
-sudo usermod -aG realtime $USER
+sudo usermod -aG realtime,audio $USER
+{{ end }}
+
+{{ if eq .installprofile "workstation" }}
+sudo usermod -aG libvirt $USER
 {{ end }}
 
 sp "Installing Git LFS"
