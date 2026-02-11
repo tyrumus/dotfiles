@@ -213,6 +213,8 @@ groupadd sudo
 useradd -m -s ${USR_SHELL} -G sudo ${USRNAME}
 systemctl enable dhcpcd.service
 systemctl enable systemd-boot-update.service
+mkdir -p /etc/pacman.conf.d
+touch /etc/pacman.conf.d/dummy.conf
 sed -i "s/\[options\]/\[options\]\\nInclude \= \/etc\/pacman.conf.d\/\*.conf/" /etc/pacman.conf
 sed -i "s/#Color.*/Color/" /etc/pacman.conf
 sed -i "s/#ParallelDownloads.*/ParallelDownloads = 5/" /etc/pacman.conf
@@ -231,6 +233,9 @@ bootctl install
 mkinitcpio -P
 echo root:${ROOT_PASSWD} | chpasswd
 echo ${USRNAME}:${USER_PASSWD} | chpasswd
+pacman -Syu --noconfirm
+echo > /home/${USRNAME}/.zshrc
+chown ${USRNAME}:${USRNAME} /home/${USRNAME}/.zshrc
 EOF
 ssp "Finished chrooted operations"
 
@@ -247,9 +252,10 @@ fi
 # add self-destructing chezmoi install script
 ssp "Adding finishing touches"
 if [ ! -z "${CHEZMOI_URL}" ]; then
+    ZSHRC="/mnt/home/${USRNAME}/.zshrc"
     sp "Adding Chezmoi init"
-    echo "rm \$0" >> /mnt/home/${USRNAME}/.zshrc
-    echo "chezmoi init ${CHEZMOI_URL} --apply" >> /mnt/home/${USRNAME}/.zshrc
+    echo "rm ~/.zshrc" >> "${ZSHRC}"
+    echo "chezmoi init ${CHEZMOI_URL} --apply" >> "${ZSHRC}"
 fi
 
 sync

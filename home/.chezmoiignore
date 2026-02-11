@@ -1,15 +1,12 @@
-{{- if (eq .installtype "term") }}
+{{- if (eq .installprofile "terminal") }}
 .ssh/authorized_keys
 .config/looking-glass
-.config/systemd
 .config/resticprofile
-.config/rootmoi
 .config/spotify-launcher.conf
-.local
+.local/bin/lockscreen
+.local/bin/perfmode
 .face
 .Xresources
 .gnupg
-.config/macchina
-.config/paru
 .config/kitty
 {{- end }}

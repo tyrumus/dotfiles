@@ -1,22 +1,16 @@
 {{- if eq .installprofile "workstation" }}
 etc/systemd/system.conf.d/10-chezmoi-framework.conf
-{{- else if eq .installprofile "laptop" }}
-usr/local/bin/win-reboot-now
-usr/local/bin/reboot-kexec
-etc/sudoers.d/20-win-reboot
-etc/sudoers.d/30-kexec
-var/lib/logmein-hamachi/h2-engine-override.cfg
-etc/systemd/system/unmodeset.service
-etc/systemd/system/kexec-load@.service
-etc/systemd/system/mnt-backup.mount
-etc/systemd/system/mnt-backup.automount
-etc/systemd/system/mnt-oldbackup.mount
-etc/systemd/system/mnt-oldbackup.automount
-etc/systemd/system/mnt-public.mount
-etc/systemd/system/mnt-public.automount
-etc/systemd/system/mnt-win.mount
-etc/systemd/system/mnt-win.automount
+{{- else }}
+etc/sudoers.d
+etc/systemd/system
+usr/local
+var
 {{- end }}
-{{- if not stat "/mnt/c/Windows") }}
+{{- if eq .installprofile "laptop" }}
+{{- end }}
+{{- if eq .installprofile "terminal" }}
+etc/systemd/system.conf.d/10-chezmoi-framework.conf
+{{- end }}
+{{- if not (stat "/mnt/c/Windows") }}
 etc/wsl.conf
 {{- end }}

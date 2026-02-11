@@ -1,19 +1,25 @@
-{{- if (eq .installtype "full") -}}
 #!/usr/bin/zsh
 # vim: ft=zsh
 
 {{ template "print.zsh" }}
 
+function waitkey(){
+    if [ -f "/tmp/waitkey" ]; then
+        echo "WAITING FOR ENTER KEYPRESS"
+        read fard
+    fi
+}
+
 function keepalive_sudo(){
     ssp "One-time sudo prompt"
     sudo -v
-    ( while true; do sudo -v; sleep 50; done; ) &
+    ( while true; do sudo -v; sleep 30; done; ) &
     SUDO_PID="$!"
     trap stop_sudo SIGINT SIGTERM
 }
 
 function stop_sudo(){
-    ssp "Stopping sudo"
+    ssp "Stopping sudo PID ${SUDO_PID}"
     kill -9 "$SUDO_PID"
     trap - SIGINT SIGTERM
     sudo -k
@@ -21,16 +27,20 @@ function stop_sudo(){
 
 function install_paru(){
     sp "Updating package databases"
+    waitkey
     sudo pacman -Sy
 
     sp "Installing necessary utilities"
+    waitkey
     sudo pacman -Sy --noconfirm --needed base-devel git pigz rustup
 
     sp "Installing latest Rust toolchain"
+    waitkey
     rustup toolchain install stable
 
     # download and setup paru
     sp "Starting paru install"
+    waitkey
 
     git clone https://aur.archlinux.org/paru.git /tmp/paru
     cd /tmp/paru
@@ -40,36 +50,49 @@ function install_paru(){
 keepalive_sudo
 
 ssp "Applying root filesystem changes"
+waitkey
 rootmoi apply
 
 if [ ! $(command -v paru) ]; then
     ssp "Installing paru"
+    waitkey
     install_paru
 fi
 
 if [ ! $(command -v reflector) ]; then
     ssp "Installing reflector"
+    waitkey
     paru -Sy --needed --noconfirm reflector
     sp "Finding mirrors"
     # cat {{ .chezmoi.config.workingTree }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
+    waitkey
     sudo systemctl start reflector
 fi
 
 ssp "Installing system packages"
+waitkey
 
 {{ if eq .installprofile "workstation" }}
-paru -Sy --needed {{ .default | join " " }} {{ .workstation | join " " }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }} {{ .pkgs.terminalextra | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.workstation | join " " }}
 {{ else if eq .installprofile "laptop" }}
-paru -Sy --needed {{ .default | join " " }} {{ .laptop | join " " }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }} {{ .pkgs.terminalextra | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.laptop | join " " }}
+{{ else if eq .installprofile "terminal" }}
+paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }}
 {{ end }}
+waitkey
 
 {{ if eq .installprofile "workstation" }}
 ssp "Installing flatpak packages"
+waitkey
 flatpak install --noninteractive -y flathub {{ .flatpak.workstation | join " " }}
 {{ end }}
 
-ssp "Installing Neovim plugins"
-nvim --headless "+Lazy! sync" +qa
+{{ if .cargo.default }}
+ssp "Installing cargo packages"
+waitkey
+cd /
+cargo install --locked {{ .cargo.default | join " " }}
+{{ end }}
 
 BLOCK_FILE="$HOME/.cache/chezmoi-setup"
 
@@ -86,34 +109,51 @@ fi
 
 ssp "Executing one-time setup"
 
+{{ if not (eq .installprofile "terminal") }}
 # create extra home folders
 sp "Setting up extra home folders"
+waitkey
 xdg-user-dirs-update
 mkdir "$HOME/rsync"
 mkdir "$HOME/notes"
 
-sp "Installing Git LFS"
-git lfs install
-
 sp "Setting up realtime audio stuff"
-sudo usermod -aG realtime $USER
+waitkey
+sudo usermod -aG realtime,audio $USER
+{{ end }}
+
+{{ if eq .installprofile "workstation" }}
+sudo usermod -aG libvirt $USER
+{{ end }}
+
+sp "Installing Git LFS"
+waitkey
+git lfs install
 
 # enable services
 sp "Enabling user services"
+waitkey
 systemctl --user daemon-reload
+{{ if not (eq .installprofile "terminal") }}
 systemctl --user enable pipewire.service
 systemctl --user enable pipewire-pulse.service
 systemctl --user enable wireplumber.service
+{{ end }}
 systemctl --user enable ssh-agent.service
 
 sp "Enabling system services"
-sudo systemctl enable sddm.service
+waitkey
+sudo systemctl daemon-reload
 sudo systemctl enable sshd.service
 sudo systemctl enable reflector.timer
+{{ if not (eq .installprofile "terminal") }}
+sudo systemctl enable sddm.service
 sudo systemctl enable syncthing@{{- .chezmoi.username -}}.service
 sudo systemctl enable logmein-hamachi.service
+{{ end }}
 
 {{ if eq .installprofile "workstation" }}
+# kexec and samba-related stuff
 sudo systemctl enable srv-backup.automount
 sudo systemctl enable srv-oldbackup.automount
 sudo systemctl enable srv-public.automount
@@ -126,25 +166,41 @@ sudo systemctl enable kexec-load@linux.service
 {{ else }}
 sp "No kernel found to set for kexec-load service. Will need to be enabled manually."
 {{ end }}
+{{ end }}
+waitkey
 
-{{ else if eq .installprofile "laptop" }}
+{{ if eq .installprofile "laptop" }}
+# laptop-specific stuff
 sudo systemctl enable bluetooth.service
 sudo systemctl enable tlp.service
 {{ end }}
+waitkey
 
 # probably insecure, but whatever
+# TODO: re-enable restic backups
 {{ if not (stat "/usr/local/bin/resticprofile") }}
-curl -o /tmp/resticprofile-installer.sh -L "https://raw.githubusercontent.com/creativeprojects/resticprofile/master/install.sh"
-chmod +x /tmp/resticprofile-installer.sh
-sudo /tmp/resticprofile-installer.sh -b /usr/local/bin
+# curl -o /tmp/resticprofile-installer.sh -L "https://raw.githubusercontent.com/creativeprojects/resticprofile/master/install.sh"
+# chmod +x /tmp/resticprofile-installer.sh
+# sudo /tmp/resticprofile-installer.sh -b /usr/local/bin
 {{ end }}
 
 {{ if not (stat "/usr/local/bin/restic") }}
-curl -o /tmp/restic.bz2 -L "https://github.com/restic/restic/releases/download/v0.17.3/restic_0.17.3_linux_amd64.bz2"
-bzip2 -d /tmp/restic.bz2
-sudo mv /tmp/restic /usr/local/bin/restic
-sudo chmod +x /usr/local/bin/restic
+# curl -o /tmp/restic.bz2 -L "https://github.com/restic/restic/releases/download/v0.17.3/restic_0.17.3_linux_amd64.bz2"
+# bzip2 -d /tmp/restic.bz2
+# sudo mv /tmp/restic /usr/local/bin/restic
+# sudo chmod +x /usr/local/bin/restic
 {{ end }}
+
+sp "Installing Node.js stable toolchain"
+waitkey
+# remove N_PREFIX line from zshrc so this install script doesn't error out
+# it'll get added back by the below script
+sed -i "/export N_PREFIX/d" ~/.zshrc
+curl -kL "https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install" | N_PREFIX=~/.local/share/n bash -s -- -y
+
+ssp "Installing Neovim plugins"
+waitkey
+nvim --headless "+Lazy! sync" +qa
 
 ### CHEZMOI REMINDERS ###
 sp "Generating post-install reminder file"
@@ -160,6 +216,7 @@ echo "Ensure to update the MAC address for the ethernet card"
 echo
 {{ end }}
 
+{{ if not (eq .installprofile "terminal") }}
 echo "Edit the Samba credentials file at /etc/samba/credentials/nas"
 echo "It should contain the following:"
 echo
@@ -174,22 +231,21 @@ echo
 echo "Setup Spotify with spotify-launcher."
 echo
 
-echo "Change the URL for remote origin to SSH"
-echo
-
 echo "Remember to append preempt=full to kernel parameters"
 echo
 
-echo "Setup resticprofile credentials"
+# echo "Setup resticprofile credentials"
+# echo
+{{ end }}
+
+echo "Change the URL for remote origin to SSH"
 echo
 
 echo "To stop these reminders, run:"
 echo "rm \${0}"
 EOL
 
+waitkey
 stop_sudo
 
 ssp "Full install complete. Probably want to reboot."
-
-exec zsh
-{{- end }}

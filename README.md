@@ -18,55 +18,42 @@ Music Player | [Spotify](https://wiki.archlinux.org/title/Spotify)
 
 ## Setup
 
-Install Mode | Required Storage
+Install Profile | Required Storage
 --- | ---
-`term` | 1.8 GiB
-`full` workstation | 14.7 GiB
-`full` laptop | 10 GiB
+terminal | 9.2 GiB
+laptop | 18 GiB
+workstation | 24 GiB
 
-### Install Mode: `term`
+### Install
 
-This mode only installs utilities and Neovim in `~/.local/bin`, without using the system package manager.
-It is intended to be extremely portable.
+This repository includes a series of bootstrap scripts that installs all utilities and GUI programs that I use, depending on the profile and settings selected in the script prompts.
 
-Install chezmoi to `~/.local/bin`
-```
-sh -c "$(curl -fsLS get.chezmoi.io/lb)" && export PATH="$PATH:~/.local/bin"
-```
+#### Run unattended Arch Linux install
 
-Install the dotfiles and follow the prompts.
-```
-chezmoi init https://github.com/tyrumus/dotfiles
-chezmoi apply
-```
-
-### Install Mode: `full`
-
-This mode installs all utilities and GUI programs that I use on a full, regular Arch Linux installation.
-See **Run unattended Arch Linux install** for OS install details, as the rest of this section assumes a minimal Arch Linux install.
-
-Install dependencies
-```
-# pacman -S chezmoi git zsh curl
-```
-
-Apply the dotfiles
-```
-chezmoi init https://github.com/tyrumus/dotfiles --apply
-```
-
-Logout of your session, and log back in. Enjoy!
-
-## Run unattended Arch Linux install
+If you already have a basic Arch Linux install, skip to the **Alternative Setup Method** section.
 
 [Follow the Arch Linux install guide](https://wiki.archlinux.org/title/Installation_guide) to boot an Arch Linux ISO and connect to the internet.
 
-If on Wi-Fi, make sure to use the `iwd` package rather than some other configuration utility, as this install script will copy the config.
+If on Wi-Fi, make sure to use the `iwd` package rather than some other configuration utility, as this install script will automatically copy the config.
 
-### Running the Install Script
+#### Running the Install Script
 
 Once that's done, run the install script and follow the prompts:
 ```
 curl -L -o install.zsh https://tyrumus.dev/ai
 zsh install.zsh
 ```
+
+#### Alternative Setup Method
+If you already have a minimal Arch Linux install - a shell and nothing else, simply install these dependencies before installing the dotfiles.
+
+```
+# pacman -S chezmoi git zsh curl
+```
+
+#### Install the Dotfiles
+```
+$ chezmoi init https://github.com/tyrumus/dotfiles --apply
+```
+
+Logout of your session, and log back in. Enjoy!
