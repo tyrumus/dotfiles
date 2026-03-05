@@ -8,6 +8,15 @@ vim.opt.wildmenu = true
 vim.opt.showcmd = true
 vim.opt.laststatus = 2
 
+-- see trailing whitespace
+vim.opt.list = true
+vim.opt.listchars = {
+    tab = "▸ ",
+    trail = "·",
+    precedes = "←",
+    extends = "→",
+}
+
 -- disable line wrapping
 vim.opt.wrap = false
 
