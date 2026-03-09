@@ -46,6 +46,13 @@ bindkey "\e[H" beginning-of-line
 bindkey "\e[3~" delete-char
 bindkey "\e[F" end-of-line
 
+# source local machine configs
+if [ -d "${HOME}/.config/zsh" ]; then
+    for file in ${HOME}/.config/zsh/*; do
+        source "${file}"
+    done
+fi
+
 # Completions
 source <(fzf --zsh)
 # TODO: re-enable restic backups
