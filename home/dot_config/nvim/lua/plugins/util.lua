@@ -57,9 +57,22 @@ return {
             "FloatermNext"
         }
     },
+    {
+        "folke/snacks.nvim",
+        lazy = false,
+        priority = 1000,
+        config = true,
+        opt = {
+        },
+    },
     { -- automatically cd to project dir
-        "ahmedkhalf/project.nvim",
-        main = "project_nvim",
+        "DrKJeff16/project.nvim",
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            "wsdjeg/picker.nvim",
+            "folke/snacks.nvim",
+            "ibhagwan/fzf-lua"
+        },
         opts = require("config.project").opts,
     },
     { -- automatically set indentation settings for a file
