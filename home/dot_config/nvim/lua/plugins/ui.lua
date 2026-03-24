@@ -68,13 +68,14 @@ return {
     },
     { -- fuzzy finder over lists
         "nvim-telescope/telescope.nvim",
-        branch = "0.1.x",
-        lazy = true,
+        tag = "v0.2.1",
+        lazy = false,
         cmd = "Telescope",
         config = require("config.telescope").config,
         dependencies = {
             "nvim-telescope/telescope-ui-select.nvim",
-            "nvim-lua/plenary.nvim"
+            "nvim-lua/plenary.nvim",
+            { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
         }
     },
     { -- tabpage interface for cycling thru git diffs
