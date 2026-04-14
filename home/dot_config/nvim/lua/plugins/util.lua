@@ -30,6 +30,7 @@ return {
         }
     },
     { -- toggle comments by keymap
+        -- TODO: find actively-maintained replacement
         "terrortylor/nvim-comment",
         lazy = true,
         event = { "BufRead" },
@@ -54,7 +55,7 @@ return {
             "FloatermNext"
         }
     },
-    {
+    { -- a bunch of small QoL plugins
         "folke/snacks.nvim",
         lazy = false,
         priority = 1000,
@@ -78,11 +79,11 @@ return {
         event = { "BufRead" },
         config = true
     },
-    {
+    { -- find and replace
         "MagicDuck/grug-far.nvim",
         opts = {},
     },
-    {
+    { -- align text interactively
         "nvim-mini/mini.align",
         version = "*",
         opts = {},

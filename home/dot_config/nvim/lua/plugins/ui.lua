@@ -45,6 +45,7 @@ return {
         }
     },
     { -- show indentations guides
+        -- TODO: improve integrations with other plugins. see upstream README
         "lukas-reineke/indent-blankline.nvim",
         priority = 1000,
         main = "ibl",
@@ -109,6 +110,7 @@ return {
         opts = {}
     },
     { -- top winbar to show LSP context
+        -- TODO: find actively-maintained replacement
         "utilyre/barbecue.nvim",
         lazy = true,
         opts = {
