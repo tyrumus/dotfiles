@@ -35,12 +35,10 @@ return {
             "neovim/nvim-lspconfig"
         }
     },
-    { -- epic syntax highlighting
-        "nvim-treesitter/nvim-treesitter",
+    { -- manage treesitter parsers
+        "romus204/tree-sitter-manager.nvim",
         lazy = false,
-        build = require("config.treesitter").build,
-        config = require("config.treesitter").config,
-        event = { "BufRead" }
+        opts = require("config.treesitter").opts
     },
     { -- autocompletion engine
         "hrsh7th/nvim-cmp",

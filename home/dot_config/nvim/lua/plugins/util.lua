@@ -5,10 +5,7 @@ return {
         "windwp/nvim-ts-autotag",
         lazy = true,
         config = true,
-        event = { "BufRead" },
-        dependencies = {
-            "nvim-treesitter"
-        }
+        event = { "BufRead" }
     },
     { -- superior fuzzy finder to telescope, that's not compatible with everything
         "ibhagwan/fzf-lua",
