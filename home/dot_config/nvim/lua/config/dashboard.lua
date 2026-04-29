@@ -71,7 +71,7 @@ local buttons = {
         button("l", "󰳿  Update language servers", "<cmd>Mason<CR>"),
         button("p", "󰐳  Update parsers", "<cmd>TSManager<CR>"),
         button("s", "  Settings", ":cd $HOME/.config/nvim | lua require('fzf-lua').files()<CR>"),
-        button("R", "  Reset", "<cmd>!rm -rf ~/.local/share/nvim/lazy && rm -rf ~/.local/state/nvim && rm -f ~/.config/nvim/lazy-lock.json<CR>"),
+        button("R", "  Reset", "<cmd>!rm -rf ~/.local/share/nvim && rm -rf ~/.local/state/nvim && rm -f ~/.config/nvim/lazy-lock.json<CR>"),
         button("q", "󰗼  Quit", "<cmd>q!<CR>"),
     },
     opts = {
