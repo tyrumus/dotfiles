@@ -46,13 +46,16 @@ return {
         }
     },
     { -- show indentations guides
-        -- TODO: improve integrations with other plugins. see upstream README
         "lukas-reineke/indent-blankline.nvim",
         priority = 1000,
         main = "ibl",
         lazy = true,
-        opts = require("config.indent").opts,
-        event = { "BufRead" }
+        config = require("config.indent").config,
+        -- opts = require("config.indent").opts,
+        event = { "BufRead" },
+        dependencies = {
+            "HiPhish/rainbow-delimiters.nvim"
+        }
     },
     { -- pretty list for diagnostics, quickfixes, etc
         "folke/trouble.nvim",
