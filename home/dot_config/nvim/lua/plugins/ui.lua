@@ -2,6 +2,7 @@
 
 return {
     { -- gruvbox colorscheme, also used for kitty theme
+        -- TODO: appears abandoned. find replacement.
         "eddyekofo94/gruvbox-flat.nvim",
         priority = 900,
         config = function()
@@ -13,7 +14,7 @@ return {
         opts = require("config.dashboard").opts
     },
     { -- map icons to nerd fonts
-        "kyazdani42/nvim-web-devicons",
+        "nvim-tree/nvim-web-devicons",
         lazy = true,
         opts = { default = true }
     },
@@ -80,6 +81,7 @@ return {
         }
     },
     { -- tabpage interface for cycling thru git diffs
+        -- TODO: appears abandoned. find replacement.
         "sindrets/diffview.nvim",
         config = require("config.diffview").config,
         lazy = true,

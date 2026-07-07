@@ -30,12 +30,11 @@ return {
         }
     },
     { -- toggle comments by keymap
-        -- TODO: find actively-maintained replacement
-        "terrortylor/nvim-comment",
+        "nvim-mini/mini.comment",
+        version = "*",
+        opts = {},
         lazy = true,
-        event = { "BufRead" },
-        main = "nvim_comment",
-        config = true
+        event = { "BufRead" }
     },
     { -- quickly edit surrounding delimiters
         "tpope/vim-surround",
