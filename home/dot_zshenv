@@ -1,6 +1,6 @@
 # vim: ft=zsh
 # local bin
-export PATH="$HOME/.local/bin:$PATH:$HOME/.local/share/n/bin"
+export PATH="$HOME/.local/bin:$PATH:$HOME/.local/share/n/bin:$HOME/.cargo/bin"
 
 # Neovim is my beautiful child
 export VISUAL=/usr/bin/nvim
