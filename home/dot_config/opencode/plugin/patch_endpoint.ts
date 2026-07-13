@@ -5,26 +5,46 @@ export const PatchApiEndpoint: Plugin = async (ctx) => {
     auth: {
       provider: "azure",
       methods: [],
-      loader: async (_auth, _provider) => {
+      loader: async (_auth, provider) => {
+        const apiVersion =
+          typeof provider.options?.apiVersion === "string" ? provider.options.apiVersion : undefined
+
         await ctx.client.app.log({
-          body: { service: "patch-api-endpoint", level: "info", message: "Loader initialized..." }
+          body: {
+            service: "patch-api-endpoint",
+            level: "info",
+            message: "Loader initialized...",
+            extra: { apiVersion },
+          },
         })
 
         return {
           fetch: async (url: string | URL | Request, init?: RequestInit) => {
-            const oldUrl = url instanceof Request ? url.url : String(url)
-            const newUrl = new URL(oldUrl.replace("/v1/responses","/responses"))
+            const oldUrl = url instanceof Request ? new URL(url.url) : new URL(String(url))
+            const newUrl = new URL(oldUrl)
 
-            ctx.client.app.log({
+            if (apiVersion && !newUrl.searchParams.has("api-version")) {
+              newUrl.searchParams.set("api-version", apiVersion)
+            }
+
+            void ctx.client.app.log({
               body: {
                 service: "patch-api-endpoint",
                 level: "info",
                 message: "Patching API Endpoint",
-                extra: { oldUrl: oldUrl, newUrl: newUrl.toString()  },
-              }
+                extra: {
+                  oldUrl: oldUrl.toString(),
+                  newUrl: newUrl.toString(),
+                  method: url instanceof Request ? url.method : init?.method,
+                },
+              },
             })
 
-            return fetch(newUrl.toString(), init)
+            if (url instanceof Request) {
+              return fetch(new Request(newUrl, url), init)
+            }
+
+            return fetch(newUrl, init)
           },
         }
       },
@@ -33,3 +53,4 @@ export const PatchApiEndpoint: Plugin = async (ctx) => {
 }
 
 export default PatchApiEndpoint
+
