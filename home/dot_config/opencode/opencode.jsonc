@@ -1,0 +1,43 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "enabled_providers": ["azure"],
+  "share": "disabled",
+  "autoupdate": "notify",
+  "provider": {
+    "azure": {
+      "name": "MoogAI",
+      "options": {
+        "baseURL": "{file:/etc/opencode/baseurl}",
+        "useDeploymentBasedUrls": false,
+        "useCompletionUrls": false,
+        "apiVersion": "{file:/etc/opencode/apiversion}",
+        "headers": {
+          "api-key": "{file:/etc/opencode/moog.key}"
+        }
+      }
+    },
+  },
+  "permission": {
+    "external_directory": {
+      "/home/tyrum/work/**": "allow"
+    },
+    "read": {
+      "/home/tyrum/work/**": "allow"
+    },
+    "edit": {
+      "/home/tyrum/work/**": "allow"
+    },
+    "glob": {
+      "/home/tyrum/work/**": "allow"
+    },
+    "grep": {
+      "/home/tyrum/work/**": "allow"
+    },
+    "bash": {
+      "git *": "deny",
+      "git diff *": "allow",
+      "git status *": "allow",
+      "git show *": "allow"
+    }
+  }
+}
