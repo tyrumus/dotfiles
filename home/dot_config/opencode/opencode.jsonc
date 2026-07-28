@@ -17,6 +17,7 @@
       }
     },
   },
+  "plugin": ["opencode-parser"],
   "permission": {
     "external_directory": {
       "/home/tyrum/work/**": "allow"
