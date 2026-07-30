@@ -12,7 +12,7 @@
         "useCompletionUrls": false,
         "apiVersion": "{file:/etc/opencode/apiversion}",
         "headers": {
-          "api-key": "{file:/etc/opencode/moog.key}"
+          "api-key": "unused"
         }
       }
     },
