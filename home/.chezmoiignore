@@ -9,4 +9,7 @@
 .Xresources
 .gnupg
 .config/kitty
+{{- else }}
+.config/opencode
+.local/share/opencode
 {{- end }}
