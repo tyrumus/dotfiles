@@ -63,15 +63,19 @@ return {
         },
     },
     { -- automatically cd to project dir
-        "DrKJeff16/project.nvim",
-        dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "wsdjeg/picker.nvim",
-            "folke/snacks.nvim",
-            "ibhagwan/fzf-lua",
-            "xieyonn/spinner.nvim"
+        "wsdjeg/rooter.nvim",
+        config = true,
+        opt = {
+            root_patterns = {
+                ".git/",
+                ".github/",
+                "Pipfile",
+                "pyproject.toml",
+                "Cargo.toml",
+                "package.json",
+            },
+            outermost = false,
         },
-        opts = require("config.project").opts,
     },
     { -- automatically set indentation settings for a file
         "NMAC427/guess-indent.nvim",
