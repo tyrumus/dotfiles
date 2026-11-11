@@ -38,6 +38,15 @@ bootstrap_dl("tree-sitter-cli", tspath, {
     "tree-sitter-cli"
 })
 
+-- bootstrap neovim Node.js provider
+local nvimjs = vim.env.HOME .. "/.local/share/n/lib/node_modules/neovim"
+bootstrap_dl("neovim js", nvimjs, {
+    "npm",
+    "install",
+    "-g",
+    "neovim"
+})
+
 -- Don't need lewis6991/impatient.nvim anymore
 vim.loader.enable()
 
