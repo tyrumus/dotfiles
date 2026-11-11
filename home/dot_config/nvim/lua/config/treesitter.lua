@@ -40,5 +40,6 @@ return {
         border = "rounded",
         auto_install = true,
         highlight = true,
+        -- nohighlight = { "latex" },
     }
 }
