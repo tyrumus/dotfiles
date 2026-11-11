@@ -68,7 +68,8 @@ return {
             "nvim-telescope/telescope.nvim",
             "wsdjeg/picker.nvim",
             "folke/snacks.nvim",
-            "ibhagwan/fzf-lua"
+            "ibhagwan/fzf-lua",
+            "xieyonn/spinner.nvim"
         },
         opts = require("config.project").opts,
     },
