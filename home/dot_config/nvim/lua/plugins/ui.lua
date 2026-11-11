@@ -1,12 +1,12 @@
 -- UI plugins
 
 return {
-    { -- gruvbox colorscheme, also used for kitty theme
-        -- TODO: appears abandoned. find replacement.
-        "eddyekofo94/gruvbox-flat.nvim",
+    {
+        "ellisonleao/gruvbox.nvim",
         priority = 900,
         config = function()
-            vim.cmd("colorscheme gruvbox-flat")
+            vim.o.background = "dark"
+            vim.cmd([[colorscheme gruvbox]])
         end
     },
     { -- greeter

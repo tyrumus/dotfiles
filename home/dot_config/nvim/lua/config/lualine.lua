@@ -1,7 +1,7 @@
 return {
     opts = {
         options = {
-            theme = "gruvbox-flat",
+            theme = "gruvbox",
             section_separators = { left = "", right = "" },
             component_separators = { "", "" },
             icons_enabled = true,
