@@ -84,8 +84,7 @@ return {
         }
     },
     { -- tabpage interface for cycling thru git diffs
-        -- TODO: appears abandoned. find replacement.
-        "sindrets/diffview.nvim",
+        "dlyongemallo/diffview-plus.nvim",
         config = require("config.diffview").config,
         lazy = true,
         cmd = "DiffviewOpen",
