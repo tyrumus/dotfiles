@@ -59,6 +59,6 @@ EOL
 
     cat >>"$HOME/.cache/chezmoi-reminders.zsh" <<'EOL'
 echo "To stop these reminders, run:"
-echo 'rm \${0}'
+echo "rm ${0}"
 EOL
 }
