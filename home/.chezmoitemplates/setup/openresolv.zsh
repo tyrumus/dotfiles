@@ -1,7 +1,7 @@
 # vim: ft=zsh
 function setup_openresolv(){
     # if we're in WSL
-    if [ ! -d "/mnt/c/Windows" ]; then
+    if [ -d "/mnt/c/Windows" ]; then
         sp "Setting up DNS"
         waitkey
         sudo rm /etc/resolv.conf
