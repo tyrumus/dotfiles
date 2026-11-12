@@ -53,7 +53,7 @@ echo > "${ZSHRC}"
 chown ${USRNAME}:${USRNAME} "${ZSHRC}"
 echo "rm ~/.zshrc" >> "${ZSHRC}"
 echo "echo running chezmoi setup" >> "${ZSHRC}"
-echo "chezmoi init ${CHEZMOI_URL} --apply" >> "${ZSHRC}"
+echo "chezmoi init ${CHEZMOI_URL}" >> "${ZSHRC}"
 
 echo "Installation complete."
 exit 0
