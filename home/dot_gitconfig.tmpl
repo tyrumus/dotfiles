@@ -9,7 +9,7 @@
     process = git-lfs filter-process
     required = true
     clean = git-lfs clean -- %f
-{{ if not (eq .installprofile "terminal") }}
+{{ if not (eq .installprofile "work") }}
 [credential]
     helper = keepassxc --git-groups
 {{ else }}
