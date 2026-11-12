@@ -1,4 +1,12 @@
-{{- if (eq .installprofile "terminal") }}
+# vim: ft=gitignore
+
+# install for work
+{{- if not (eq .installprofile "work") }}
+.config/opencode
+{{- end }}
+
+# install for workstation and laptop
+{{- if not (and (eq .installprofile "workstation") (eq .installprofile "laptop")) }}
 .ssh/authorized_keys
 .config/looking-glass
 .config/resticprofile
@@ -9,7 +17,4 @@
 .Xresources
 .gnupg
 .config/kitty
-{{- else }}
-.config/opencode
-.local/share/opencode
 {{- end }}
