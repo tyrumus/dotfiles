@@ -84,6 +84,10 @@ alias kssh="kitty +kitten ssh"
 alias icat="kitty +kitten icat"
 {{- end }}
 
+if [ -z "$(command -v vivid)" ]; then
+    export LS_COLORS="$(vivid generate gruvbox-dark-hard)"
+fi
+
 # Plugins
 eval "$(zoxide init zsh --cmd j)"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
