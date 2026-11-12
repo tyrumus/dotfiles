@@ -1,16 +1,27 @@
-{{- if eq .installprofile "workstation" }}
-etc/systemd/system.conf.d/10-chezmoi-framework.conf
-{{- else }}
-etc/sudoers.d
-etc/systemd/system
-usr/local
-var
-{{- end }}
-{{- if eq .installprofile "laptop" }}
-{{- end }}
-{{- if eq .installprofile "terminal" }}
-etc/systemd/system.conf.d/10-chezmoi-framework.conf
-{{- end }}
+# vim: ft=gitignore
+
+# only install for WSL
 {{- if not (stat "/mnt/c/Windows") }}
+etc/sudoers.d/10-nopasswd-wsl
 etc/wsl.conf
+{{- end }}
+
+# only install for laptop
+{{- if not (eq .installprofile "laptop") }}
+etc/systemd/system.conf.d/10-chezmoi-framework.conf
+{{- end }}
+
+# only install for workstation
+{{- if not (eq .installprofile "workstation") }}
+etc/sudoers.d/20-win-reboot
+etc/sudoers.d/30-kexec
+usr/local
+usr/local/bin/win-reboot-now
+{{- end }}
+
+# install for workstation and laptop
+{{- if not (and (eq .installprofile "workstation") (eq .installprofile "laptop")) }}
+etc/systemd/system
+etc/security
+usr/local/bin/reboot-kexec
 {{- end }}
