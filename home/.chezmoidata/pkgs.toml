@@ -66,6 +66,17 @@ terminal = [
     "yazi",
     "zoxide",
 ]
+work = [
+    "ansible",
+    "atftp",
+    "azure-cli",
+    "dtc",
+    "hexedit",
+    "minicom",
+    "openbsd-netcat",
+    "opencode",
+    "picocom",
+]
 # installprofile = workstation, laptop
 # extra stuff I don't necessarily use at work
 terminalextra = [
