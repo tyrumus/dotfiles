@@ -1,3 +1,11 @@
+# each installprofile can depend on others. an installprofile is basically a package group.
+[deps]
+default = []
+terminal = ["default"]
+terminalextra = ["terminal"]
+work = ["terminal"]
+workstation = ["terminalextra", "gui"]
+laptop = ["terminalextra", "gui"]
 [pkgs]
 # installprofile = terminal, workstation, laptop
 # 'default' profile always gets included on all install profiles

@@ -47,6 +47,46 @@ function install_paru(){
     makepkg -si --noconfirm
 }
 
+# Keep the first occurrence of each package, in dependency order.
+typeset -aU install_packages
+typeset -A installprofile_state
+
+function resolve_installprofile(){
+    local profile="$1"
+
+    if [[ "${installprofile_state[$profile]}" == "visiting" ]]; then
+        print -u2 -- "Dependency cycle detected at installprofile: $profile"
+        return 1
+    fi
+    if [[ "${installprofile_state[$profile]}" == "done" ]]; then
+        return 0
+    fi
+
+    installprofile_state[$profile]="visiting"
+    case "$profile" in
+{{ range $profile, $packages := .pkgs }}
+        {{ $profile | quote }})
+{{ range $dependency := index $.deps $profile }}
+            resolve_installprofile {{ $dependency | quote }} || return 1
+{{ end }}
+            install_packages+=(
+{{ range $packages }}
+                {{ . | quote }}
+{{ end }}
+            )
+            ;;
+{{ end }}
+        *)
+            print -u2 -- "Unknown installprofile or package group: $profile"
+            return 1
+            ;;
+    esac
+    installprofile_state[$profile]="done"
+}
+
+# Validate and build the package list before making system changes.
+resolve_installprofile {{ .installprofile | quote }} || exit 1
+
 keepalive_sudo
 
 ssp "Applying root filesystem changes"
@@ -64,7 +104,6 @@ if [ ! $(command -v reflector) ]; then
     waitkey
     paru -Sy --needed --noconfirm reflector
     sp "Finding mirrors"
-    # cat {{ .chezmoi.config.workingTree }}/root/etc/xdg/reflector/reflector.conf | xargs sudo reflector
     waitkey
     sudo systemctl start reflector
 fi
@@ -72,13 +111,9 @@ fi
 ssp "Installing system packages"
 waitkey
 
-{{ if eq .installprofile "workstation" }}
-paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }} {{ .pkgs.terminalextra | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.workstation | join " " }}
-{{ else if eq .installprofile "laptop" }}
-paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }} {{ .pkgs.terminalextra | join " " }} {{ .pkgs.gui | join " " }} {{ .pkgs.laptop | join " " }}
-{{ else if eq .installprofile "terminal" }}
-paru -Sy --needed {{ .pkgs.default | join " " }} {{ .pkgs.terminal | join " " }}
-{{ end }}
+if (( ${#install_packages} > 0 )); then
+    paru -Sy --needed "${install_packages[@]}"
+fi
 waitkey
 
 {{ if eq .installprofile "workstation" }}
