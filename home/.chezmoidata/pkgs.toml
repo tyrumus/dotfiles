@@ -29,11 +29,14 @@ default = [
 ]
 # installprofile = terminal, workstation, laptop
 terminal = [
+    "bandwhich",
     "bat",
     "bind",
     "biodiff",
     "bottom",
     "caligula",
+    "curlie",
+    "doggo",
     "dtop-bin",
     "duf",
     "dust",
@@ -45,10 +48,14 @@ terminal = [
     "github-cli",
     "gum",
     "hexyl",
+    "htop",
     "httpie",
     "hyperfine",
     "jq",
     "lazygit",
+    "pigz",
+    "podman",
+    "podman-docker",
     "python-uv",
     "ripgrep",
     "rustup",
@@ -56,13 +63,12 @@ terminal = [
     "speedtest-cli",
     "tokei",
     "vivid",
+    "yazi",
     "zoxide",
 ]
 # installprofile = workstation, laptop
 # extra stuff I don't necessarily use at work
 terminalextra = [
-    "bandwhich",
-    "curlie",
     "imagemagick",
     "macchina",
     "pam-u2f",
