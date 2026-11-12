@@ -13,9 +13,6 @@
 {{- $email := (promptString "Enter git email address:") }}
 
 [data]
-{{- if not (eq $installProfile "terminal") }}
-    firefoxhash = {{ mozillaInstallHash "/usr/lib/firefox" | quote }}
-{{- end }}
     installprofile = {{ $installProfile | quote }}
     gitemail = {{ $email | quote }}
     gitname = {{ $name | quote }}
