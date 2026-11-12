@@ -2,6 +2,7 @@
 # most of this was taken from arch-install.zsh
 
 USRNAME=tyrum
+CHEZMOI_URL="https://github.com/tyrumus/dotfiles"
 
 # setup locale
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
@@ -37,10 +38,16 @@ pacman -Sy --needed --noconfirm chezmoi git zsh curl
 # systemd setup
 echo "KEYMAP=us" > /etc/vconsole.conf
 
+# overwrite wsl.conf
+echo "[boot]" > /etc/wsl.conf
+echo "systemd=true" >> /etc/wsl.conf
+echo "[user]" >> /etc/wsl.conf
+echo "default=${USRNAME}" >> /etc/wsl.conf
+
 # create the .zshrc for downloading chezmoi dotfiles
-echo > /home/${USRNAME}/.zshrc
-chown ${USRNAME}:${USRNAME} /home/${USRNAME}/.zshrc
 ZSHRC="/home/${USRNAME}/.zshrc"
+echo > "${ZSHRC}"
+chown ${USRNAME}:${USRNAME} "${ZSHRC}"
 echo "rm ~/.zshrc" >> "${ZSHRC}"
 echo "chezmoi init ${CHEZMOI_URL} --apply" >> "${ZSHRC}"
 
