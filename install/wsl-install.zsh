@@ -35,6 +35,9 @@ pacman -Syu --noconfirm
 # install initial dependencies
 pacman -Sy --needed --noconfirm chezmoi git zsh curl sudo
 
+# enable passwordless use of sudo group
+echo "%sudo ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-nopasswd-wsl
+
 # systemd setup
 echo "KEYMAP=us" > /etc/vconsole.conf
 
