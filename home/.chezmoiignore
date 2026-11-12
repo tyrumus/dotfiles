@@ -1,7 +1,7 @@
 # vim: ft=gitignore
 
-# install for work
-{{- if not (eq .installprofile "work") }}
+# install for enterprise
+{{- if not (eq .installprofile "enterprise") }}
 .config/opencode
 {{- end }}
 

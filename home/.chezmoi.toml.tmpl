@@ -1,5 +1,5 @@
 # vim: ft=toml
-{{- $profileChoices := (list "work" "terminal" "workstation" "laptop") }}
+{{- $profileChoices := (list "enterprise" "terminal" "workstation" "laptop") }}
 {{- $installProfile := "terminal" }}
 {{- $installProfile := (promptChoice "Which profile do you want to install?" $profileChoices) }}
 {{- if not (eq .chezmoi.osRelease.id "arch") }}
