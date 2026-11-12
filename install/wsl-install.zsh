@@ -33,7 +33,7 @@ sed -i "s/#MAKEFLAGS.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 pacman -Syu --noconfirm
 
 # install initial dependencies
-pacman -Sy --needed --noconfirm chezmoi git zsh curl
+pacman -Sy --needed --noconfirm chezmoi git zsh curl sudo
 
 # systemd setup
 echo "KEYMAP=us" > /etc/vconsole.conf
@@ -49,6 +49,7 @@ ZSHRC="/home/${USRNAME}/.zshrc"
 echo > "${ZSHRC}"
 chown ${USRNAME}:${USRNAME} "${ZSHRC}"
 echo "rm ~/.zshrc" >> "${ZSHRC}"
+echo "echo running chezmoi setup" >> "${ZSHRC}"
 echo "chezmoi init ${CHEZMOI_URL} --apply" >> "${ZSHRC}"
 
 echo "Installation complete."
