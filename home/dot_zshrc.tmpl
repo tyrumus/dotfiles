@@ -73,9 +73,9 @@ alias oc="opencode"
 
 ### Arch Linux support
 alias df="duf"
-alias top="btm"
+alias top="htop"
 alias rmorphan="paru -Rns $(paru -Qtdq)"
-{{- if not (eq .installprofile "terminal") }}
+{{- if or (eq .installprofile "workstation") (eq .installprofile "laptop") }}
 ### kitty support
 alias clip="kitty +kitten clipboard"
 alias c="pwd | clip"
